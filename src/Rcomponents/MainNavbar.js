@@ -2,10 +2,28 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { LinkContainer } from 'react-router-bootstrap';
+import {useNavigate} from 'react-router-dom'
 import Logo from "../logos/Logo.png"
 import DefaultProfile from "../logos/default-profile.jpg"
+import {auth} from "../config/firebase"
+import {signOut} from 'firebase/auth'
 
-const MainNavbarAdminHomepage = () => {
+const MainNavbar = () => {
+
+    const navigate = useNavigate()
+
+    const logoutHandler = async () => {
+        try{
+            await signOut(auth)
+            console.log("signed out")
+            navigate("/login")    
+        }
+        catch(err){
+            console.log("unable to sign out")
+        }
+        
+    }
+    
     return (
         <>
         <Navbar fixed="top" style={{backgroundColor: "#edf5e1"}} expand="md">
@@ -25,10 +43,14 @@ const MainNavbarAdminHomepage = () => {
              <LinkContainer to="/my-account"><NavDropdown.Item >
                  View Profile
              </NavDropdown.Item></LinkContainer>
-             <NavDropdown.Divider />
              <LinkContainer to="/my-account/account-settings"><NavDropdown.Item >
                  Account Settings
              </NavDropdown.Item></LinkContainer>
+             <NavDropdown.Divider />
+             <NavDropdown.Item onClick={logoutHandler}>
+                 Logout
+             </NavDropdown.Item>
+
              </NavDropdown>
          </Nav>
          </Navbar.Collapse>
@@ -37,4 +59,4 @@ const MainNavbarAdminHomepage = () => {
     )
 }
 
-export default MainNavbarAdminHomepage
+export default MainNavbar

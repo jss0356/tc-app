@@ -1,6 +1,11 @@
 import { initializeApp } from "firebase/app";
-//import firestore
-import {getFirestore} from "@firebase/firestore"
+//import firestore db
+import {getFirestore} from "firebase/firestore"
+//import firebase auth service
+import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth"
+//import firebase storage service
+import {getStorage} from "firebase/storage"
+
 
 // Firebase configuration settings
 const firebaseConfig = {
@@ -14,5 +19,29 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-//initialize firestore with app configurations
-const firestore = getFirestore(app)
+
+//initialize firestore with app configurations, then export firestore database.
+export const firestore = getFirestore(app)
+
+//export auth service.
+export const auth = getAuth(app)
+
+//export storage service.
+export const storage = getStorage(app)
+
+//represents google auth service.
+const providerGoogle = new GoogleAuthProvider()
+
+//google sign in with popup.
+export const signInWithGoogle = async () => {
+  try{
+    const userInfo = await signInWithPopup(auth, providerGoogle)
+    return userInfo
+  }
+  catch(err){
+    console.log("Error, couldn't sign in with google.")
+  }
+
+}
+
+export default app

@@ -7,7 +7,28 @@ import DefaultProfile from "../logos/default-profile.jpg"
 import SearchIcon from "../logos/SearchIcon.png"
 import FilterIcon from "../logos/FilterIcon.png"
 import ShoppingCartIcon from "../logos/ShoppingCartIcon.png"
+import {auth} from "../config/firebase"
+import {signOut} from 'firebase/auth'
+import {useNavigate} from 'react-router-dom'
+
+
 const MainNavbarMarketplace = () => {
+    const navigate = useNavigate()
+
+    const logoutHandler = async () => {
+        try{
+            await signOut(auth)
+            console.log("signed out")
+            navigate("/login")    
+        }
+        catch(err){
+            console.log("unable to sign out")
+        }
+        
+    }
+
+    
+    
     return (
         <>
         <Navbar fixed="top" style={{backgroundColor: "#edf5e1"}} expand="md">
@@ -41,10 +62,13 @@ const MainNavbarMarketplace = () => {
              <LinkContainer to="/my-account"><NavDropdown.Item >
                  View Profile
              </NavDropdown.Item></LinkContainer>
-             <NavDropdown.Divider />
              <LinkContainer to="/my-account/account-settings"><NavDropdown.Item >
                  Account Settings
              </NavDropdown.Item></LinkContainer>
+             <NavDropdown.Divider />
+             <NavDropdown.Item onClick={logoutHandler}>
+                 Logout
+             </NavDropdown.Item>
              </NavDropdown>
          </Nav>
          </Navbar.Collapse>

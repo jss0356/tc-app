@@ -30,6 +30,7 @@ import PaymentSuccess from './PaymentSuccess';
 import Product from './Product'
 import HomeAdmin from './HomeAdmin';
 import ManageDataAdmin from './ManageDataAdmin';
+import RegistrationSuccess from './RegistrationSuccess';
 
 function App() {
   return (
@@ -45,6 +46,7 @@ function App() {
             <Route index element={<Registration/>}/>
             <Route path="initial-profile-settings" element={<InitialSettingsProfile/>}/>
             <Route path="initial-payment-settings" element={<InitialSettingsPaymentInfo/>}/>
+            <Route path="registration-success" element={<RegistrationSuccess/>}/>
           </Route>
           <Route path = "/reset">
             <Route index element={<ResetPassword/>}/>
