@@ -1,30 +1,79 @@
-import {Link} from "react-router-dom"
+import {Link, useNavigate} from "react-router-dom"
 import {useState} from 'react'
-import UserDataService from './services/user.services'
+import {collection, query, where, getDocs} from 'firebase/firestore'
+import {firestore} from "./config/firebase"
+import {auth} from "./config/firebase"
+import {sendPasswordResetEmail} from "firebase/auth"
 
 const ResetPassword = () =>{
+
+    const navigate = useNavigate()
 
     const [email, setEmail] = useState('')
     const [isEmailValid, setIsEmailValid] = useState(false)
     
     const [securityQuestion, setSecurityQuestion] = useState('')
     const [securityAnswer, setSecurityAnswer] = useState('')
+    const [isSecurityAnswerValid, setIsSecurityAnswerValid] = useState(false)
 
 
-    const findAssociatedAccount = async (emailToMatch) => {
-        const allUsers = []
-        allUsers = await UserDataService.getAllUsers()
-        //if(allUsers.)
+    const determineIfValidEmail = async (emailToMatch) => {
+        const usersRef = collection(firestore, "users")
+        const queryResult = query(usersRef, where("email", "==", emailToMatch))
         
+        try{
+            const returnedDoc = await getDocs(queryResult)
+
+            if(returnedDoc._snapshot.docs.size === 0){
+                setIsEmailValid(false)
+            }
+            else{
+                console.log(returnedDoc._snapshot.docChanges[0].doc.data.value.mapValue.fields.securityQuestion.stringValue)
+                setIsEmailValid(true)
+                setSecurityQuestion(returnedDoc._snapshot.docChanges[0].doc.data.value.mapValue.fields.securityQuestion.stringValue)
+            }
+    
+        }
+        catch(err){
+            console.log("error obtaining document reference from users")
+        }
     }
 
+    const determineIfValidSecurityAnswer = async (providedAnswer) => {
+        const usersRef = collection(firestore, "users")
+        const queryResult = query(usersRef, where("email", "==", email), where("securityAnswer", "==", providedAnswer))
+
+        try{
+            const returnedDoc = await getDocs(queryResult)
+
+            if(returnedDoc._snapshot.docs.size === 0){
+                setIsSecurityAnswerValid(false)
+            }
+            else{
+                setIsSecurityAnswerValid(true)
+            }
+    
+        }
+        catch(err){
+            console.log("error obtaining document reference from users")
+        }
+
+
+
+    }
     const emailHandler = (e) => {
         setEmail(e.target.value)
-        findAssociatedAccount(e.target.value)
+        determineIfValidEmail(e.target.value)
     }
 
     const securityAnswerHandler = (e) => {
         setSecurityAnswer(e.target.value)
+        determineIfValidSecurityAnswer(e.target.value)
+    }
+
+    const resetPasswordHandler = () => {
+            console.log("reset request sent successfully")
+            navigate("/reset/request-sent", {state: email})
     }
 
     return (
@@ -36,12 +85,17 @@ const ResetPassword = () =>{
                     <div id="reset-password-form">
                         <form>
                             <label htmlFor="email" className="form-label">Email:</label>
-                            <input id="email" type="email" className="form-control mb-4" value={email} onChange={emailHandler}/>
+                            <input id="email" type="email" className="form-control mb-2" value={email} onChange={emailHandler}/>
+                            {!isEmailValid && <p className="text-danger">Please enter an existing account's email.</p>}
                             {isEmailValid && <><label htmlFor="security-answer" className="form-label">{securityQuestion}</label>
                             <input id="security-answer" type="text" className="form-control mb-4" value={securityAnswer} onChange={securityAnswerHandler}/></>}
+                            <div className="d-flex flex-row w-100 justify-content-center">
+                                <button type="button" className="btn btn-primary w-50 mt-2" disabled={!isSecurityAnswerValid || !isEmailValid} onClick={resetPasswordHandler}>Reset Password</button>
+                            </div>
+
                         </form>
-                        <div className="d-flex justify-content-center h-100 w-100">
-                        <Link style={{width: "50%"}} to="/reset/request-sent"><button className="btn btn-primary w-100 mt-2">Reset Password</button></Link>
+                        <div className="d-flex justify-content-center w-100 pt-5">
+                            <Link to="/login">Back to login</Link>
                         </div>
                     </div>
                 </div>
