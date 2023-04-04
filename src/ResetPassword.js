@@ -1,7 +1,31 @@
 import {Link} from "react-router-dom"
+import {useState} from 'react'
+import UserDataService from './services/user.services'
 
 const ResetPassword = () =>{
 
+    const [email, setEmail] = useState('')
+    const [isEmailValid, setIsEmailValid] = useState(false)
+    
+    const [securityQuestion, setSecurityQuestion] = useState('')
+    const [securityAnswer, setSecurityAnswer] = useState('')
+
+
+    const findAssociatedAccount = async (emailToMatch) => {
+        const allUsers = []
+        allUsers = await UserDataService.getAllUsers()
+        //if(allUsers.)
+        
+    }
+
+    const emailHandler = (e) => {
+        setEmail(e.target.value)
+        findAssociatedAccount(e.target.value)
+    }
+
+    const securityAnswerHandler = (e) => {
+        setSecurityAnswer(e.target.value)
+    }
 
     return (
         <div id="reset-password-display" className="d-flex justify-content-center align-items-center h-100 w-100">
@@ -12,9 +36,9 @@ const ResetPassword = () =>{
                     <div id="reset-password-form">
                         <form>
                             <label htmlFor="email" className="form-label">Email:</label>
-                            <input id="email" type="email" className="form-control mb-4"/>
-                            <label htmlFor="security-question" className="form-label">(sample security question)What is your mother's maiden name?</label>
-                            <input id="security-question" type="text" className="form-control mb-4"/>
+                            <input id="email" type="email" className="form-control mb-4" value={email} onChange={emailHandler}/>
+                            {isEmailValid && <><label htmlFor="security-answer" className="form-label">{securityQuestion}</label>
+                            <input id="security-answer" type="text" className="form-control mb-4" value={securityAnswer} onChange={securityAnswerHandler}/></>}
                         </form>
                         <div className="d-flex justify-content-center h-100 w-100">
                         <Link style={{width: "50%"}} to="/reset/request-sent"><button className="btn btn-primary w-100 mt-2">Reset Password</button></Link>

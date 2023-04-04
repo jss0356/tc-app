@@ -1,23 +1,24 @@
 import {Link, useLocation, useNavigate} from "react-router-dom"
 import {useState} from 'react'
+import {auth} from './config/firebase'
 import PaymentInformation from "./Rcomponents/PaymentInformation"
-import userSettingsDataService from "./services/userSettings.services"
+import UserDataService from "./services/user.services"
 
 const InitialSettingsPaymentInfo = () => {
 
     const navigate = useNavigate()
 
     const location = useLocation()
-    const [currentInitialSettings, setCurrentIntialSettings] = useState(location.state)
-
+    const [currentInitialSettings, setCurrentIntialSettings] = useState(location.state.newInitialSettings)
+    console.log(location.state.id)
     console.log("state retrieved: ", currentInitialSettings)
 
     const addInitialUserSettings = async (userSettingsToAdd) => {
         try{
-            await userSettingsDataService.addUserSettings(userSettingsToAdd)
+            await UserDataService.initializeUserSettings(location.state.id, userSettingsToAdd)
         }
         catch(err){
-            console.log("Unable to update settings")
+            console.log(err)
         }
     }
 

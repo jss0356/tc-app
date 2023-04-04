@@ -39,6 +39,11 @@ import {collection,
             return getDoc(userDoc)
         }
 
+        initializeUserSettings = (userID, initialSettings) => {
+            const userSettingsCollectionRef = collection(firestore, `users/${userID}/userSettings`)
+            return addDoc(userSettingsCollectionRef, initialSettings)
+        }
+
     }
 
     export default new UserDataService()

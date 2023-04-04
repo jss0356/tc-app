@@ -1,5 +1,7 @@
 import {Link, useNavigate} from 'react-router-dom'
 import { useState } from 'react';
+import {firestore} from './config/firebase'
+import {setDoc} from 'firebase/firestore'
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import {auth} from './config/firebase'
 import userDataService from './services/user.services'
@@ -22,7 +24,7 @@ const Registration = () => {
     const [receiveEmailNotifications, setRecieveEmailNotifications] = useState(false)
     
     const addNewUser = async (newUser) => {
-        await userDataService.addUser(newUser)
+        return await userDataService.addUser(newUser)
     }
 
 
@@ -46,16 +48,19 @@ const Registration = () => {
             }
             
             try{
-                await addNewUser(newUser)
+                let addedUserRef= await addNewUser(newUser)
+                await setDoc(addedUserRef, {userID: addedUserRef.id}, {merge: true})
                 console.log("User successfully added", newUser)
+                console.log("returned data", addedUserRef)
                 
+                
+
                 //lastly, set default settings with the initial field of emailNotifications.
                 const initialSettings = {
-                    userID: auth.currentUser.uid,
                     receiveEmailNotifications
                 }
                 
-                navigate("/register/initial-profile-settings", {state: initialSettings})
+                navigate("/register/initial-profile-settings", {state: {initialSettings, id: addedUserRef.id}})
                 
             }
             catch(err){

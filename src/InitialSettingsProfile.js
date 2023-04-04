@@ -12,8 +12,9 @@ const InitialSettingsProfile = () => {
     const [profileBio, setProfileBio] = useState('')
     const [profileImageDisplay, setProfileImageDisplay] = useState(ProfileDefault)
     const location = useLocation()
+    console.log(location.state.id)
 
-    const [currentInitialSettings, setCurrentIntialSettings] = useState(location.state)
+    const [currentInitialSettings, setCurrentIntialSettings] = useState(location.state.initialSettings)
     
     //becomes true if attempting to submit the form with an invalid image type.
     const [isInvalidImage, setIsInvalidImage] = useState(true)
@@ -79,13 +80,13 @@ const InitialSettingsProfile = () => {
         e.preventDefault()
 
         const newInitialSettings = {...currentInitialSettings, profileBio, IsProfileImageSet: true}
-        navigate("/register/initial-payment-settings", {state: newInitialSettings})
+        navigate("/register/initial-payment-settings", {state: {newInitialSettings, id: location.state.id}})
     }
 
     //ignore whatever is in the state variables and set empty values (no changes made to the settings and no profile image uploaded to firebase storage).
     const decideLaterHandler = () => {
         const newInitialSettings = {...currentInitialSettings, IsProfileImageSet: false,  profileBio: ""}
-        navigate("/register/initial-payment-settings", {state: newInitialSettings})
+        navigate("/register/initial-payment-settings", {state: {newInitialSettings, id: location.state.id}})
     }
 
     return (
