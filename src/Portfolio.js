@@ -7,8 +7,40 @@ import AddIcon from './logos/Add-Icon.png'
 import { LinkContainer } from 'react-router-bootstrap'
 import Modal from 'react-bootstrap/Modal'
 import Button from "react-bootstrap/Button"
+import CalculateGradeForm from './CalculateGradeForm'
 
 const Portfolio = () =>{
+
+    const[selectedGrade, setSelectedGrade] = useState('-');
+    const[selectedGraded, setSelectedGraded] = useState();
+    const DisplayForm = (props) => {
+        if(props.graded == "Yes") {
+            return(
+
+                <div>
+                    <select className="form-select custom-select mb-2" value={selectedGrade} onChange={e => setSelectedGrade(e.target.value)}>
+                        <option value="">Select a Grade:</option>
+                        <option value="N0">N0</option>
+                        <option value="PR 1">PR 1</option>
+                        <option value="FR 1.5">FR 1.5</option>
+                        <option value="GOOD 2">GOOD 2</option>
+                        <option value="VG 3">VG 3</option>
+                        <option value="VG-EX 4">VG-EX 4</option>
+                        <option value="EX 5">EX 5</option>
+                        <option value="EX-MT 6">EX-MT 6</option>
+                        <option value="NM 7">NM 7</option>
+                        <option value="NM-MT 8">NM-MT 8</option>
+                        <option value="MINT 9">MINT 9</option>
+                        <option value="GEM-MT 10">GEM-MT 10</option>
+                    </select>
+                    {<p> Grade: {selectedGrade}</p>}
+                </div>
+
+            )
+        } else if (props.graded == "No") {
+            return <CalculateGradeForm/>
+        }
+    }
 
     const [show, setShow] = useState(false);
 
@@ -22,12 +54,11 @@ const Portfolio = () =>{
     </Modal.Header>
     <Modal.Body>
     
-        <form>
+    <form>
             <div className="form-group mb-2">
                 <label htmlFor="uploadCardImage">Upload card image:</label>
                 <input type="file" className="form-control-file d-block" id="uploadCardImage"/>
             </div>
-
 
             <label htmlFor="add-portfolio-title">Card Name:</label>
             <input className="form-control mb-2" type="text" id="add-portfolio-title"/>
@@ -39,35 +70,18 @@ const Portfolio = () =>{
                     <option value="Basketball">Basketball</option>
             </select>
 
-            <select className="form-select mb-2" aria-labelledby="Select card genre">
+            <select className="form-select mb-2" aria-labelledby="Select card genre" value={selectedGraded} onChange={e => setSelectedGraded(e.target.value)}>
                 <option value="">Do you know the PSA grade?</option>
-                    <option value="Baseball">Yes</option>
-                    <option value="Football">No</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
             </select>
 
-
-
-            <select class="form-select custom-select">
-                <option value="">Set the PSA-Grade For the Card:</option>
-                <option value="1">PSA-1</option>
-                <option value="2">PSA-2</option>
-                <option value="3">PSA-3</option>
-                <option value="4">PSA-4</option>
-                <option value="5">PSA-5</option>
-                <option value="6">PSA-6</option>
-                <option value="7">PSA-7</option>
-                <option value="8">PSA-8</option>
-                <option value="9">PSA-9</option>
-                <option value="10">PSA-10</option>
-            </select>
-
+            <DisplayForm graded = {selectedGraded}/>
 
             <div className="form-group">
                 <label htmlFor="card-description">Card Description</label>
                 <textarea className="form-control" id="card-description" rows="3"></textarea>
             </div>
-
-
 
         </form>
 
