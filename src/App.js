@@ -35,7 +35,7 @@ import RegistrationSuccess from './RegistrationSuccess';
 function App() {
   return (
     <div className="App" style={{backgroundColor: "#5cdb95"}}>
-      <div className="container">
+      <div className="container" style={{overflow:"auto"}}>
 
 
 
