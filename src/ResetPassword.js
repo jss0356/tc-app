@@ -71,9 +71,16 @@ const ResetPassword = () =>{
         determineIfValidSecurityAnswer(e.target.value)
     }
 
-    const resetPasswordHandler = () => {
-            console.log("reset request sent successfully")
-            navigate("/reset/request-sent", {state: email})
+    const resetPasswordHandler = async () => {
+            try{
+                await sendPasswordResetEmail(auth, email)
+                console.log("reset request sent successfully")
+                navigate("/reset/request-sent", {state: email})
+    
+            }
+            catch(err){
+                console.log("Error with sending password reset request.")
+            }
     }
 
     return (
