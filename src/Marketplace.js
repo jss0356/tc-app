@@ -18,7 +18,7 @@ const Marketplace = () => {
                                             
                         <Card.Img variant="top" src={Basketball1} style={{height:"100px", width: "100px"}}/>
                             <Card.Body>
-                                <LinkContainer to="/my-account/my-portfolios/1/2"><Card.Title className="text-center"><h5>Card 2</h5>
+                                <LinkContainer to="/marketplace/1"><Card.Title className="text-center"><h5>Card 2</h5>
                                 <h6>$32.99</h6>
                                 </Card.Title></LinkContainer>
                             </Card.Body>
@@ -27,7 +27,7 @@ const Marketplace = () => {
                                             
                         <Card.Img variant="top" src={Basketball1} style={{height:"100px", width: "100px"}}/>
                             <Card.Body>
-                                <LinkContainer to="/my-account/my-portfolios/1/2"><Card.Title className="text-center"><h5>Card 2</h5>
+                                <LinkContainer to="/marketplace/1"><Card.Title className="text-center"><h5>Card 2</h5>
                                 <h6>$32.99</h6> </Card.Title></LinkContainer>
                             </Card.Body>
                     </Card>
@@ -35,7 +35,7 @@ const Marketplace = () => {
                                             
                         <Card.Img variant="top" src={Basketball1} style={{height:"100px", width: "100px"}}/>
                             <Card.Body>
-                                <LinkContainer to="/my-account/my-portfolios/1/2"><Card.Title className="text-center"><h5>Card 2</h5>
+                                <LinkContainer to="/marketplace/1"><Card.Title className="text-center"><h5>Card 2</h5>
                                 <h6>$32.99</h6></Card.Title></LinkContainer>
                             </Card.Body>
                     </Card>
@@ -43,7 +43,7 @@ const Marketplace = () => {
                                             
                         <Card.Img variant="top" src={Basketball1} style={{height:"100px", width: "100px"}}/>
                             <Card.Body>
-                                <LinkContainer to="/my-account/my-portfolios/1/2"><Card.Title className="text-center"><h5>Card 2</h5>
+                                <LinkContainer to="/marketplace/1"><Card.Title className="text-center"><h5>Card 2</h5>
                                 <h6>$32.99</h6></Card.Title></LinkContainer>
                             </Card.Body>
                     </Card>
@@ -51,7 +51,7 @@ const Marketplace = () => {
                                             
                         <Card.Img variant="top" src={Basketball1} style={{height:"100px", width: "100px"}}/>
                             <Card.Body>
-                                <LinkContainer to="/my-account/my-portfolios/1/2"><Card.Title className="text-center"><h5>Card 2</h5>
+                                <LinkContainer to="/marketplace/1"><Card.Title className="text-center"><h5>Card 2</h5>
                                 <h6>$32.99</h6></Card.Title></LinkContainer>
                             </Card.Body>
                     </Card>
@@ -59,7 +59,7 @@ const Marketplace = () => {
                                             
                         <Card.Img variant="top" src={Basketball1} style={{height:"100px", width: "100px"}}/>
                             <Card.Body>
-                                <LinkContainer to="/my-account/my-portfolios/1/2"><Card.Title className="text-center"><h5>Card 2</h5>
+                                <LinkContainer to="/marketplace/1"><Card.Title className="text-center"><h5>Card 2</h5>
                                 <h6>$32.99</h6></Card.Title></LinkContainer>
                             </Card.Body>
                     </Card>
@@ -67,7 +67,7 @@ const Marketplace = () => {
                                             
                         <Card.Img variant="top" src={Basketball1} style={{height:"100px", width: "100px"}}/>
                             <Card.Body>
-                                <LinkContainer to="/my-account/my-portfolios/1/2"><Card.Title className="text-center"><h5>Card 2</h5>
+                                <LinkContainer to="/marketplace/1"><Card.Title className="text-center"><h5>Card 2</h5>
                                 <h6>$32.99</h6></Card.Title></LinkContainer>
                             </Card.Body>
                     </Card>
@@ -75,7 +75,7 @@ const Marketplace = () => {
                                             
                         <Card.Img variant="top" src={Basketball1} style={{height:"100px", width: "100px"}}/>
                             <Card.Body>
-                                <LinkContainer to="/my-account/my-portfolios/1/2"><Card.Title className="text-center"><h5>Card 2</h5>
+                                <LinkContainer to="/marketplace/1"><Card.Title className="text-center"><h5>Card 2</h5>
                                 <h6>$32.99</h6></Card.Title></LinkContainer>
                             </Card.Body>
                     </Card> 
@@ -83,7 +83,7 @@ const Marketplace = () => {
                                             
                                             <Card.Img variant="top" src={Basketball1} style={{height:"100px", width: "100px"}}/>
                                                 <Card.Body>
-                                                    <LinkContainer to="/my-account/my-portfolios/1/2"><Card.Title className="text-center"><h5>Card 2</h5>
+                                                    <LinkContainer to="/marketplace/1"><Card.Title className="text-center"><h5>Card 2</h5>
                                 <h6>$32.99</h6></Card.Title></LinkContainer>
                                                 </Card.Body>
                     </Card>
@@ -91,7 +91,7 @@ const Marketplace = () => {
                                             
                                             <Card.Img variant="top" src={Basketball1} style={{height:"100px", width: "100px"}}/>
                                                 <Card.Body>
-                                                    <LinkContainer to="/my-account/my-portfolios/1/2"><Card.Title className="text-center"><h5>Card 2</h5>
+                                                    <LinkContainer to="/marketplace/1"><Card.Title className="text-center"><h5>Card 2</h5>
                                 <h6>$32.99</h6></Card.Title></LinkContainer>
                                                 </Card.Body>
                                         </Card>         
@@ -104,7 +104,7 @@ const Marketplace = () => {
                                             
                         <Card.Img variant="top" src={Basketball1} style={{height:"100px", width: "100px"}}/>
                             <Card.Body>
-                                <LinkContainer to="/my-account/my-portfolios/1/2"><Card.Title className="text-center"><h5>Card 2</h5>
+                                <LinkContainer to="/marketplace/1"><Card.Title className="text-center"><h5>Card 2</h5>
                                 <h6>$32.99</h6></Card.Title></LinkContainer>
                             </Card.Body>
                     </Card>
@@ -112,7 +112,7 @@ const Marketplace = () => {
                                             
                         <Card.Img variant="top" src={Basketball1} style={{height:"100px", width: "100px"}}/>
                             <Card.Body>
-                                <LinkContainer to="/my-account/my-portfolios/1/2"><Card.Title className="text-center"><h5>Card 2</h5>
+                                <LinkContainer to="/marketplace/1"><Card.Title className="text-center"><h5>Card 2</h5>
                                 <h6>$32.99</h6></Card.Title></LinkContainer>
                             </Card.Body>
                     </Card>
@@ -120,7 +120,7 @@ const Marketplace = () => {
                                             
                         <Card.Img variant="top" src={Basketball1} style={{height:"100px", width: "100px"}}/>
                             <Card.Body>
-                                <LinkContainer to="/my-account/my-portfolios/1/2"><Card.Title className="text-center"><h5>Card 2</h5>
+                                <LinkContainer to="/marketplace/1"><Card.Title className="text-center"><h5>Card 2</h5>
                                 <h6>$32.99</h6></Card.Title></LinkContainer>
                             </Card.Body>
                     </Card>
@@ -128,7 +128,7 @@ const Marketplace = () => {
                                             
                         <Card.Img variant="top" src={Basketball1} style={{height:"100px", width: "100px"}}/>
                             <Card.Body>
-                                <LinkContainer to="/my-account/my-portfolios/1/2"><Card.Title className="text-center"><h5>Card 2</h5>
+                                <LinkContainer to="/marketplace/1"><Card.Title className="text-center"><h5>Card 2</h5>
                                 <h6>$32.99</h6></Card.Title></LinkContainer>
                             </Card.Body>
                     </Card>
@@ -136,7 +136,7 @@ const Marketplace = () => {
                                             
                         <Card.Img variant="top" src={Basketball1} style={{height:"100px", width: "100px"}}/>
                             <Card.Body>
-                                <LinkContainer to="/my-account/my-portfolios/1/2"><Card.Title className="text-center"><h5>Card 2</h5>
+                                <LinkContainer to="/marketplace/1"><Card.Title className="text-center"><h5>Card 2</h5>
                                 <h6>$32.99</h6></Card.Title></LinkContainer>
                             </Card.Body>
                     </Card>
@@ -144,7 +144,7 @@ const Marketplace = () => {
                                             
                         <Card.Img variant="top" src={Basketball1} style={{height:"100px", width: "100px"}}/>
                             <Card.Body>
-                                <LinkContainer to="/my-account/my-portfolios/1/2"><Card.Title className="text-center"><h5>Card 2</h5>
+                                <LinkContainer to="/marketplace/1"><Card.Title className="text-center"><h5>Card 2</h5>
                                 <h6>$32.99</h6></Card.Title></LinkContainer>
                             </Card.Body>
                     </Card>
@@ -152,7 +152,7 @@ const Marketplace = () => {
                                             
                         <Card.Img variant="top" src={Basketball1} style={{height:"100px", width: "100px"}}/>
                             <Card.Body>
-                                <LinkContainer to="/my-account/my-portfolios/1/2"><Card.Title className="text-center"><h5>Card 2</h5>
+                                <LinkContainer to="/marketplace/1"><Card.Title className="text-center"><h5>Card 2</h5>
                                 <h6>$32.99</h6></Card.Title></LinkContainer>
                             </Card.Body>
                     </Card>
@@ -160,7 +160,7 @@ const Marketplace = () => {
                                             
                         <Card.Img variant="top" src={Basketball1} style={{height:"100px", width: "100px"}}/>
                             <Card.Body>
-                                <LinkContainer to="/my-account/my-portfolios/1/2"><Card.Title className="text-center"><h5>Card 2</h5>
+                                <LinkContainer to="/marketplace/1"><Card.Title className="text-center"><h5>Card 2</h5>
                                 <h6>$32.99</h6></Card.Title></LinkContainer>
                             </Card.Body>
                     </Card> 
@@ -168,7 +168,7 @@ const Marketplace = () => {
                                             
                                             <Card.Img variant="top" src={Basketball1} style={{height:"100px", width: "100px"}}/>
                                                 <Card.Body>
-                                                    <LinkContainer to="/my-account/my-portfolios/1/2"><Card.Title className="text-center"><h5>Card 2</h5>
+                                                    <LinkContainer to="/marketplace/1"><Card.Title className="text-center"><h5>Card 2</h5>
                                 <h6>$32.99</h6></Card.Title></LinkContainer>
                                                 </Card.Body>
                     </Card>
@@ -176,7 +176,7 @@ const Marketplace = () => {
                                             
                                             <Card.Img variant="top" src={Basketball1} style={{height:"100px", width: "100px"}}/>
                                                 <Card.Body>
-                                                    <LinkContainer to="/my-account/my-portfolios/1/2"><Card.Title className="text-center"><h5>Card 2</h5>
+                                                    <LinkContainer to="/marketplace/1"><Card.Title className="text-center"><h5>Card 2</h5>
                                 <h6>$32.99</h6></Card.Title></LinkContainer>
                                                 </Card.Body>
                                         </Card>         
@@ -189,7 +189,7 @@ const Marketplace = () => {
                                             
                         <Card.Img variant="top" src={Basketball1} style={{height:"100px", width: "100px"}}/>
                             <Card.Body>
-                                <LinkContainer to="/my-account/my-portfolios/1/2"><Card.Title className="text-center"><h5>Card 2</h5>
+                                <LinkContainer to="/marketplace/1"><Card.Title className="text-center"><h5>Card 2</h5>
                                 <h6>$32.99</h6></Card.Title></LinkContainer>
                             </Card.Body>
                     </Card>
@@ -197,7 +197,7 @@ const Marketplace = () => {
                                             
                         <Card.Img variant="top" src={Basketball1} style={{height:"100px", width: "100px"}}/>
                             <Card.Body>
-                                <LinkContainer to="/my-account/my-portfolios/1/2"><Card.Title className="text-center"><h5>Card 2</h5>
+                                <LinkContainer to="/marketplace/1"><Card.Title className="text-center"><h5>Card 2</h5>
                                 <h6>$32.99</h6></Card.Title></LinkContainer>
                             </Card.Body>
                     </Card>
@@ -205,7 +205,7 @@ const Marketplace = () => {
                                             
                         <Card.Img variant="top" src={Basketball1} style={{height:"100px", width: "100px"}}/>
                             <Card.Body>
-                                <LinkContainer to="/my-account/my-portfolios/1/2"><Card.Title className="text-center"><h5>Card 2</h5>
+                                <LinkContainer to="/marketplace/1"><Card.Title className="text-center"><h5>Card 2</h5>
                                 <h6>$32.99</h6></Card.Title></LinkContainer>
                             </Card.Body>
                     </Card>
@@ -213,7 +213,7 @@ const Marketplace = () => {
                                             
                         <Card.Img variant="top" src={Basketball1} style={{height:"100px", width: "100px"}}/>
                             <Card.Body>
-                                <LinkContainer to="/my-account/my-portfolios/1/2"><Card.Title className="text-center"><h5>Card 2</h5>
+                                <LinkContainer to="/marketplace/1"><Card.Title className="text-center"><h5>Card 2</h5>
                                 <h6>$32.99</h6></Card.Title></LinkContainer>
                             </Card.Body>
                     </Card>
@@ -221,7 +221,7 @@ const Marketplace = () => {
                                             
                         <Card.Img variant="top" src={Basketball1} style={{height:"100px", width: "100px"}}/>
                             <Card.Body>
-                                <LinkContainer to="/my-account/my-portfolios/1/2"><Card.Title className="text-center"><h5>Card 2</h5>
+                                <LinkContainer to="/marketplace/1"><Card.Title className="text-center"><h5>Card 2</h5>
                                 <h6>$32.99</h6></Card.Title></LinkContainer>
                             </Card.Body>
                     </Card>
@@ -229,7 +229,7 @@ const Marketplace = () => {
                                             
                         <Card.Img variant="top" src={Basketball1} style={{height:"100px", width: "100px"}}/>
                             <Card.Body>
-                                <LinkContainer to="/my-account/my-portfolios/1/2"><Card.Title className="text-center"><h5>Card 2</h5>
+                                <LinkContainer to="/marketplace/1"><Card.Title className="text-center"><h5>Card 2</h5>
                                 <h6>$32.99</h6></Card.Title></LinkContainer>
                             </Card.Body>
                     </Card>
@@ -237,7 +237,7 @@ const Marketplace = () => {
                                             
                         <Card.Img variant="top" src={Basketball1} style={{height:"100px", width: "100px"}}/>
                             <Card.Body>
-                                <LinkContainer to="/my-account/my-portfolios/1/2"><Card.Title className="text-center"><h5>Card 2</h5>
+                                <LinkContainer to="/marketplace/1"><Card.Title className="text-center"><h5>Card 2</h5>
                                 <h6>$32.99</h6></Card.Title></LinkContainer>
                             </Card.Body>
                     </Card>
@@ -245,7 +245,7 @@ const Marketplace = () => {
                                             
                         <Card.Img variant="top" src={Basketball1} style={{height:"100px", width: "100px"}}/>
                             <Card.Body>
-                                <LinkContainer to="/my-account/my-portfolios/1/2"><Card.Title className="text-center"><h5>Card 2</h5>
+                                <LinkContainer to="/marketplace/1"><Card.Title className="text-center"><h5>Card 2</h5>
                                 <h6>$32.99</h6></Card.Title></LinkContainer>
                             </Card.Body>
                     </Card> 
@@ -253,7 +253,7 @@ const Marketplace = () => {
                                             
                                             <Card.Img variant="top" src={Basketball1} style={{height:"100px", width: "100px"}}/>
                                                 <Card.Body>
-                                                    <LinkContainer to="/my-account/my-portfolios/1/2"><Card.Title className="text-center"><h5>Card 2</h5>
+                                                    <LinkContainer to="/marketplace/1"><Card.Title className="text-center"><h5>Card 2</h5>
                                 <h6>$32.99</h6></Card.Title></LinkContainer>
                                                 </Card.Body>
                     </Card>
@@ -261,7 +261,7 @@ const Marketplace = () => {
                                             
                                             <Card.Img variant="top" src={Basketball1} style={{height:"100px", width: "100px"}}/>
                                                 <Card.Body>
-                                                    <LinkContainer to="/my-account/my-portfolios/1/2"><Card.Title className="text-center"><h5>Card 2</h5>
+                                                    <LinkContainer to="/marketplace/1"><Card.Title className="text-center"><h5>Card 2</h5>
                                 <h6>$32.99</h6></Card.Title></LinkContainer>
                                                 </Card.Body>
                                         </Card>         
