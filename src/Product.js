@@ -6,8 +6,14 @@ import RatingStarFilled from './logos/RatingStarFull.png'
 import ShoppingCartIcon from './logos/ShoppingCartIcon.png'
 import AuctionIcon from './logos/MarketplaceUploadIcon.png'
 
+
+import LineGraph from './Rcomponents/LineGraph'
+
+
 const Product = () =>{
     const {productID} = useParams()
+
+   
 
     return(
         <div id="container" className='w-100 h-100 d-flex flex-column'>
@@ -16,7 +22,7 @@ const Product = () =>{
             </div>
             
             
-            <div id="product-container" className='w-100 h-100 d-flex flex-column' style={{backgroundColor:"#edf5e1"}}>
+            <div id="product-container" className='w-100 pb-5 d-flex flex-column' style={{backgroundColor:"#edf5e1"}}>
                 <div id="product-image" className=" w-100 d-flex flex-column align-items-center" style={{height:"40%"}}>
                     <img src={SampleProductImage} alt="Product" width="120px" className="pt-2 border rounded"/>
                     <h2>Shohei Othani</h2>
@@ -26,13 +32,7 @@ const Product = () =>{
 
                 <div className='w-100 h-100 d-flex flex-row'>
                     <div id="left-display" className='ps-3 h-100 w-100 d-flex flex-column justify-content-center gap-2' >
-                    <img src={ShadedLineGraph} alt="Shaded Line Graph" width="500px"/>                        
-                    <div className='input-group mb-3 w-100  d-flex flex-row justify-content-center' style={{height:"5%"}}>
-                        <button className='btn btn-primary border border-dark'>1m</button>
-                        <button className='btn btn-primary border border-dark'>3m</button>
-                        <button className='btn btn-primary border border-dark'>6m</button>
-                        <button className='btn btn-primary border border-dark active'>1y</button>
-                    </div>
+                        <LineGraph/>
 
                         
                         <div>
