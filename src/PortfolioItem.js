@@ -7,6 +7,7 @@ import EditIcon from './logos/EditIcon.png'
 import Modal from 'react-bootstrap/Modal'
 import Button from "react-bootstrap/Button"
 import {useState} from 'react'
+import LineGraph from './Rcomponents/LineGraph'
 
 const PortfolioItem = () =>{
 
@@ -83,7 +84,7 @@ const PortfolioItem = () =>{
             <div id="main-navbar" style={{marginBottom:"130px"}}>
                 <MainNavbar/>
             </div>
-            <div id="portfolio-item-contents-container" className="h-100 w-100 d-flex flex-column" style={{backgroundColor: "#edf5e1"}} >  
+            <div id="portfolio-item-contents-container" className="w-100 d-flex flex-column" style={{backgroundColor: "#edf5e1"}} >  
                 {PortfolioToMarketplaceModal}
 
                     <button id="placeOnMarketplace" className='btn btn-light border border-dark d-grid' onClick={() => {setShow(true)}}style={{width:"30px", height:"30px", placeContent:"center"}}><img src={MarketplaceIcon} alt="Add" width="30px"/></button>
@@ -101,14 +102,7 @@ const PortfolioItem = () =>{
                     <div id="content-display" className='d-flex w-100 h-100 flex-row'>
                         <div id="left-display" className="h-100 w-100">
                             <div id="card-stats">
-                                    <img src={ShadedLineGraph} alt="Shaded Line Graph" width="500px"/>                        
-                                    <div className='input-group mb-3 h-100 w-100  d-flex flex-row justify-content-center'>
-                                        <button className='btn btn-primary border border-dark'>1m</button>
-                                        <button className='btn btn-primary border border-dark'>3m</button>
-                                        <button className='btn btn-primary border border-dark'>6m</button>
-                                        <button className='btn btn-primary border border-dark active'>1y</button>
-
-                                    </div>
+                                <LineGraph/>
                                 <div id="text-price-stats" className='ms-3'>
                                     <h3 className='text-center'>Card Price Stats:</h3>
                                     <h5 className='d-inline'>Current Estimated Market Value:</h5>

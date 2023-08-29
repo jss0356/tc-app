@@ -1,7 +1,7 @@
 import {useParams} from 'react-router-dom'
 import {useState} from 'react'
 import MainNavbar from './Rcomponents/MainNavbar'
-import ShadedLineGraph from './image/ShadedLineGraph.png'
+import LineGraph from './Rcomponents/LineGraph'
 import SearchIcon from './logos/SearchIcon.png'
 import AddIcon from './logos/Add-Icon.png'
 import { LinkContainer } from 'react-router-bootstrap'
@@ -113,9 +113,10 @@ const Portfolio = () =>{
 
             {uploadCardModal}
 
-            <div id="portfolio-contents-container" className="h-100 w-100 d-flex flex-column" style={{backgroundColor: "#edf5e1"}} >
+            <div id="portfolio-contents-container" className="w-100 d-flex flex-column" style={{backgroundColor: "#edf5e1"}} >
                 
                 <div className='w-100 d-flex flex-row gap-3'>
+                    
                     <button id="uploadToPortfolio" className='btn d-grid' onClick={handleShow} style={{width:"30px", height:"30px", placeContent:"center"}}><img src={AddIcon} alt="Add" width="30px"/></button>
                     <div className="form-check form-switch">
                         <input className="form-check-input" type="checkbox" id="sortIntoSections"/>
@@ -128,16 +129,9 @@ const Portfolio = () =>{
                 <hr />
 
                 <div id="inner-display" className='w-100 h-100 d-flex flex-row'>
-                    <div id="left-display" className=''>
-                    <div id="portfolio-stats">
-                                <img src={ShadedLineGraph} alt="Shaded Line Graph" width="500px"/>                        
-                                <div className='input-group mb-3 h-100 w-100  d-flex flex-row justify-content-center'>
-                                    <button className='btn btn-primary border border-dark'>1m</button>
-                                    <button className='btn btn-primary border border-dark'>3m</button>
-                                    <button className='btn btn-primary border border-dark'>6m</button>
-                                    <button className='btn btn-primary border border-dark active'>1y</button>
-
-                                </div>
+                    <div id="left-display" className='w-100 h-100'>
+                    <div id="portfolio-stats" className=''>
+                    <LineGraph/> 
                             <div id="text-stats" className='ms-3'>
                                 <h3 className='text-center'>Portfolio Stats:</h3>
                                 <h5 className='d-inline'>Current Estimated Market Value:</h5>
