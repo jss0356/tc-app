@@ -35,6 +35,7 @@ import RegistrationSuccess from './RegistrationSuccess';
 import UserSettingsProvider from './app/UserSettingsProvider';
 
 function App() {
+  const [cart, setCart] = useState([]);
   return (
     <div className="App" style={{backgroundColor: "#5cdb95"}}>
       <div className="container" style={{overflow:"auto"}}>
@@ -81,10 +82,11 @@ function App() {
           <Route path = "/manage-data-admin" element={<ManageDataAdmin/>}/>
 
           <Route path="/marketplace">
-            <Route index element={<Marketplace/>}/>
+            <Route index element={<Marketplace cart={cart} setCart={setCart}/>}/>
             <Route path=":productID" element={<Product/>}/>
-            <Route path="search-results" element={<MarketplaceSearch/>}/>
-            <Route path="cart" element={<Cart/>}/>
+{/*<Route path="search-results" element={<MarketplaceSearch cart={cart} setCart={setCart}/>}/>*/}
+             <Route path="search-results" element={<Marketplace cart={cart} setCart={setCart} />}/>
+            <Route path="cart" element={<Cart cart={cart}/>}/>
             <Route path="payment">
               <Route index element={<PaymentInfo/>}/>
               <Route path="success" element={<PaymentSuccess/>}/>
