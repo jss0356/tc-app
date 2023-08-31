@@ -2,7 +2,8 @@ import MainNavbarMarketplace from "./Rcomponents/MainNavbarMarketplace"
 import Card from 'react-bootstrap/Card'
 import { LinkContainer } from "react-router-bootstrap"
 import Basketball1 from "./image/basketball/card1.jpg"
-
+import Spinner from "react-bootstrap/Spinner";
+import Cart from "./Cart";
 const Marketplace = ({ cart, setCart }) => {
      const [cards, setCards] = useState([]);
   //this is the state that will hold the value of the input
