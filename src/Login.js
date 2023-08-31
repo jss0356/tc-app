@@ -1,9 +1,14 @@
 import {Link, useNavigate} from 'react-router-dom'
 import {useState} from 'react'
 import WebLogo from './Rcomponents/WebLogo'
-import {auth} from './config/firebase'
+import {auth, firestore} from './config/firebase'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { signInWithGoogle } from './config/firebase'
+
+import {query, where, collection, getDocs, setDoc} from 'firebase/firestore'
+
+
+import UserDataService from './services/user.services'
 
 import './signInButton.css'
 
@@ -28,7 +33,7 @@ const Login = () => {
         }
     }
 
-    //sign in using google with a popup, store results of current authenticated user in local storage.
+    //sign in using google with a popup, store results of current authenticated user in database.
     const googleSignInHandler = async () => {
         const result = await signInWithGoogle()
         console.log(result)
@@ -37,10 +42,31 @@ const Login = () => {
         const email = result.user.email
         const profilePic = result.user.photoURL
 
-        localStorage.setItem("name", name)
-        localStorage.setItem("email", email)
-        localStorage.setItem("profilePic", profilePic)
+        const usersRef = collection(firestore, '/users')        
+        console.log(usersRef)
+        const q = query(usersRef, where("email", "==", email))
         
+        try{
+            
+
+            const resultDoc = await getDocs(q)
+            const fullCollection = await getDocs(usersRef)
+            if(resultDoc._snapshot.docs.size == 0 || fullCollection.empty){
+                const userDocToAdd = {username: name, email, authenticationMethod: "google"}
+                try{
+                    const userRef = await UserDataService.addUser(userDocToAdd)
+                    setDoc(userRef, {userID: userRef.id}, {merge: true})
+                }catch(err){
+                    console.log("Unable to add new user data to database.")
+                }
+
+            }
+        }catch(err){
+            console.log("Unable to determine if user data already exists.")
+        }
+
+
+    
         navigate("/home")
     }
     return (

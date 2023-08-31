@@ -1,29 +1,35 @@
 
+import { useContext, useState } from "react"
+import { UserSettingsContext } from "./app/UserSettingsProvider"
+
 const GenSettings = () => {
+
+
+    const {accountEmail, setAccountEmail, receiveEmailNotifications, setRecieveEmailNotifications} = useContext(UserSettingsContext)
+
     return (
-        <div id="setting-options" className="vstack d-flex justify-content-center gap-3 h-100 w-50 border border-dark">
-            <label>General Settings</label>
-            <label htmlFor="sample-setting">Sample Setting 1:</label>
-            <select id="sample-setting"className="form-select" aria-label="Default select example">
-                <option value="">Open this select menu</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
-                </select>
+        <div id="setting-options" className="ps-3 d-flex flex-column gap-3 h-100 w-50 border border-dark">
+            <label className="text-center">General Settings</label>
+
+            <div id="form-input-account-email d-flex">
             
-            <div className="form-check form-switch">
-                <input className="form-check-input" type="checkbox" id="flexSwitchCheckDefault"/>
-                <label className="form-check-label" htmlFor="flexSwitchCheckDefault">Sample Setting 2:</label>
+                <label htmlFor="account-email" className="d-inline pe-2">Account Email:</label>
+                <input type="text" value={accountEmail} onChange={(e) => setAccountEmail(e.target.value)} className="w-75 form-control d-inline" />
+            
+            </div>            
+            
+            <div className="d-flex flex-row w-100">
+                <label className="form-label d-inline pe-2" htmlFor="flexSwitchCheckDefault" >Recieve Email Notifications: </label>
+
+                <div className="form-check form-switch">
+
+                    <input className="form-check-input d-inline" type="checkbox" id="flexSwitchCheckDefault" checked={receiveEmailNotifications} onChange={() => setRecieveEmailNotifications(!receiveEmailNotifications)}/>
+
+                </div>
             </div>
 
             
-                <label htmlFor="sample-setting">Sample Setting 3:</label>
-            <select id="sample-setting"className="form-select" aria-label="Default select example">
-                <option value="">Open this select menu</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
-                </select>
+
         </div>
     )
 }

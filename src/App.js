@@ -32,6 +32,8 @@ import HomeAdmin from './HomeAdmin';
 import ManageDataAdmin from './ManageDataAdmin';
 import RegistrationSuccess from './RegistrationSuccess';
 
+import UserSettingsProvider from './app/UserSettingsProvider';
+
 function App() {
   return (
     <div className="App" style={{backgroundColor: "#5cdb95"}}>
@@ -57,7 +59,10 @@ function App() {
 
           <Route path="/my-account">
             <Route index element={<ViewProfile/>}/>
-            <Route path="account-settings" element={<AccountSettings/>}/>
+            <Route path="account-settings" element={
+            <UserSettingsProvider>
+              <AccountSettings/> 
+            </UserSettingsProvider>}/>
             <Route path="my-portfolios">
               <Route index element={<MyPortfolios/>}/>
               <Route path=":portfolioID">

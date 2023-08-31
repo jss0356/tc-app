@@ -41,10 +41,11 @@ const Registration = () => {
             
             //successful registration, so add user to db
             const newUser = {
-                email,
+                email: email.toLowerCase(),
                 securityAnswer,
                 securityQuestion,
-                username
+                username,
+                authenticationMethod: "email"
             }
             
             try{

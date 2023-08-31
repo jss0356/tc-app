@@ -1,28 +1,104 @@
-const PaySettings = () => {
-    return (
-        <div id="setting-options" className="vstack d-flex justify-content-center gap-3 h-100 w-50 border border-dark">
-            <label>Payment Settings</label>
-            <label htmlFor="sample-setting">Sample Setting 1:</label>
-            <select id="sample-setting"className="form-select" aria-label="Default select example">
-                <option value="">Open this select menu</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
-                </select>
-            
-            <div className="form-check form-switch">
-                <input className="form-check-input" type="checkbox" id="flexSwitchCheckDefault"/>
-                <label className="form-check-label" htmlFor="flexSwitchCheckDefault">Sample Setting 2:</label>
-            </div>
 
-            
-                <label htmlFor="sample-setting">Sample Setting 3:</label>
-            <select id="sample-setting"className="form-select" aria-label="Default select example">
-                <option value="">Open this select menu</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
+import {useContext, useState} from 'react'
+import { UserSettingsContext } from './app/UserSettingsProvider'
+
+const PaySettings = () => {
+
+
+
+    const { selectedPaymentMethod, setSelectedPaymentMethod,
+        creditCardNumber, setCreditCardNumber,
+        expirationDate, setExpirationDate,
+        cvv, setCVV,
+        countryOrRegion, setCountryOrRegion,
+        firstName, setFirstName,
+        lastName, setLastName,
+        streetAddress, setStreetAddress,
+        aptOrSuiteOrBuilding, setAptOrSuiteOrBuilding,
+        zipCode, setZipCode,
+        cityOrState, setCityOrState} = useContext(UserSettingsContext)
+        
+
+
+
+    return (
+        <div id="setting-options" style={{overflow: "auto"}} className="ps-3 d-flex flex-column gap-3 h-100 w-50 border border-dark">
+            <label className='text-center'>Payment Settings</label>
+           
+
+
+           <div id="preferred payment method">
+                <label htmlFor="sample-setting" className='d-inline'>Preferred payment method: </label>
+                <select id="sample-setting" className="form-select w-50 d-inline" value={selectedPaymentMethod} onChange={(e) => setSelectedPaymentMethod(e.target.value)} aria-label="Default select example">
+                    <option value="">Set Preferred Method: </option>
+                    <option value="Mastercard">Mastercard</option>
+                    <option value="Visa">Visa</option>
+                    <option value="Amex">Amex</option>
+                    <option value="Paypal">Paypal</option>
                 </select>
+           </div>
+
+            {(selectedPaymentMethod !== "Paypal" && selectedPaymentMethod !== "") && (
+            <>
+                <div id="form-input-credit-card-number d-flex">
+
+                    <h2 className='text-center'>Card Information:</h2>
+                
+                    <label htmlFor="account-email" className="d-inline pe-2">Credit Card Number:</label>
+                    <input type="text" className="w-50 form-control d-inline" value={creditCardNumber} onChange={(e) => setCreditCardNumber(e.target.value)} />
+                </div>            
+                <div id="form-input-credit-card-number d-flex">
+
+                    <label htmlFor="account-email" className="d-inline pe-2">Expiration Date:</label>
+                    <input type="text" className="w-50 form-control d-inline" value={expirationDate} onChange={(e) => setExpirationDate(e.target.value)} />
+                </div>            
+                <div id="form-input-credit-card-number d-flex">
+                    <label htmlFor="account-email" className="d-inline pe-2">CVV:</label>
+                    <input type="text" className="w-50 form-control d-inline" value={cvv} onChange={(e) => setCVV(e.target.value)}/>
+                </div>            
+
+                <h2 className='text-center'>Billing Address:</h2>
+
+                <div id="form-input-credit-card-number d-flex">
+                    <label htmlFor="account-email" className="d-inline pe-2">Country/Region:</label>
+                    <input type="text" className="w-50 form-control d-inline" value={countryOrRegion} onChange={(e) => setCountryOrRegion(e.target.value)}/>
+                </div>            
+
+                <div id="form-input-credit-card-number d-flex">
+                    <label htmlFor="account-email" className="d-inline pe-2">First Name:</label>
+                    <input type="text" className="w-50 form-control d-inline" value={firstName} onChange={(e) => setFirstName(e.target.value)}/>
+                </div>            
+
+                <div id="form-input-credit-card-number d-flex">
+                    <label htmlFor="account-email" className="d-inline pe-2">Last Name:</label>
+                    <input type="text" className="w-50 form-control d-inline" value={lastName} onChange={(e) => setLastName(e.target.value)}/>
+                </div>            
+
+                <div id="form-input-credit-card-number d-flex">
+                    <label htmlFor="account-email" className="d-inline pe-2">Street Address:</label>
+                    <input type="text" className="w-50 form-control d-inline" value={streetAddress} onChange={(e) => setStreetAddress(e.target.value)}/>
+                </div>            
+
+                <div id="form-input-credit-card-number d-flex">
+                    <label htmlFor="account-email" className="d-inline pe-2">Apt/Suite/Building (Optional):</label>
+                    <input type="text" className="w-50 form-control d-inline" value={aptOrSuiteOrBuilding} onChange={(e) => setAptOrSuiteOrBuilding(e.target.value)}/>
+                </div>            
+
+                <div id="form-input-credit-card-number d-flex">
+                    <label htmlFor="account-email" className="d-inline pe-2">Zip Code:</label>
+                    <input type="text" className="w-50 form-control d-inline" value={zipCode} onChange={(e) => setZipCode(e.target.value)}/>
+                </div>            
+
+                <div id="form-input-credit-card-number d-flex">
+                    <label htmlFor="account-email" className="d-inline pe-2">City, State:</label>
+                    <input type="text" className="w-50 form-control d-inline" value={cityOrState} onChange={(e) => setCityOrState(e.target.value)}/>
+                </div>            
+
+
+            </>
+            )}
+            
+
         </div>
     )
 }

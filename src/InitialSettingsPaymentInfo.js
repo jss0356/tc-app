@@ -4,6 +4,8 @@ import {auth} from './config/firebase'
 import PaymentInformation from "./Rcomponents/PaymentInformation"
 import UserDataService from "./services/user.services"
 
+import { setDoc } from "firebase/firestore"
+
 const InitialSettingsPaymentInfo = () => {
 
     const navigate = useNavigate()
@@ -15,7 +17,7 @@ const InitialSettingsPaymentInfo = () => {
 
     const addInitialUserSettings = async (userSettingsToAdd) => {
         try{
-            await UserDataService.initializeUserSettings(location.state.id, userSettingsToAdd)
+            return await UserDataService.initializeUserSettings(location.state.id, userSettingsToAdd)
         }
         catch(err){
             console.log(err)
@@ -24,15 +26,23 @@ const InitialSettingsPaymentInfo = () => {
 
     const [paymentType, setPaymentType] = useState("")
 
-    const saveChangesHandler = () => {
+    const saveChangesHandler = async () => {
         const newIntialSettings = {...currentInitialSettings, isPaymentInfoSet: true, paymentType}
-        addInitialUserSettings(newIntialSettings)
+        
+        let addedSettingsRef =  await addInitialUserSettings(newIntialSettings)
+
+        await setDoc(addedSettingsRef, {settingsID: addedSettingsRef.id}, {merge: true})
+
+        
         navigate("/register/registration-success")
     }
 
-    const decideLaterHandler = () => {
+    const decideLaterHandler = async () => {
         const newIntialSettings = {...currentInitialSettings, isPaymentInfoSet: false}
-        addInitialUserSettings(newIntialSettings)
+        let addedSettingsRef =  await addInitialUserSettings(newIntialSettings)
+        console.log(addedSettingsRef.id)
+        await setDoc(addedSettingsRef, {settingsID: addedSettingsRef.id}, {merge: true})
+
         navigate("/register/registration-success")
     }
 

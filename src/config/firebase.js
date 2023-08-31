@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 //import firestore db
 import {getFirestore} from "firebase/firestore"
+
 //import firebase auth service
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth"
 //import firebase storage service
