@@ -84,5 +84,5 @@ const Cart = ({ cart, setCart }) =>{
       </div>
     </div>
   );
-
-export default Cart
+};
+export default Cart;
