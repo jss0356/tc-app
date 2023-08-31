@@ -31,7 +31,7 @@ import Product from './Product'
 import HomeAdmin from './HomeAdmin';
 import ManageDataAdmin from './ManageDataAdmin';
 import RegistrationSuccess from './RegistrationSuccess';
-
+import { useState } from "react";
 import UserSettingsProvider from './app/UserSettingsProvider';
 
 function App() {
