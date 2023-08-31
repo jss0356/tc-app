@@ -12,7 +12,7 @@ import {signOut} from 'firebase/auth'
 import {useNavigate} from 'react-router-dom'
 
 
-const MainNavbarMarketplace = () => {
+const MainNavbarMarketplace = ({ search, handleChange, cartCount }) => {
     const navigate = useNavigate()
 
     const logoutHandler = async () => {
@@ -46,7 +46,7 @@ const MainNavbarMarketplace = () => {
                         <option value="Baseball">Baseball</option>
 
                     </select>
-                    <input type="text" style={{width:"200px"}} className="form-control" placeholder="Search by Product Name" aria-label="product-name"/>
+                    <input type="text" style={{width:"200px"}} className="form-control" placeholder="Search by Product Name" aria-label="product-name" onChange={handleChange}/>
                     <LinkContainer to="/marketplace/search-results"><span className="input-group-text"><button className='btn d-grid' style={{placeContent:"center", height:"30px"}}><img src={SearchIcon} width="30px" alt="search"/></button></span></LinkContainer>
                     <LinkContainer to="/marketplace/cart"><button className='btn d-grid' style={{placeContent:"center", height:"30px"}}><img src={ShoppingCartIcon} width="30px" alt="search"/></button></LinkContainer>
             </div>
