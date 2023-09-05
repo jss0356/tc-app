@@ -54,7 +54,6 @@ const Registration = () => {
                 console.log("User successfully added", newUser)
                 console.log("returned data", addedUserRef)
                 
-                
 
                 //lastly, set default settings with the initial field of emailNotifications.
                 const initialSettings = {

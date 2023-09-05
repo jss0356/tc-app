@@ -82,10 +82,9 @@ function App() {
           <Route path = "/manage-data-admin" element={<ManageDataAdmin/>}/>
 
           <Route path="/marketplace">
-            <Route index element={<Marketplace cart={cart} setCart={setCart}/>}/>
+            <Route index element={<Marketplace/>}/>
             <Route path=":productID" element={<Product/>}/>
-{/*<Route path="search-results" element={<MarketplaceSearch cart={cart} setCart={setCart}/>}/>*/}
-             <Route path="search-results" element={<Marketplace cart={cart} setCart={setCart} />}/>
+             <Route path="search-results" element={<MarketplaceSearch cart={cart} setCart={setCart} />}/>
             <Route path="cart" element={<Cart cart={cart}/>}/>
             <Route path="payment">
               <Route index element={<PaymentInfo/>}/>
