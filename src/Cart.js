@@ -74,6 +74,8 @@ const Cart = ({ cart, setCart }) =>{
     )
 }
 */
+    
+
     return (
     <div className="h-100 w-100 d-flex flex-column">
       <div id="main-navbar" style={{ marginBottom: "130px" }}>

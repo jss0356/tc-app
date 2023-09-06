@@ -33,6 +33,7 @@ import ManageDataAdmin from './ManageDataAdmin';
 import RegistrationSuccess from './RegistrationSuccess';
 import { useState } from "react";
 import UserSettingsProvider from './app/UserSettingsProvider';
+import MarketplaceProvider from './app/MarketplaceProvider';
 
 function App() {
   const [cart, setCart] = useState([]);
@@ -42,7 +43,7 @@ function App() {
 
 
 
-
+      <MarketplaceProvider>
         <Routes>
           <Route path = "/login" element={<Login/>}/>
           <Route path = "/register">
@@ -85,7 +86,9 @@ function App() {
             <Route index element={<Marketplace/>}/>
             <Route path=":productID" element={<Product/>}/>
              <Route path="search-results" element={<MarketplaceSearch cart={cart} setCart={setCart} />}/>
-            <Route path="cart" element={<Cart cart={cart}/>}/>
+            <Route path="cart" element={
+              <Cart cart={cart}/>
+            }/>
             <Route path="payment">
               <Route index element={<PaymentInfo/>}/>
               <Route path="success" element={<PaymentSuccess/>}/>
@@ -96,6 +99,7 @@ function App() {
           <Route path = "/user/:id" element={<User/>}/>
 
         </Routes>
+        </MarketplaceProvider>
       </div>
     </div>
   );

@@ -1,24 +1,48 @@
 import MainNavbarMarketplace from "./Rcomponents/MainNavbarMarketplace"
 import Spinner from "react-bootstrap/Spinner";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Card from 'react-bootstrap/Card'
+import { MarketplaceContext } from "./app/MarketplaceProvider";
 
 const MarketplaceSearch = ({cart, setCart}) => {
     const [cards, setCards] = useState([]);
     //this is the state that will hold the value of the input
     const [filteredCards, setFilteredCards] = useState([]);
     const [error, setError] = useState(false);
-    const [search, setSearch] = useState("");
     const [loading, setLoading] = useState(false);
-  
+
+    const {search, setSearch, cartCount, setCartCount, addedCards, setAddedCards, currPage, setCurrPage, currPages, setCurrPages} = useContext(MarketplaceContext)
+    console.log("page#",currPage)
+
     useEffect(() => {
       fetchCards();
-    }, []);
+    }, [currPage]);
   
+    useEffect(() => {
+      setCartCount(cart.length)
+    }, [cart])
+
+    const handlePaginationClick = (clickedButton) => {
+      if(clickedButton === "Prev" && currPages[0] !== 1){
+        setCurrPages(currPages.map((page) => page - 1))
+        setCurrPage(currPages[0] - 1)
+        console.log(currPages, currPage)
+      }
+      else if(clickedButton === "Next"){
+        setCurrPages(currPages.map((page) => page + 1))
+        setCurrPage(currPages[currPages.length - 1] + 1)
+        console.log(currPages, currPage)
+      }
+      else{
+        setCurrPage(clickedButton)
+        console.log(currPage)
+
+      }
+    }
 
     const fetchCards = () => {
       setLoading(true);
-      fetch("https://api.pokemontcg.io/v2/cards?pageSize=16")
+      fetch(`https://api.pokemontcg.io/v2/cards?pageSize=16&page=${currPage}`)
         .then((response) => response.json())
         .then((data) => {
           console.log(data)
@@ -37,23 +61,23 @@ const MarketplaceSearch = ({cart, setCart}) => {
   
     useEffect(() => {
       const filtered = cards.filter((card) =>
-        card.name.toLowerCase().includes(search.toLowerCase())
+        card.name.toLowerCase().startsWith(search.toLowerCase())
       );
       setFilteredCards(filtered);
     }, [search, cards]);
   
   
-    const [addedToCart, setAddedToCart] = useState([]);
 
-    console.log(cart)
+    console.log(addedCards)
   
     const handleCart = (card) => {
       if (cart.some((item) => item.id === card.id)) {
         setCart(cart.filter((item) => item.id !== card.id));
-        console.log(cart)
+        setAddedCards(addedCards.filter((addedCardsID) => addedCardsID !== card.id))
       } else {
         setCart([...cart, card]);
-        setAddedToCart([...addedToCart, card.id]);
+        setAddedCards([...addedCards, card.id])
+
       }
     };
 
@@ -61,16 +85,14 @@ const MarketplaceSearch = ({cart, setCart}) => {
         <div id="container" className="h-100 w-100 d-flex flex-column">
             <div id="mainNavMarketplace" style={{marginBottom:"130px"}}>
                 <MainNavbarMarketplace
-                                  search={search}
-                                  handleChange={handleChange}
-                                  cartCount={cart.length}/>
+/>
             </div>
 
 
 
             <div id="marketplace-search-container" className="w-100 h-100 d-flex flex-column" style={{backgroundColor:"#edf5e1"}}>
             <p className="text-center">Search Results:</p>
-            <div id="search-results-container" className="h-100 w-100  " style={loading ? {}: {overflow: "hidden", display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr", gridTemplateRows: "1fr"}}>
+            <div id="search-results-container" className="h-100 w-100  " style={loading ? {}: {overflow: "hidden", display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr", gap: "1em", gridTemplateRows: "1fr 1fr"}}>
 
                         {loading ? (
                     <div className="d-flex justify-content-center align-items-center vh-100">
@@ -82,7 +104,7 @@ const MarketplaceSearch = ({cart, setCart}) => {
                         <span className="loading-message fs-4">Loading cards...</span>
                     </div>
                     ) : (
-                    filteredCards &&
+                    filteredCards && 
                     filteredCards.map((card) => {
                         return (
                         <Card key={card.id} className="card-item" style={{width: "100%"}}>
@@ -101,13 +123,14 @@ const MarketplaceSearch = ({cart, setCart}) => {
                             <button
                                 //className="btn btn-primary add-to-cart-btn"
                                 className={`btn ${
-                                cart.includes(card)
+                                addedCards.includes(card.id)
                                     ? "btn-danger"
                                     : "btn-primary"
                                 }`}
                                 onClick={() => handleCart(card)}
                             >
-                                {cart.includes(card)
+
+                                {addedCards.includes(card.id)
                                 ? "Remove from Cart"
                                 : "Add to Cart"}
                             </button>
@@ -120,18 +143,16 @@ const MarketplaceSearch = ({cart, setCart}) => {
 
 
             </div>
-            <div className="d-flex flex-row justify-content-center w-100">
+            <div className="d-flex flex-row justify-content-center w-100 pt-5">
                 <nav aria-label="...">
                     <ul className="pagination">
-                        <li className="page-item disabled">
+                        <li className={`page-item ${currPages[0] === 1 ? "disabled": ""}`} onClick={() => handlePaginationClick("Prev")}>
                             <a className="page-link" href="#" tabIndex="-1">Previous</a>
                         </li>
-                        <li className="page-item active"><a className="page-link" href="#">1</a></li>
-                            <li className="page-item disabled">
-                                <a className="page-link" href="#">2 </a>
-                            </li>
-                        <li className="page-item disabled"><a className="page-link" href="#">3</a></li>
-                            <li className="page-item disabled">
+                        {currPages.map((page) => 
+                          (<li className={`page-item ${currPage===page ? 'active' : ''}`} onClick={() => handlePaginationClick(page)}><a className="page-link" href="#">{page}</a></li>)
+                        )}
+                            <li className="page-item" onClick={() => handlePaginationClick("Next")}>
                                 <a className="page-link" href="#">Next</a>
                             </li>
                     </ul>

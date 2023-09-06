@@ -3,21 +3,22 @@ import Card from 'react-bootstrap/Card'
 import { LinkContainer } from "react-router-bootstrap"
 import Basketball1 from "./image/basketball/card1.jpg"
 import Spinner from "react-bootstrap/Spinner";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 
 import productsServices from "./services/listings.services";
 
 
 import Cart from "./Cart";
-const Marketplace = ({ cart, setCart }) => {
-    const [search, setSearch] = useState("");
+import { MarketplaceContext } from "./app/MarketplaceProvider";
 
+const Marketplace = ({ cart, setCart }) => {
+    const {search, setSearch} = useContext(MarketplaceContext)
 
     return (
         <div id="container" className="h-100 w-100 d-flex flex-column">
             <div id="mainNavMarketplace" style={{marginBottom:"130px"}}>
                 <MainNavbarMarketplace
-                  search={search}
+
                 />
             </div>
 
