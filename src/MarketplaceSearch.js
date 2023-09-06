@@ -14,9 +14,15 @@ const MarketplaceSearch = ({cart, setCart}) => {
     const {search, setSearch, cartCount, setCartCount, addedCards, setAddedCards, currPage, setCurrPage, currPages, setCurrPages} = useContext(MarketplaceContext)
     console.log("page#",currPage)
 
+    let lowerBound = 0
+
+    if(currPage !== 1){
+      lowerBound = 16*(currPage - 1)
+    }
+
     useEffect(() => {
       fetchCards();
-    }, [currPage]);
+    }, []);
   
     useEffect(() => {
       setCartCount(cart.length)
@@ -42,7 +48,7 @@ const MarketplaceSearch = ({cart, setCart}) => {
 
     const fetchCards = () => {
       setLoading(true);
-      fetch(`https://api.pokemontcg.io/v2/cards?pageSize=16&page=${currPage}`)
+      fetch(`https://api.pokemontcg.io/v2/cards?orderBy=name`)
         .then((response) => response.json())
         .then((data) => {
           console.log(data)
@@ -137,7 +143,7 @@ const MarketplaceSearch = ({cart, setCart}) => {
                             </Card.Body>
                         </Card>
                         );
-                    })
+                    }).slice(lowerBound ,16 * (currPage))
                     )}
 
 
