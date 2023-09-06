@@ -13,7 +13,7 @@ const MarketplaceSearch = ({cart, setCart}) => {
 
     const {search, setSearch, cartCount, setCartCount, addedCards, setAddedCards, currPage, setCurrPage, currPages, setCurrPages} = useContext(MarketplaceContext)
 
-    console.log(cart)
+    console.log(filteredCards)
 
     let lowerBound = 0
 
@@ -70,7 +70,16 @@ const MarketplaceSearch = ({cart, setCart}) => {
       const filtered = cards.filter((card) =>
         card.name.toLowerCase().startsWith(search.toLowerCase())
       );
-      setFilteredCards(filtered);
+      setFilteredCards(filtered.sort((a,b) => {
+        if(a.name < b.name){
+          console.log(a.name, b.name)
+          return -1;
+        }
+        if(a.name > b.name){
+          return 1;
+        }
+        return 0;
+      }));
     }, [search, cards]);
   
   
@@ -144,15 +153,7 @@ const MarketplaceSearch = ({cart, setCart}) => {
                             </Card.Body>
                         </Card>
                         );
-                    }).slice(lowerBound ,16 * (currPage)).sort((a,b) => {
-                      if(a.name < b.name){
-                        return -1;
-                      }
-                      else if(a.name > b.name){
-                        return 1;
-                      }
-                      return 0;
-                    })
+                    }).slice(lowerBound ,16 * (currPage))
                     )}
 
 
