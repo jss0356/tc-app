@@ -97,7 +97,7 @@ function App() {
 
             <Route path="/marketplace">
               <Route index element={<Marketplace />} />
-              <Route path=":productID" element={<Product />} />
+              <Route path="cards/:productID" element={<Product />} />
               <Route
                 path="search-results"
                 element={<MarketplaceSearch cart={cart} setCart={setCart} />}
