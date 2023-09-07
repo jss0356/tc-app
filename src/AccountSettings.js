@@ -39,6 +39,11 @@ const AccountSettings = () => {
     } = useContext(UserSettingsContext)
 
     const saveChangesHandler = async () => {
+
+        
+
+
+
         const userCollectionRef = collection(firestore, 'users')
         console.log(auth.currentUser.email)
 

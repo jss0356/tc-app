@@ -147,11 +147,7 @@ const MarketplaceSearch = ({ cart, setCart }) => {
             filteredCards
               .map((card) => {
                 return (
-                  <Link
-                    to={`/marketplace/cards/${card.id}`}
-                    key={card.id}
-                    className="card-link"
-                  >
+                  
                     <Card
                       key={card.id}
                       className="card-item"
@@ -164,6 +160,11 @@ const MarketplaceSearch = ({ cart, setCart }) => {
                         },
                       }}
                     >
+                      <Link
+                    to={`/marketplace/cards/${card.id}`}
+                    key={card.id}
+                    className="card-link"
+                  >
                       <Card.Img
                         variant="top"
                         src={card.images.small}
@@ -171,6 +172,8 @@ const MarketplaceSearch = ({ cart, setCart }) => {
                         //make the image smaller
                         style={{ height: "auto", width: "100%" }}
                       />
+                                        </Link>
+
                       <Card.Body>
                         <Card.Title className="card-name">
                           {card.name}
@@ -193,7 +196,6 @@ const MarketplaceSearch = ({ cart, setCart }) => {
                         </button>
                       </Card.Body>
                     </Card>
-                  </Link>
                 );
               })
               .slice(lowerBound, 16 * currPage)
