@@ -1,11 +1,15 @@
 import React from "react";
 
-function CartLogic({ cart }) {
+function CartLogic({ cart, setCart }) {
   const calculateTotalPrice = () => {
     return cart.reduce((total, card) => {
       const cardPrice = card?.tcgplayer?.prices?.holofoil?.market || 0;
       return total + cardPrice;
     }, 0);
+  };
+
+  const removeCardFromCart = (cardID) => {
+    setCart(cart.filter((card) => card.id !== cardID));
   };
 
   return (
@@ -31,6 +35,12 @@ function CartLogic({ cart }) {
                         ${card?.tcgplayer?.prices?.holofoil?.market}
                       </p>
                     </div>
+                    <button
+                      className="btn btn-danger"
+                      onClick={() => removeCardFromCart(card.id)}
+                    >
+                      Remove
+                    </button>
                   </div>
                 </div>
               </li>
