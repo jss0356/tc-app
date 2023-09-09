@@ -10,12 +10,34 @@ import { LinkContainer } from 'react-router-bootstrap';
 import Modal from 'react-bootstrap/Modal'
 import { useState } from 'react';
 import Button from "react-bootstrap/Button"
+import {auth} from './config/firebase'
+import {firestore} from "./config/firebase"
+import {collection, 
+    getDocs, 
+    getDoc, 
+    addDoc, 
+    updateDoc, 
+    deleteDoc, 
+    doc,
+    query,
+    where
+} from "firebase/firestore"
+
 
 const Home = () => {
     const [show, setShow] = useState(false);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+
+    const [portfolioName, setPortfolioName] = useState("");
+    const handleSaveChanges = async () => {
+            const q = query(collection(firestore, 'users'), where('email','==',auth.currentUser.email))
+            const foundUser = await getDocs(q)
+            const userID = foundUser._snapshot.docChanges[0].doc.data.value.mapValue.fields.userID.stringValue
+            const userPortfoliosCollectionRef = collection(firestore, `users/${userID}/userPortfolios`)
+            addDoc(userPortfoliosCollectionRef, {name:portfolioName})
+    }
   
     const addPortfolioModal=  <div id="add-portfolio-modal">
     <Modal show={show} onHide={handleClose}>
@@ -24,13 +46,13 @@ const Home = () => {
     </Modal.Header>
     <Modal.Body>
     <label htmlFor="add-portfolio-title">New Portfolio Title:</label>
-    <input className="form-control" type="text" id="add-portfolio-title"/>
+    <input className="form-control" type="text" id="add-portfolio-title" value={portfolioName} onChange={(e) =>setPortfolioName(e.target.value)}/>
     </Modal.Body>
     <Modal.Footer>
         <Button variant="secondary" onClick={handleClose}>
         Close
         </Button>
-        <Button variant="primary" onClick={handleClose}>
+        <Button variant="primary" onClick={handleSaveChanges}>
         Save Changes
         </Button>
     </Modal.Footer>
