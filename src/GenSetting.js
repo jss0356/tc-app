@@ -9,7 +9,6 @@ const GenSettings = () => {
 
     return (
         <div id="setting-options" className="ps-3 d-flex flex-column gap-3 h-100 w-50 border border-dark">
-            <form action="">
                 <label className="text-center">General Settings</label>
 
                 <div id="form-input-account-email d-flex">
@@ -28,8 +27,6 @@ const GenSettings = () => {
 
                     </div>
                 </div>
-                <input type="submit"/>
-            </form>
 
         </div>
     )

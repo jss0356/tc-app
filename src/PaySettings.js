@@ -39,7 +39,6 @@ const PaySettings = () => {
 
             {(selectedPaymentMethod !== "Paypal" && selectedPaymentMethod !== "") && (
             <>
-                <form>
                     <div id="form-input-credit-card-number d-flex">
 
                         <h2 className='text-center'>Card Information:</h2>
@@ -93,8 +92,6 @@ const PaySettings = () => {
                         <label htmlFor="city-state" className="d-inline pe-2">City, State:</label>
                         <input type="text" pattern="[A-Za-z]+" placeholder="City or State" className="w-50 form-control d-inline" value={cityOrState} onChange={(e) => setCityOrState(e.target.value)}/>
                     </div>   
-                    <input type="submit"/>         
-                </form>
 
             </>
             )}
