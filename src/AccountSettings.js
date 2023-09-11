@@ -40,8 +40,77 @@ const AccountSettings = () => {
 
     const saveChangesHandler = async () => {
 
-        
+        //Return before updatingdatabase if any user input does not match the requested format
+        //Email
+        if (!accountEmail.match(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/) )
+        {
+            console.log("Invalid email")
+            //return
+        }
 
+        //cc#
+        if (!creditCardNumber.match(/[0-9\s]{13,19}/))
+        {
+            console.log("Invalid cc#")
+            //return
+        }
+
+        //Exp Date
+        if (!expirationDate.match(/\d{4}/))
+        {
+            console.log("Invalid exp")
+            //return
+        }
+
+        //CVV
+        if (!cvv.match(/\d{3}/))
+        {
+            console.log("Invalid cvv")
+            //return
+        }
+
+        //Country/Region
+        if (!countryOrRegion.match(/[A-Za-z]+/))
+        {
+            console.log("Invalid country/region")
+            //return
+        }
+
+        //First
+        if (!firstName.match(/[A-Za-z]+/))
+        {
+            console.log("Invalid first name")
+            //return
+        }
+
+        //Last
+        if (!lastName.match(/[A-Za-z]+/))
+        {
+            console.log("Invalid last name")
+            //return
+        }
+
+        //St addr
+        if (!streetAddress.match(/^(\d+) [a-zA-Z0-9\s]+/))
+        {
+            console.log("Invalid st addr")
+            //return
+        }
+
+        //Zip
+        if (!zipCode.match(/\d{5}/))
+        {
+            console.log("Invalid zip")
+            //return
+        }
+
+
+        //City/State
+        if (!cityOrState.match(/[A-Za-z]+/))
+        {
+            console.log("Invalid city/state")
+            //return
+        }
 
 
         const userCollectionRef = collection(firestore, 'users')
@@ -155,7 +224,7 @@ const AccountSettings = () => {
         setPortfolio(false);
         setListing(true);
     }
-    saveChangesHandler()
+    //saveChangesHandler()
 
 
     return (
@@ -190,3 +259,4 @@ const AccountSettings = () => {
 
 
 export default AccountSettings
+//Email regex on line 44 taken from https://www.regextester.com/19
