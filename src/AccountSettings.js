@@ -153,7 +153,7 @@ const AccountSettings = () => {
                         }, {merge: true})
                     }
                     else{
-                        userServices.initializeUserSettings(userID, {
+                        const newDoc = await userServices.initializeUserSettings(userID, {
                             accountEmail,
                             receiveEmailNotifications,
                             textSizing,
@@ -173,6 +173,9 @@ const AccountSettings = () => {
                             portfolioVisibility,
                             dividePortfolioIntoSections
                         })
+
+                        setDoc(newDoc, {settingsID: newDoc.id}, {merge: true})
+
                     }
                 }catch(err){
                     console.log(err)
