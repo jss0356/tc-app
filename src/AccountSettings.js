@@ -1,7 +1,7 @@
-import {useContext, useState} from 'react'
+import {useContext, useState, useEffect} from 'react'
 import { LinkContainer } from "react-router-bootstrap"
 import ChooseSetting from './ChooseSetting'
-import { query, getDocs, where, collection, doc, setDoc } from 'firebase/firestore'
+import { query, getDocs, where, collection, doc, setDoc, getDoc } from 'firebase/firestore'
 import {firestore, auth} from './config/firebase'
 
 import UserSettingsProvider, { UserSettingsContext } from './app/UserSettingsProvider'
@@ -17,7 +17,7 @@ const AccountSettings = () => {
     const [listing, setListing] = useState(false);
 
 
-    const  {
+    const {
         accountEmail, setAccountEmail,
         receiveEmailNotifications, setRecieveEmailNotifications,
         textSizing, setTextSizing,
@@ -37,6 +37,83 @@ const AccountSettings = () => {
         portfolioVisibility, setPortfolioVisibility,
         dividePortfolioIntoSections, setDividePortfolioIntoSections
     } = useContext(UserSettingsContext)
+
+    const getCurrentSettings = async () => {
+        const userCollectionRef = collection(firestore, 'users')
+        console.log(auth.currentUser.email)
+
+        const findAssociatedUserDoc = query(userCollectionRef, where("email", "==", auth.currentUser.email))
+
+        try{
+            const associatedUserDoc = await getDocs(findAssociatedUserDoc)
+            if(associatedUserDoc.size != 0){
+                const userID = associatedUserDoc._snapshot.docChanges[0].doc.data.value.mapValue.fields.userID.stringValue 
+                const associatedUserDocRef = doc(firestore, `users/${userID}`)
+                const userSettingsCollection =  collection(associatedUserDocRef, 'userSettings')
+                try{
+                    let settingDoc = await getDocs(userSettingsCollection)
+                    if(settingDoc.size != 0){
+                        const settingsID = settingDoc._snapshot.docChanges[0].doc.data.value.mapValue.fields.settingsID.stringValue
+                        const settingsRef = doc(userSettingsCollection, `${settingsID}`)
+                        try{
+                            const docSnap = await getDoc(settingsRef);
+                            if(docSnap.exists()) {
+
+                                setAccountEmail(docSnap.data().accountEmail)
+                                setCityOrState(docSnap.data().cityOrState)
+                                setCountryOrRegion(docSnap.data().countryOrRegion)
+                                setCreditCardNumber(docSnap.data().creditCardNumber)
+                                setCVV(docSnap.data().cvv)
+                                setDarkMode(docSnap.data().darkMode)
+                                setDividePortfolioIntoSections(docSnap.data().dividePortfolioIntoSections)
+                                setExpirationDate(docSnap.data().expirationDate)
+                                setFirstName(docSnap.data().firstName)
+                                setLastName(docSnap.data().lastName)
+                                setPortfolioVisibility(docSnap.data().portfolioVisibility)
+                                setRecieveEmailNotifications(docSnap.data().receiveEmailNotifications)
+                                setSelectedPaymentMethod(docSnap.data().selectedPaymentMethod)
+                                setSortPortfolioListBy(docSnap.data().sortPortfolioListBy)
+                                setStreetAddress(docSnap.data().streetAddress)
+                                setTextSizing(docSnap.data().textSizing)
+                                setZipCode(docSnap.data().zipCode)
+                               
+                            } else {
+                                console.log("Document does not exist")
+                            }
+                        }catch(err){console.log(err)}
+
+                    } else {
+                        const newDoc = await userServices.initializeUserSettings(userID, {
+                            accountEmail,
+                            receiveEmailNotifications,
+                            textSizing,
+                            darkMode,
+                            selectedPaymentMethod,
+                            creditCardNumber,
+                            expirationDate,
+                            cvv,
+                            countryOrRegion,
+                            firstName,
+                            lastName,
+                            streetAddress,
+                            aptOrSuiteOrBuilding,
+                            zipCode,
+                            cityOrState,
+                            sortPortfolioListBy,
+                            portfolioVisibility,
+                            dividePortfolioIntoSections
+                        })
+
+                        setDoc(newDoc, {settingsID: newDoc.id}, {merge: true})
+                    } 
+                }catch(err){ console.log(err) }
+            }
+        }catch(err){
+            console.log(err)
+        }
+        
+    }
+
 
     const saveChangesHandler = async () => {
 
@@ -129,7 +206,7 @@ const AccountSettings = () => {
                     let settingDoc = await getDocs(userSettingsCollection)
                     if(settingDoc.size != 0){
                         const settingsID = settingDoc._snapshot.docChanges[0].doc.data.value.mapValue.fields.settingsID.stringValue
-                        console.log(settingsID)
+                        //console.log(settingsID)
                         const settingsRef = doc(userSettingsCollection, `${settingsID}`)
                         await setDoc(settingsRef, {
                             accountEmail,
@@ -151,31 +228,6 @@ const AccountSettings = () => {
                             portfolioVisibility,
                             dividePortfolioIntoSections
                         }, {merge: true})
-                    }
-                    else{
-                        const newDoc = await userServices.initializeUserSettings(userID, {
-                            accountEmail,
-                            receiveEmailNotifications,
-                            textSizing,
-                            darkMode,
-                            selectedPaymentMethod,
-                            creditCardNumber,
-                            expirationDate,
-                            cvv,
-                            countryOrRegion,
-                            firstName,
-                            lastName,
-                            streetAddress,
-                            aptOrSuiteOrBuilding,
-                            zipCode,
-                            cityOrState,
-                            sortPortfolioListBy,
-                            portfolioVisibility,
-                            dividePortfolioIntoSections
-                        })
-
-                        setDoc(newDoc, {settingsID: newDoc.id}, {merge: true})
-
                     }
                 }catch(err){
                     console.log(err)
@@ -228,8 +280,9 @@ const AccountSettings = () => {
         setListing(true);
     }
     //saveChangesHandler()
-
-
+    useEffect(() => {
+        getCurrentSettings()
+      }, [])
     return (
         <div id="account-settings-container" className="d-flex w-100 h-100 justify-content-center align-items-center ">
         <div id="account-settings-inner-container" className="border rounded w-75 h-75 p-2" style={{ backgroundColor: "#edf5e1"}}>
@@ -252,7 +305,6 @@ const AccountSettings = () => {
             <button onClick={() => saveChangesHandler()}className="btn btn-primary d-inline mt-5 ms-4">Save Changes</button>
 
         </div>
-        
         </div>
 
 
