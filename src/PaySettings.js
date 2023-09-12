@@ -29,7 +29,7 @@ const PaySettings = () => {
            <div id="preferred payment method">
                 <label htmlFor="sample-setting" className='d-inline'>Preferred payment method: </label>
                 <select id="sample-setting" className="form-select w-50 d-inline" value={selectedPaymentMethod} onChange={(e) => setSelectedPaymentMethod(e.target.value)} aria-label="Default select example">
-                    <option value="">Set Preferred Method: </option>
+                    <option value="">None</option>
                     <option value="Mastercard">Mastercard</option>
                     <option value="Visa">Visa</option>
                     <option value="Amex">Amex</option>

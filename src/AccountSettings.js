@@ -46,13 +46,13 @@ const AccountSettings = () => {
 
         try{
             const associatedUserDoc = await getDocs(findAssociatedUserDoc)
-            if(associatedUserDoc.size != 0){
+            if(associatedUserDoc.size !== 0){
                 const userID = associatedUserDoc._snapshot.docChanges[0].doc.data.value.mapValue.fields.userID.stringValue 
                 const associatedUserDocRef = doc(firestore, `users/${userID}`)
                 const userSettingsCollection =  collection(associatedUserDocRef, 'userSettings')
                 try{
                     let settingDoc = await getDocs(userSettingsCollection)
-                    if(settingDoc.size != 0){
+                    if(settingDoc.size !== 0){
                         const settingsID = settingDoc._snapshot.docChanges[0].doc.data.value.mapValue.fields.settingsID.stringValue
                         const settingsRef = doc(userSettingsCollection, `${settingsID}`)
                         try{
@@ -83,8 +83,9 @@ const AccountSettings = () => {
                         }catch(err){console.log(err)}
 
                     } else {
+                        setAccountEmail(auth.currentUser.email)
                         const newDoc = await userServices.initializeUserSettings(userID, {
-                            accountEmail,
+                            accountEmail:  auth.currentUser.email,
                             receiveEmailNotifications,
                             textSizing,
                             darkMode,
@@ -117,77 +118,81 @@ const AccountSettings = () => {
 
     const saveChangesHandler = async () => {
 
-        //Return before updatingdatabase if any user input does not match the requested format
-        //Email
+        //Return before updatingdatabase if any user input does not match the requested format, notify user
+        //Email must have a value
         if (!accountEmail.match(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/) )
         {
-            console.log("Invalid email")
-            //return
+            alert("Invalid email")
+            return
         }
 
-        //cc#
-        if (!creditCardNumber.match(/[0-9\s]{13,19}/))
-        {
-            console.log("Invalid cc#")
-            //return
-        }
+        //Credit card
+        if (selectedPaymentMethod !== "") { //Check if user wants to save a form of payment
+        //If yes, ensure that all required fields are filled
+            //cc#
+            if (!creditCardNumber.match(/[0-9\s]{13,19}/))
+            {
+                alert("Invalid credit card info")
+                return
+            }
 
-        //Exp Date
-        if (!expirationDate.match(/\d{4}/))
-        {
-            console.log("Invalid exp")
-            //return
-        }
+            //Exp Date
+            if (!expirationDate.match(/\d{4}/))
+            {
+                alert("Invalid credit card info")
+                return
+            }
 
-        //CVV
-        if (!cvv.match(/\d{3}/))
-        {
-            console.log("Invalid cvv")
-            //return
-        }
+            //CVV
+            if (!cvv.match(/\d{3}/))
+            {
+                alert("Invalid credit card info")
+                return
+            }
 
-        //Country/Region
-        if (!countryOrRegion.match(/[A-Za-z]+/))
-        {
-            console.log("Invalid country/region")
-            //return
-        }
+            //Country/Region
+            if (!countryOrRegion.match(/[A-Za-z]+/))
+            {
+                alert("Invalid credit card info")
+                return
+            }
 
-        //First
-        if (!firstName.match(/[A-Za-z]+/))
-        {
-            console.log("Invalid first name")
-            //return
-        }
+            //First
+            if (!firstName.match(/[A-Za-z]+/))
+            {
+                alert("Invalid credit card info")
+                return
+            }
 
-        //Last
-        if (!lastName.match(/[A-Za-z]+/))
-        {
-            console.log("Invalid last name")
-            //return
-        }
+            //Last
+            if (!lastName.match(/[A-Za-z]+/))
+            {
+                alert("Invalid credit card info")
+                return
+            }
 
-        //St addr
-        if (!streetAddress.match(/^(\d+) [a-zA-Z0-9\s]+/))
-        {
-            console.log("Invalid st addr")
-            //return
-        }
+            //St addr
+            if (!streetAddress.match(/^(\d+) [a-zA-Z0-9\s]+/))
+            {
+                alert("Invalid credit card info")
+                return
+            }
 
-        //Zip
-        if (!zipCode.match(/\d{5}/))
-        {
-            console.log("Invalid zip")
-            //return
-        }
+            //Zip
+            if (!zipCode.match(/\d{5}/))
+            {
+                alert("Invalid credit card info")
+                return
+            }
 
 
-        //City/State
-        if (!cityOrState.match(/[A-Za-z]+/))
-        {
-            console.log("Invalid city/state")
-            //return
-        }
+            //City/State
+            if (!cityOrState.match(/[A-Za-z]+/))
+            {
+                alert("Invalid credit card info")
+                return
+            }
+        } 
 
 
         const userCollectionRef = collection(firestore, 'users')
@@ -197,14 +202,14 @@ const AccountSettings = () => {
 
         try{
             const associatedUserDoc = await getDocs(findAssociatedUserDoc)
-            if(associatedUserDoc.size != 0){
+            if(associatedUserDoc.size !== 0){
                 const userID = associatedUserDoc._snapshot.docChanges[0].doc.data.value.mapValue.fields.userID.stringValue 
                 const associatedUserDocRef = doc(firestore, `users/${userID}`)
                 const userSettingsCollection =  collection(associatedUserDocRef, 'userSettings')
                 
                 try{
                     let settingDoc = await getDocs(userSettingsCollection)
-                    if(settingDoc.size != 0){
+                    if(settingDoc.size !== 0){
                         const settingsID = settingDoc._snapshot.docChanges[0].doc.data.value.mapValue.fields.settingsID.stringValue
                         //console.log(settingsID)
                         const settingsRef = doc(userSettingsCollection, `${settingsID}`)
