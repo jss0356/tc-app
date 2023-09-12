@@ -5,35 +5,34 @@ const CalculateGradeForm = () => {
 
     const CalculateGrade = (props) => {
     
-        let grade = 11;
+        let grade = "11";
         
-        for(let i = 0; i<props.selection.length; i++)      
-        {    
-            if(props.selection[i] < grade) {
-                grade = props.selection[i];
-            }
-        }
-        if(grade < 11){
+        grade = Math.min.apply(Math, props.selection)
+        console.log(props.selection)
+        if (grade < 11) {
             return (<p>Grade: {grade}</p>)
-        } else { return <p>Grade: -</p>}
+        } else {
+            return (<p>Grade: -</p>)
+        }
+    
     }
 
-    const[selectedAltered, setSelectedAltered] = useState(11);
-    const[selectedSurfaceWear, setSelectedSurfaceWear] = useState(11);
-    const[selectedDiscoloration, setSelectedDiscoloration] = useState(11);
-    const[selectedScratch, setSelectedScratch] = useState(11);
-    const[selectedStain, setSelectedStain] = useState(11);
-    const[selectedDefect, setSelectedDefect] = useState(11);
-    const[selectedCornersRounded, setSelectedCornersRounded] = useState(11);
-    const[selectedCrease, setSelectedCrease] = useState(11);
-    const[selectedBorder, setSelectedBorder] = useState(11);
-    const[selectedCornersFraying, setSelectedCornersFraying] = useState(11);
-    const[selectedEdges, setSelectedEdges] = useState(11);
-    const[selectedFocus, setSelectedFocus] = useState(11);
-    const[selectedGloss, setSelectedGloss] = useState(11);
-    const[selectedInTact, setSelectedInTact] = useState(11);
-    const[selectedFrontCentering, setSelectedFrontCentering] = useState(11);
-    const[selectedBackCentering, setSelectedBackCentering] = useState(11);
+    const[selectedAltered, setSelectedAltered] = useState("11");
+    const[selectedSurfaceWear, setSelectedSurfaceWear] = useState("11");
+    const[selectedDiscoloration, setSelectedDiscoloration] = useState("11");
+    const[selectedScratch, setSelectedScratch] = useState("11");
+    const[selectedStain, setSelectedStain] = useState("11");
+    const[selectedDefect, setSelectedDefect] = useState("11");
+    const[selectedCornersRounded, setSelectedCornersRounded] = useState("11");
+    const[selectedCrease, setSelectedCrease] = useState("11");
+    const[selectedBorder, setSelectedBorder] = useState("11");
+    const[selectedCornersFraying, setSelectedCornersFraying] = useState("11");
+    const[selectedEdges, setSelectedEdges] = useState("11");
+    const[selectedFocus, setSelectedFocus] = useState("11");
+    const[selectedGloss, setSelectedGloss] = useState("11");
+    const[selectedInTact, setSelectedInTact] = useState("11");
+    const[selectedFrontCentering, setSelectedFrontCentering] = useState("11");
+    const[selectedBackCentering, setSelectedBackCentering] = useState("11");
 
     const selection = [selectedAltered, selectedInTact, selectedSurfaceWear, selectedDiscoloration, selectedScratch, 
     selectedStain, selectedDefect, selectedCrease, selectedCornersRounded, selectedCornersFraying, selectedBorder, 
@@ -43,9 +42,9 @@ const CalculateGradeForm = () => {
         <div>
             <label htmlFor="add-portfolio-title">Calculate Grade:</label>
             <select className="form-select custom-select mb-2" value={selectedAltered} onChange={e => setSelectedAltered(e.target.value)}>
-                <option value={11}>Is the card altered in some way or have any major defects</option>
-                <option value={0}>Yes</option>
-                <option value={10}>No</option>
+                <option value="11">Is the card altered in some way or have any major defects</option>
+                <option value="0">Yes</option>
+                <option value="10">No</option>
             </select>
             <select className="form-select custom-select mb-2" value={selectedInTact} onChange={e => setSelectedInTact(e.target.value)}>
                 <option value={11}>Is the card fully in tact</option>
