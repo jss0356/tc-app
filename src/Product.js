@@ -19,6 +19,7 @@ import {
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import { Spinner } from "react-bootstrap";
+import pokemonTypes from "./constants/pokemonTypes";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -53,6 +54,10 @@ const Product = () => {
   useEffect(() => {
     individualCardDetails();
   }, []);
+
+  if(!loading){
+    console.log({card})
+  }
 
   //const cardPrices = card.tcgplayer?.prices?.holofoil;
 
@@ -98,6 +103,38 @@ const Product = () => {
             className="pt-2 border rounded"
           />
           <h2>{card.name}</h2>
+          <div className="d-flex flex-column">
+
+          {card?.types?.map((type) => (
+              <div className="d-flex flex-row w-full h-full">
+              <p className="px-4" style={{fontWeight: "bold", fontSize: "1.3rem"}}>Type:</p>
+                <img src={pokemonTypes.types[type].icon} style={pokemonTypes.types[String(type)].iconStyle} alt={type}/>
+                <p className="px-2" style={pokemonTypes.types[type].style}>{type}</p>
+
+              </div>
+            ))}
+
+
+
+              {card?.weaknesses?.map((weakness) => (
+                <div className="d-flex flex-row w-100">
+              <p className="px-4" style={{fontWeight: "bold", fontSize: "1.3rem"}}>Weaknesses:</p>
+
+                  <img src={pokemonTypes.types[String(weakness.type)].icon}  style={pokemonTypes.types[weakness.type].iconStyle} alt={weakness.type}/>
+                  <p className="px-2" style={pokemonTypes.types[weakness.type].style}>{weakness.type}</p>
+                </div>
+              ))}
+
+
+            <div className="d-flex flex-row align-center">
+                <p className="px-4" style={{fontWeight: "bold", fontSize: "1.3rem"}}>HP:</p>
+                <img src="/pokemonHP/hpIcon.png" alt="hp icon" style={{width: "50px", height: "auto", marginRight: "0.5em"}}/>
+                <p style={{fontWeight: "bold", color: "red", position: "relative", top: "25%"}}>{card?.hp}HP</p>
+            </div>
+
+
+          </div>
+          
           <p>Prices updated on: {card?.tcgplayer?.updatedAt}</p>
           <p className="m-0">Starting Selling Price: $20</p>
           <p>Starting Bid: $20</p>
