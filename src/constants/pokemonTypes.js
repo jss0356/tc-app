@@ -136,6 +136,20 @@ const pokemonTypes = {
             },
             icon: "/pokemonTypes/Normal type.ico"
         },
+        Colorless: {
+            style: {
+                color: "grey",
+                position: "relative", top:"25%",
+                fontWeight: "bold",
+                
+
+            },
+            iconStyle: {
+                height: "50px",
+                width: "50px",
+            },
+            icon: "/pokemonTypes/Normal type.ico"
+        },
         Ground: {
             style: {
                 color: "brown",
