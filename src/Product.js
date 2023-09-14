@@ -78,6 +78,25 @@ const Product = () => {
     ],
   };
 
+  const [cardHoverEffect, setCardHoverEffect] = useState(false);
+
+  const handleHoverOverCard = () => {
+    setCardHoverEffect(true);
+  };
+
+  const handleHoverOffCard = () => {
+    setCardHoverEffect(false);
+  };
+
+  const hoverEffectStyle = {
+    width: "210px",
+    padding: "1rem",
+    tranistion: "all 0.5s ease",
+    transform: cardHoverEffect ? "scale(1.3)" : "scale(1)",
+    boxShadow: cardHoverEffect ? "0 0 10px rgba(0, 0, 0, 0.5)" : "none",
+    cursor: cardHoverEffect ? "pointer" : "default",
+  };
+
   return (
     <div id="container" className="w-100 h-100 d-flex flex-column">
       <div id="main-navbar" style={{ marginBottom: "130px" }}>
@@ -104,6 +123,9 @@ const Product = () => {
                 alt="Product"
                 width="250px"
                 className="pt-2 border rounded"
+                style={hoverEffectStyle}
+                onMouseOver={handleHoverOverCard}
+                onMouseLeave={handleHoverOffCard}
               />
             </div>
           </div>
