@@ -55,11 +55,9 @@ const Product = () => {
     individualCardDetails();
   }, []);
 
-  if(!loading){
-    console.log({card})
+  if (!loading) {
+    console.log({ card });
   }
-
-  //const cardPrices = card.tcgplayer?.prices?.holofoil;
 
   const options = {};
   const data = {
@@ -91,53 +89,170 @@ const Product = () => {
         className="w-100 pb-5 d-flex flex-column"
         style={{ backgroundColor: "#edf5e1" }}
       >
-        <div
-          id="product-image"
-          className=" w-100 d-flex flex-column align-items-center"
-          style={{ height: "40%" }}
-        >
-          <img
-            src={card.images?.small}
-            alt="Product"
-            width="120px"
-            className="pt-2 border rounded"
-          />
-          <h2>{card.name}</h2>
-          <div className="d-flex flex-column">
-
-          {card?.types?.map((type) => (
-              <div className="d-flex flex-row w-full h-full">
-              <p className="px-4" style={{fontWeight: "bold", fontSize: "1.3rem"}}>Type:</p>
-                <img src={pokemonTypes.types[type].icon} style={pokemonTypes.types[String(type)].iconStyle} alt={type}/>
-                <p className="px-2" style={pokemonTypes.types[type].style}>{type}</p>
-
+        <div className="row">
+          <div className="col-md-3">
+            <div
+              id="product-image"
+              className="d-flex flex-column align-items-center"
+            >
+              <div className="d-flex align-items-center">
+                <h2>{card.name}</h2>
+                <span className="px-2">{card.subtypes}</span>
               </div>
-            ))}
-
-
-
-              {card?.weaknesses?.map((weakness) => (
-                <div className="d-flex flex-row w-100">
-              <p className="px-4" style={{fontWeight: "bold", fontSize: "1.3rem"}}>Weaknesses:</p>
-
-                  <img src={pokemonTypes.types[String(weakness.type)].icon}  style={pokemonTypes.types[weakness.type].iconStyle} alt={weakness.type}/>
-                  <p className="px-2" style={pokemonTypes.types[weakness.type].style}>{weakness.type}</p>
+              <img
+                src={card.images?.small}
+                alt="Product"
+                width="250px"
+                className="pt-2 border rounded"
+              />
+            </div>
+          </div>
+          <div className="col-md-3">
+            <div className="d-flex flex-column">
+              {card?.types?.map((type) => (
+                <div className="d-flex flex-row">
+                  <p
+                    className="px-4"
+                    style={{ fontWeight: "bold", fontSize: "1.3rem" }}
+                  >
+                    Type:
+                  </p>
+                  {/* <img
+                  src={pokemonTypes.types[type].icon}
+                  style={pokemonTypes.types[String(type)].iconStyle}
+                  alt={type}
+                />
+                <p className="px-2" style={pokemonTypes.types[type].style}>
+                  {type}
+                </p> */}
+                  {pokemonTypes.types[type] ? (
+                    <>
+                      <img
+                        src={pokemonTypes.types[type].icon}
+                        style={pokemonTypes.types[String(type)].iconStyle}
+                        alt={type}
+                      />
+                      <p
+                        className="px-2"
+                        style={pokemonTypes.types[type].style}
+                      >
+                        {type}
+                      </p>
+                    </>
+                  ) : (
+                    <p>Error, no type avaiable</p>
+                  )}
                 </div>
               ))}
 
+              {card?.weaknesses?.map((weakness) => (
+                <div className="d-flex flex-row w-100">
+                  <p
+                    className="px-4"
+                    style={{ fontWeight: "bold", fontSize: "1.3rem" }}
+                  >
+                    Weaknesses:
+                  </p>
 
-            <div className="d-flex flex-row align-center">
-                <p className="px-4" style={{fontWeight: "bold", fontSize: "1.3rem"}}>HP:</p>
-                <img src="/pokemonHP/hpIcon.png" alt="hp icon" style={{width: "50px", height: "auto", marginRight: "0.5em"}}/>
-                <p style={{fontWeight: "bold", color: "red", position: "relative", top: "25%"}}>{card?.hp}HP</p>
+                  <img
+                    src={pokemonTypes.types[String(weakness.type)].icon}
+                    style={pokemonTypes.types[weakness.type].iconStyle}
+                    alt={weakness.type}
+                  />
+                  <p
+                    className="px-2"
+                    style={pokemonTypes.types[weakness.type].style}
+                  >
+                    {weakness.type}
+                  </p>
+                </div>
+              ))}
+
+              <div className="d-flex flex-row align-center">
+                <p
+                  className="px-4"
+                  style={{ fontWeight: "bold", fontSize: "1.3rem" }}
+                >
+                  HP:
+                </p>
+                <img
+                  src="/pokemonHP/hpIcon.png"
+                  alt="hp icon"
+                  style={{
+                    width: "50px",
+                    height: "auto",
+                    marginRight: "0.5em",
+                  }}
+                />
+                <p
+                  style={{
+                    fontWeight: "bold",
+                    color: "red",
+                    position: "relative",
+                    top: "25%",
+                  }}
+                >
+                  {card?.hp}HP
+                </p>
+              </div>
             </div>
-
-
           </div>
-          
-          <p>Prices updated on: {card?.tcgplayer?.updatedAt}</p>
-          <p className="m-0">Starting Selling Price: $20</p>
-          <p>Starting Bid: $20</p>
+          <div className="col-md-3 d-flex flex-column">
+            <div className="setContainer align-items-center d-flex">
+              <span style={{ fontWeight: "bold", fontSize: "1.1rem" }}>
+                Set:
+              </span>
+              <img
+                src={card?.set?.images?.symbol}
+                alt="set logo"
+                style={{ width: "50px", height: "auto", marginLeft: "0.5em" }}
+              />
+              <p className="mb-0">{card?.set?.name}</p>
+            </div>
+            <p className="mb-3">
+              <span style={{ fontWeight: "bold", fontSize: "1.1rem" }}>
+                Artist:
+              </span>{" "}
+              {card?.artist}
+            </p>
+            <p className="mb-3">
+              <span style={{ fontWeight: "bold", fontSize: "1.1rem" }}>
+                Release Date:
+              </span>{" "}
+              {card?.set?.releaseDate}
+            </p>
+            <p className="mb-3">
+              <span style={{ fontWeight: "bold", fontSize: "1.1.rem" }}>
+                Printed Total:
+              </span>
+              {card?.set?.printedTotal}
+            </p>
+          </div>
+
+          <div className="d-flex flex-column col-md-2">
+            <p className="mb-3">
+              <span style={{ fontSize: "1.1rem", fontWeight: "bold" }}>
+                Prices updated on:
+              </span>{" "}
+              {card?.tcgplayer?.updatedAt}
+            </p>
+
+            <div>
+              <p className="mb-3">
+                <span style={{ fontSize: "1.1rem", fontWeight: "bold" }}>
+                  Current Market Price:
+                </span>{" "}
+                ${card.tcgplayer?.prices?.holofoil?.market}
+              </p>
+              <p className="mb-3">
+                <span style={{ fontSize: "1.1rem", fontWeight: "bold" }}>
+                  7-day Price Change:
+                </span>{" "}
+                ?
+              </p>
+            </div>
+            <button className="btn btn-primary">Add to Portfolio</button>
+          </div>
         </div>
         {/* <div className='w-100 h-100 d-flex flex-row'>
                     <div id="left-display" className='ps-3 h-100 w-100 d-flex flex-column justify-content-center gap-2' >
