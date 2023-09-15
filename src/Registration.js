@@ -61,7 +61,7 @@ const Registration = () => {
                 }
                 
                 navigate("/register/initial-profile-settings", {state: {initialSettings, id: addedUserRef.id}})
-                
+                userDataService.initializeUserSettings(addedUserRef.id, newUser.email)
             }
             catch(err){
                 console.log("user was unable to be added to the database.")

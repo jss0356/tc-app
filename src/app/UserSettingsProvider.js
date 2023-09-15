@@ -1,5 +1,8 @@
 
 import { createContext, useState } from "react"
+import {firestore, auth} from '../config/firebase'
+import UserDataService from '../services/user.services'
+import { collection } from "firebase/firestore"
 
 export const UserSettingsContext = createContext(null)
 
@@ -24,7 +27,6 @@ const UserSettingsProvider = ({children}) => {
     const [sortPortfolioListBy, setSortPortfolioListBy] = useState("")
     const [portfolioVisibility, setPortfolioVisibility] = useState("")
     const [dividePortfolioIntoSections, setDividePortfolioIntoSections] = useState("")
-
 
     const contextValue = {
         accountEmail, setAccountEmail,

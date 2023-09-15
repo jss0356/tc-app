@@ -5,9 +5,13 @@ import {collection,
     getDoc, 
     addDoc, 
     updateDoc, 
+    setDoc,
     deleteDoc, 
-    doc
+    doc,
+    query, 
+    where
 } from "firebase/firestore"
+import {useContext} from 'react'
 
     //reference to users collection.
     const userCollectionRef = collection(firestore, "users")
@@ -39,9 +43,80 @@ import {collection,
             return getDoc(userDoc)
         }
 
-        initializeUserSettings = (userID, initialSettings) => {
+        getUserID = async (email) => {
+            const usersCollectionRef = collection(firestore, 'users')
+            const associatedUserDoc = query(usersCollectionRef, where("email", "==", email))
+            try {
+                const userDoc = await getDocs(associatedUserDoc)
+                if (userDoc.docs.size !== 0) {
+                    return userDoc.docs[0].id
+                } else {
+                    console.log("User does not exist")
+                    return 0
+                }
+            }catch(err) {
+                console.log(err)
+            }
+
+        }
+
+        getSettings = async (id) => {
+
+            const settingsCollectionRef = collection(firestore, `users/${id}/userSettings`)
+
+            try{
+                const settings = await getDocs(settingsCollectionRef)
+
+                if (settings.size !== 0){
+                    return settings.docs[0].data()
+                } else {
+                    console.log("Settings have not been initialized yet")
+                    return 0
+                }
+
+            }catch(err){console.log(err)}
+        }
+
+        getSettingRef = async (id) => {
+
+            const settingsCollectionRef = collection(firestore, `users/${id}/userSettings`)
+            
+            try{
+                const settings = await getDocs(settingsCollectionRef)
+
+                if (settings.size !== 0){
+                    return doc(settingsCollectionRef, `${settings.docs[0].id}`)
+                    
+                } else {
+                    console.log("Settings have not been initialized yet")
+                    return 0
+                }
+
+            }catch(err){console.log(err)}
+        }
+
+        initializeUserSettings = (userID, email) => {
             const userSettingsCollectionRef = collection(firestore, `users/${userID}/userSettings`)
-            return addDoc(userSettingsCollectionRef, initialSettings)
+            return addDoc(userSettingsCollectionRef, {
+                accountEmail: email,
+                receiveEmailNotifications: false,
+                textSizing: "",
+                darkMode: false,
+                selectedPaymentMethod: "",
+                creditCardNumber: "",
+                expirationDate: "",
+                cvv: "",
+                countryOrRegion: "",
+                firstName: "",
+                lastName: "",
+                streetAddress: "",
+                aptOrSuiteOrBuilding: "",
+                zipCode: "",
+                cityOrState: "",
+                sortPortfolioListBy: "",
+                portfolioVisibility: "",
+                dividePortfolioIntoSections: ""
+            })
         }
 
     }

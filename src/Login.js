@@ -1,5 +1,5 @@
 import {Link, useNavigate} from 'react-router-dom'
-import {useState} from 'react'
+import {useState, useContext} from 'react'
 import WebLogo from './Rcomponents/WebLogo'
 import {auth, firestore} from './config/firebase'
 import { signInWithEmailAndPassword } from 'firebase/auth'
@@ -7,8 +7,7 @@ import { signInWithGoogle } from './config/firebase'
 
 import {query, where, collection, getDocs, setDoc} from 'firebase/firestore'
 
-
-import UserDataService from './services/user.services'
+import userService from './services/user.services'
 
 import './signInButton.css'
 
@@ -54,8 +53,10 @@ const Login = () => {
             if(resultDoc._snapshot.docs.size == 0 || fullCollection.empty){
                 const userDocToAdd = {username: name, email, authenticationMethod: "google"}
                 try{
-                    const userRef = await UserDataService.addUser(userDocToAdd)
+                    const userRef = await userService.addUser(userDocToAdd)
                     setDoc(userRef, {userID: userRef.id}, {merge: true})
+                    userService.initializeUserSettings(userRef.id, email)
+
                 }catch(err){
                     console.log("Unable to add new user data to database.")
                 }
@@ -64,9 +65,8 @@ const Login = () => {
         }catch(err){
             console.log("Unable to determine if user data already exists.")
         }
-
-
     
+
         navigate("/home")
     }
     return (
