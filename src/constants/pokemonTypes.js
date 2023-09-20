@@ -54,7 +54,7 @@ const pokemonTypes = {
         },
         Sand: {
             style: {
-                color: "yellow",
+                color: "#ffd880",
                 position: "relative", top:"25%",
                 fontWeight: "bold",
                 
@@ -250,7 +250,21 @@ const pokemonTypes = {
         },
         Electric: {
             style: {
-                color: "yellow",
+                color: "#ffd880",
+                position: "relative", top:"25%",
+                fontWeight: "bold",
+                                
+
+            },
+            iconStyle: {
+                height: "50px",
+                width: "50px",
+            },
+            icon: "/pokemonTypes/Electric type.ico"
+        },
+        Lightning: {
+            style: {
+                color: "#ffd880",
                 position: "relative", top:"25%",
                 fontWeight: "bold",
                 

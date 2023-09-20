@@ -80,22 +80,38 @@ const Product = () => {
 
   const [cardHoverEffect, setCardHoverEffect] = useState(false);
 
-  const handleHoverOverCard = () => {
+  const [hoverEffectStyle, setCardHoverEffectStyle] = useState({
+  width: "350px", 
+  padding: "1rem",
+  transition: "all 0.5s ease",
+  transform: cardHoverEffect ? "scale(1.3)" : "scale(1)",
+  boxShadow: cardHoverEffect ? "0 0 10px rgba(0, 0, 0, 0.5)" : "none",
+  cursor: cardHoverEffect ? "pointer" : "default"})
+
+ 
+
+
+  const handleHoverOverCard = (e) => {
     setCardHoverEffect(true);
   };
+
+  const handleMouseMove = (e) => {
+    console.log("CLIENT X: ", e.clientX);
+    console.log("CLIENT Y: ", e.clientY);
+    const dampeningFactor = 0.13;
+    setCardHoverEffectStyle({...hoverEffectStyle, transform: `rotateX(${(e.clientY-300) * dampeningFactor}deg) rotateY(${(e.clientX-190) * dampeningFactor}deg)`})
+    
+  }
 
   const handleHoverOffCard = () => {
     setCardHoverEffect(false);
   };
 
-  const hoverEffectStyle = {
+
+  const nonHoverEffectStyle = {
+    transition: "all 0.5s ease",
     width: "210px",
-    padding: "1rem",
-    tranistion: "all 0.5s ease",
-    transform: cardHoverEffect ? "scale(1.3)" : "scale(1)",
-    boxShadow: cardHoverEffect ? "0 0 10px rgba(0, 0, 0, 0.5)" : "none",
-    cursor: cardHoverEffect ? "pointer" : "default",
-  };
+  }
 
   return (
     <div id="container" className="w-100 h-100 d-flex flex-column">
@@ -123,9 +139,10 @@ const Product = () => {
                 alt="Product"
                 width="250px"
                 className="pt-2 border rounded"
-                style={hoverEffectStyle}
+                style={cardHoverEffect ? hoverEffectStyle : nonHoverEffectStyle}
                 onMouseOver={handleHoverOverCard}
                 onMouseLeave={handleHoverOffCard}
+                onMouseMove={handleMouseMove}
               />
             </div>
           </div>
