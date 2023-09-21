@@ -140,7 +140,13 @@ const Home = () => {
                                 <button variant="primary" onClick={handleShow} className='d-grid' style={{height:"40px", width:"300px", placeContent:"center", backgroundColor:"none"}}><img src={AddIcon} alt="" width="20px"/></button>
                         </div>
 
-
+                        {portfolios.map((portfolio, index) => (
+                            <div key={index} className='portfolio title'>
+                                <LinkContainer to={`/my-account/my-portfolios/${portfolio.id}`}>
+                                    <h2>{portfolio.name}</h2>
+                                </LinkContainer>
+                            </div>
+                        ))}
                             <div className='portfolio title'>
                                 <LinkContainer to="/my-account/my-portfolios/1"><h2>Portfolio 1</h2></LinkContainer> 
                             </div>   
