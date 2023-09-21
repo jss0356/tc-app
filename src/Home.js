@@ -8,7 +8,7 @@ import Card1Baseball from "./image/baseball/card1.jpg"
 import Card2Baseball from "./image/baseball/card2.jpg"
 import { LinkContainer } from 'react-router-bootstrap';
 import Modal from 'react-bootstrap/Modal'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Button from "react-bootstrap/Button"
 import {auth} from './config/firebase'
 import {firestore} from "./config/firebase"
@@ -26,6 +26,7 @@ import {collection,
 
 const Home = () => {
     const [show, setShow] = useState(false);
+    const[portfolios, setPortfolios] = useState([]);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -37,7 +38,33 @@ const Home = () => {
             const userID = foundUser._snapshot.docChanges[0].doc.data.value.mapValue.fields.userID.stringValue
             const userPortfoliosCollectionRef = collection(firestore, `users/${userID}/userPortfolios`)
             addDoc(userPortfoliosCollectionRef, {name:portfolioName})
+
+            // Re-fetches the portfolio after adding the portfolio    
+            fetchPortfolios();
+            /*handleClose();*/
     }
+
+    const fetchPortfolios = async () => {
+        const q = query(collection(firestore, 'users'), where('email', '==', auth.currentUser.email));
+        const foundUser = await getDocs(q);
+        const userID = foundUser.docs[0].id;
+        const userPortfoliosCollectionRef = collection(firestore, `users/${userID}/userPortfolios`);
+        
+        const querySnapshot = await getDocs(userPortfoliosCollectionRef);
+        
+        const portfolioArray = [];
+        querySnapshot.forEach((doc) => {
+          const portfolioItem = doc.data();
+          portfolioArray.push(portfolioItem);
+        });
+    
+        setPortfolios(portfolioArray);
+      };
+
+      useEffect(() => {
+        // fetches the portfolios
+        fetchPortfolios();
+      }, []);
   
     const addPortfolioModal=  <div id="add-portfolio-modal">
     <Modal show={show} onHide={handleClose}>
@@ -108,10 +135,10 @@ const Home = () => {
                     </div>
                     <h2 className='text-center'>My Portfolios</h2>
                     <hr />
-                        <div id="portfolio-showcase" className="d-flex flex-column align-items-center">
+                    <div id="portfolio-showcase" className="d-flex flex-column align-items-center">
                             <div id="add-portfolio" className="w-75 d-flex align-items-center justify-content-center" style={{height:"50px", placeContent:"center"}}>
                                 <button variant="primary" onClick={handleShow} className='d-grid' style={{height:"40px", width:"300px", placeContent:"center", backgroundColor:"none"}}><img src={AddIcon} alt="" width="20px"/></button>
-                            </div>
+                        </div>
 
 
                             <div className='portfolio title'>
