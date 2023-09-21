@@ -52,7 +52,7 @@ const Home = () => {
         <Button variant="secondary" onClick={handleClose}>
         Close
         </Button>
-        <Button variant="primary" onClick={handleSaveChanges}>
+        <Button variant="primary" onClick={() => {handleSaveChanges();handleClose();}}>
         Save Changes
         </Button>
     </Modal.Footer>
