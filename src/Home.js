@@ -54,7 +54,7 @@ const Home = () => {
         
         const portfolioArray = [];
         querySnapshot.forEach((doc) => {
-          const portfolioItem = doc.data();
+          const portfolioItem = doc;
           portfolioArray.push(portfolioItem);
         });
     
@@ -143,7 +143,7 @@ const Home = () => {
                         {portfolios.map((portfolio, index) => (
                             <div key={index} className='portfolio title'>
                                 <LinkContainer to={`/my-account/my-portfolios/${portfolio.id}`}>
-                                    <h2>{portfolio.name}</h2>
+                                    <h2>{portfolio.data().name}</h2>
                                 </LinkContainer>
                             </div>
                         ))}

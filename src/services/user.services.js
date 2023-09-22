@@ -77,6 +77,20 @@ import {useContext} from 'react'
             }catch(err){console.log(err)}
         }
 
+        getPortfolio = async (userID, portfolioID) => {
+            return doc(firestore, `users/${userID}/userPortfolios/${portfolioID}`)
+        }
+
+        getPortfolioCards = async (userID, portfolioID) => {
+            const portfolioCardsCollectionRef = collection(firestore, `users/${userID}/userPortfolios/${portfolioID}/cards`)
+
+            try {
+                const cards = await getDocs(portfolioCardsCollectionRef)
+                return cards
+
+            }catch(err){ console.log(err) }
+        }
+
         getSettingRef = async (id) => {
 
             const settingsCollectionRef = collection(firestore, `users/${id}/userSettings`)

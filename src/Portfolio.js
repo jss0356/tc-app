@@ -8,17 +8,28 @@ import { LinkContainer } from 'react-router-bootstrap'
 import Modal from 'react-bootstrap/Modal'
 import Button from "react-bootstrap/Button"
 import CalculateGradeForm from './CalculateGradeForm'
+import userService from './services/user.services'
+import pokemon from './config/pokemontcgsdk'
+
+import { auth} from './config/firebase'
+import {collection, 
+    setDoc,
+    doc
+} from "firebase/firestore"
+import { upload } from '@testing-library/user-event/dist/upload'
 
 const Portfolio = () =>{
 
-    const[selectedGrade, setSelectedGrade] = useState('-');
     const[selectedGraded, setSelectedGraded] = useState();
+    const [cardGrade, setCardGrade] = useState(0);
+    const [cardName, setCardName] = useState("");
+
     const DisplayForm = (props) => {
-        if(props.graded == "Yes") {
+        if(props.graded === "Yes") {
             return(
 
                 <div>
-                    <select className="form-select custom-select mb-2" value={selectedGrade} onChange={e => setSelectedGrade(e.target.value)}>
+                    <select className="form-select custom-select mb-2" value={cardGrade} onChange={e => setCardGrade(e.target.value)}>
                         <option value="">Select a Grade:</option>
                         <option value="N0">N0</option>
                         <option value="PR 1">PR 1</option>
@@ -33,13 +44,36 @@ const Portfolio = () =>{
                         <option value="MINT 9">MINT 9</option>
                         <option value="GEM-MT 10">GEM-MT 10</option>
                     </select>
-                    {<p> Grade: {selectedGrade}</p>}
+                    {<p> Grade: {cardGrade}</p>}
                 </div>
 
             )
-        } else if (props.graded == "No") {
+        } else if (props.graded === "No") {
             return <CalculateGradeForm/>
         }
+    }
+
+    const {portfolioID} = useParams()
+    const uploadCard = async () => {
+         
+        console.log(portfolioID)
+        const userID = await userService.getUserID(auth.currentUser.email)
+        console.log(userID)
+        const portfolioRef = await userService.getPortfolio(userID, portfolioID)
+        console.log(portfolioRef)
+        const cardRef = collection(portfolioRef, "cards")
+        
+        pokemon.card.where({ q: `name:${cardName}`, pageSize: 5, page: 1})
+        .then(result => {
+            console.log(result.data)
+            let cardID = result.data[1].id
+            setDoc(doc(cardRef, cardID), {
+                cardName,
+                cardGrade
+            })
+            handleClose()
+        })
+
     }
 
     const [show, setShow] = useState(false);
@@ -47,6 +81,7 @@ const Portfolio = () =>{
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
   
+    
     const uploadCardModal =  <div id="add-portfolio-modal">
     <Modal show={show} onHide={handleClose}>
     <Modal.Header closeButton>
@@ -61,14 +96,9 @@ const Portfolio = () =>{
             </div>
 
             <label htmlFor="add-portfolio-title">Card Name:</label>
-            <input className="form-control mb-2" type="text" id="add-portfolio-title"/>
+            <input className="form-control mb-2" type="text" id="add-portfolio-title" value={cardName} onChange={e => setCardName(e.target.value)}/>
 
-            <select className="form-select mb-2" aria-labelledby="Select card genre">
-                <option value="">Select Card Genre/Section:</option>
-                    <option value="Baseball">Baseball</option>
-                    <option value="Football">Football</option>
-                    <option value="Basketball">Basketball</option>
-            </select>
+            
 
             <select className="form-select mb-2" aria-labelledby="Select card genre" value={selectedGraded} onChange={e => setSelectedGraded(e.target.value)}>
                 <option value="">Do you know the PSA grade?</option>
@@ -76,7 +106,7 @@ const Portfolio = () =>{
                     <option value="No">No</option>
             </select>
 
-            <DisplayForm graded = {selectedGraded}/>
+            <DisplayForm graded = {selectedGraded} grade = {cardGrade}/>
 
             <div className="form-group">
                 <label htmlFor="card-description">Card Description</label>
@@ -92,8 +122,8 @@ const Portfolio = () =>{
         <Button variant="secondary" onClick={handleClose}>
         Close
         </Button>
-        <Button variant="primary" onClick={handleClose}>
-        Save Changes
+        <Button variant="primary" onClick={uploadCard}>
+        Upload
         </Button>
     </Modal.Footer>
     </Modal>
@@ -103,7 +133,7 @@ const Portfolio = () =>{
 
 
 
-    const {portfolioID} = useParams()
+    //const {portfolioID} = useParams()
 
     return(
         <div id="container-portfolio" className='h-100 w-100 d-flex flex-column'>
