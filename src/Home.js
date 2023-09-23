@@ -143,7 +143,7 @@ const Home = () => {
                         {portfolios.map((portfolio, index) => (
                             <div key={index} className='portfolio title'>
                                 <LinkContainer to={`/my-account/my-portfolios/${portfolio.id}`}>
-                                    <h2>{portfolio.data().name}</h2>
+                                    <h2 role="button">{portfolio.data().name}</h2>
                                 </LinkContainer>
                             </div>
                         ))}
