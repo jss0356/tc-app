@@ -13,7 +13,7 @@ import pokemon from './config/pokemontcgsdk'
 
 import { auth} from './config/firebase'
 import {collection, 
-    setDoc,
+    addDoc,
     doc
 } from "firebase/firestore"
 import { upload } from '@testing-library/user-event/dist/upload'
@@ -23,6 +23,7 @@ const Portfolio = () =>{
     const[selectedGraded, setSelectedGraded] = useState();
     const [cardGrade, setCardGrade] = useState(0);
     const [cardName, setCardName] = useState("");
+    const [cardID, setCardID] = useState("");
 
     const DisplayForm = (props) => {
         if(props.graded === "Yes") {
@@ -54,7 +55,7 @@ const Portfolio = () =>{
     }
 
     const {portfolioID} = useParams()
-    const uploadCard = async () => {
+    const uploadCard = async (name) => {
          
         console.log(portfolioID)
         const userID = await userService.getUserID(auth.currentUser.email)
@@ -62,19 +63,24 @@ const Portfolio = () =>{
         const portfolioRef = await userService.getPortfolio(userID, portfolioID)
         console.log(portfolioRef)
         const cardRef = collection(portfolioRef, "cards")
-        
-        pokemon.card.where({ q: `name:${cardName}`, pageSize: 5, page: 1})
-        .then(result => {
-            console.log(result.data)
-            let cardID = result.data[1].id
-            setDoc(doc(cardRef, cardID), {
-                cardName,
-                cardGrade
-            })
-            handleClose()
+        addDoc(cardRef, {
+            name,
+            cardGrade,
+            cardID
         })
 
     }
+
+    const getCards = async (name) => {
+        console.log(name)
+        pokemon.card.where({ q: `name:${name}*`, pageSize: 5, page: 1, orderBy: 'name'})
+        .then(result => {
+            console.log(result.data)
+        })
+        setCardName(name)
+        
+    }
+
 
     const [show, setShow] = useState(false);
 
@@ -96,7 +102,7 @@ const Portfolio = () =>{
             </div>
 
             <label htmlFor="add-portfolio-title">Card Name:</label>
-            <input className="form-control mb-2" type="text" id="add-portfolio-title" value={cardName} onChange={e => setCardName(e.target.value)}/>
+            <input className="form-control mb-2" type="text" id="add-portfolio-title" value={cardName} onChange={e =>  getCards(e.target.value)}/>
 
             
 
@@ -106,7 +112,7 @@ const Portfolio = () =>{
                     <option value="No">No</option>
             </select>
 
-            <DisplayForm graded = {selectedGraded} grade = {cardGrade}/>
+            <DisplayForm graded = {selectedGraded}/>
 
             <div className="form-group">
                 <label htmlFor="card-description">Card Description</label>
@@ -130,10 +136,6 @@ const Portfolio = () =>{
 </div>
 
 
-
-
-
-    //const {portfolioID} = useParams()
 
     return(
         <div id="container-portfolio" className='h-100 w-100 d-flex flex-column'>
