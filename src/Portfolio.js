@@ -1,5 +1,8 @@
 import {useParams} from 'react-router-dom'
 import {useState} from 'react'
+import Select from 'react-select'
+import { components } from 'react-select';
+import AsyncSelect from 'react-select/async'
 import MainNavbar from './Rcomponents/MainNavbar'
 import LineGraph from './Rcomponents/LineGraph'
 import SearchIcon from './logos/SearchIcon.png'
@@ -24,6 +27,7 @@ const Portfolio = () =>{
     const [cardGrade, setCardGrade] = useState(0);
     const [cardName, setCardName] = useState("");
     const [cardID, setCardID] = useState("");
+    const [loading, setLoading] = useState(false)
 
     const DisplayForm = (props) => {
         if(props.graded === "Yes") {
@@ -64,30 +68,47 @@ const Portfolio = () =>{
         console.log(portfolioRef)
         const cardRef = collection(portfolioRef, "cards")
         addDoc(cardRef, {
-            name,
             cardGrade,
             cardID
         })
+        handleClose()
 
     }
 
-    const getCards = async (name) => {
-        console.log(name)
-        pokemon.card.where({ q: `name:${name}*`, pageSize: 5, page: 1, orderBy: 'name'})
-        .then(result => {
-            console.log(result.data)
-        })
-        setCardName(name)
         
+    const getCards = async inputValue => {
+        
+        
+        let arr = []
+        setLoading(true)
+            return pokemon.card.where({ q: `name:${inputValue}*`}).then(result => {   
+                result.data.map((card) => {
+                    return arr.push({value: card.id, label: card.name, setSymbol: card.set.images.symbol})
+                    })    
+                setLoading(false) 
+                return arr               
+            })
     }
-
 
     const [show, setShow] = useState(false);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
   
+    const selectionChange = (selectedOption) => {
+        if (selectedOption) { 
+            setCardID(selectedOption.value)
+        } else { setCardID('none') }
+    }
     
+
+    const IconOption = (props) => (
+        <components.Option {...props}>
+            <img src={props.data.setSymbol} style={{ height: '30px', borderRadius: '50%', marginRight: '10px' }} alt={"set symbol"}/>
+            {props.data.label}
+        </components.Option>
+    );
+
     const uploadCardModal =  <div id="add-portfolio-modal">
     <Modal show={show} onHide={handleClose}>
     <Modal.Header closeButton>
@@ -96,15 +117,13 @@ const Portfolio = () =>{
     <Modal.Body>
     
     <form>
-            <div className="form-group mb-2">
-                <label htmlFor="uploadCardImage">Upload card image:</label>
-                <input type="file" className="form-control-file d-block" id="uploadCardImage"/>
-            </div>
 
             <label htmlFor="add-portfolio-title">Card Name:</label>
-            <input className="form-control mb-2" type="text" id="add-portfolio-title" value={cardName} onChange={e =>  getCards(e.target.value)}/>
-
-            
+            <AsyncSelect className="basic-single mb-2" classNamePrefix="select" 
+            components={{Option: IconOption}} fe
+            onChange={selectionChange}
+            isLoading={loading} isClearable isSearchable 
+            loadOptions={getCards}/>
 
             <select className="form-select mb-2" aria-labelledby="Select card genre" value={selectedGraded} onChange={e => setSelectedGraded(e.target.value)}>
                 <option value="">Do you know the PSA grade?</option>
