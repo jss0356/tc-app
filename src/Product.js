@@ -362,25 +362,34 @@ const Product = () => {
 
                     </div>
   </div> */}
+      <div className="d-flex flex-row w-100">
         {card.tcgplayer?.prices?.holofoil ? (
-        
-        <div className="chart-container w-50 h-25">
-        <h2 className="text-center">Price Over Time</h2>
-            <Bar data={data} options={options} />
+          
+          <div className="chart-container h-25 w-100">
+            <h2 className="text-center">Price Over Time</h2>
+                <Bar data={data} options={options} />
+              </div>
+            ) : (
+              <div className="d-flex justify-content-center align-items-center vh-100">
+                <Spinner
+                  animation="border"
+                  variant="primary"
+                  className="custom-spinner spinner-lg w-20 h-20"
+                />
+                <span className="loading-message fs-4">
+                  Loading Card Details...
+                </span>
+              </div>
+            )}
+
+          <div id="selling-listings" className="w-100 d-flex flex-column align-items-center ">
+            Listings will go here
           </div>
-        ) : (
-          <div className="d-flex justify-content-center align-items-center vh-100">
-            <Spinner
-              animation="border"
-              variant="primary"
-              className="custom-spinner spinner-lg w-20 h-20"
-            />
-            <span className="loading-message fs-4">
-              Loading Card Details...
-            </span>
-          </div>
-        )}
+
+        </div>
+
       </div>
+
     </div>
   );
 };
