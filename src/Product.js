@@ -59,7 +59,9 @@ const Product = () => {
     console.log({ card });
   }
 
-  const options = {};
+  const options = {responsive: true,
+    maintainAspectRatio: true
+  };
   const data = {
     labels: ["low", "mid", "high", "market", "direct low"],
     datasets: [
@@ -81,10 +83,10 @@ const Product = () => {
   const [cardHoverEffect, setCardHoverEffect] = useState(false);
 
   const [hoverEffectStyle, setCardHoverEffectStyle] = useState({
-  width: "350px", 
+  width: "80%", 
   padding: "1rem",
   transition: "all 0.5s ease",
-  transform: cardHoverEffect ? "scale(1.3)" : "scale(1)",
+  transform: cardHoverEffect ? "scale(1)" : "scale(1)",
   boxShadow: cardHoverEffect ? "0 0 10px rgba(0, 0, 0, 0.5)" : "none",
   cursor: cardHoverEffect ? "pointer" : "default"})
 
@@ -110,22 +112,22 @@ const Product = () => {
 
   const nonHoverEffectStyle = {
     transition: "all 0.5s ease",
-    width: "210px",
+    width: "60%",
   }
 
   return (
-    <div id="container" className="w-100 h-100 d-flex flex-column">
+    <div id="container" className="w-100 d-flex flex-column">
       <div id="main-navbar" style={{ marginBottom: "130px" }}>
         <MainNavbarMarketplace />
       </div>
 
       <div
         id="product-container"
-        className="w-100 pb-5 d-flex flex-column"
+        className="w-100 pb-5 h-100 d-flex flex-column"
         style={{ backgroundColor: "#edf5e1" }}
       >
-        <div className="row">
-          <div className="col-md-3">
+        <div className="row pt-3">
+          <div className="col-md-4 justify-content-center">
             <div
               id="product-image"
               className="d-flex flex-column align-items-center"
@@ -133,6 +135,16 @@ const Product = () => {
               <div className="d-flex align-items-center">
                 <h2>{card.name}</h2>
                 <span className="px-2">{card.subtypes}</span>
+              </div>
+              <div className="d-flex flex-row w-100 justify-content-center align-items-center">
+
+                <div className="px-2" style={{fontWeight: "bold"}}>
+                  Starting from:
+                </div>
+                <div style={{fontSize: "2rem"}} className="text-green">
+                ${card?.cardmarket?.prices?.averageSellPrice}
+                </div>
+                 
               </div>
               <img
                 src={card.images?.small}
@@ -146,10 +158,10 @@ const Product = () => {
               />
             </div>
           </div>
-          <div className="col-md-3">
-            <div className="d-flex flex-column">
+          <div className="col-md-4 justify-content-center">
+            <div className="d-flex flex-column ">
               {card?.types?.map((type) => (
-                <div className="d-flex flex-row">
+                <div className="d-flex flex-row ">
                   <p
                     className="px-4"
                     style={{ fontWeight: "bold", fontSize: "1.3rem" }}
@@ -236,7 +248,7 @@ const Product = () => {
               </div>
             </div>
           </div>
-          <div className="col-md-3 d-flex flex-column">
+          <div className="col-md-4 justify-content-center">
             <div className="setContainer align-items-center d-flex">
               <span style={{ fontWeight: "bold", fontSize: "1.1rem" }}>
                 Set:
@@ -262,36 +274,10 @@ const Product = () => {
             </p>
             <p className="mb-3">
               <span style={{ fontWeight: "bold", fontSize: "1.1.rem" }}>
-                Printed Total:
-              </span>
-              {card?.set?.printedTotal}
+                Printed Total: </span> {card?.set?.printedTotal}
             </p>
           </div>
 
-          <div className="d-flex flex-column col-md-2">
-            <p className="mb-3">
-              <span style={{ fontSize: "1.1rem", fontWeight: "bold" }}>
-                Prices updated on:
-              </span>{" "}
-              {card?.tcgplayer?.updatedAt}
-            </p>
-
-            <div>
-              <p className="mb-3">
-                <span style={{ fontSize: "1.1rem", fontWeight: "bold" }}>
-                  Current Market Price:
-                </span>{" "}
-                ${card.tcgplayer?.prices?.holofoil?.market}
-              </p>
-              <p className="mb-3">
-                <span style={{ fontSize: "1.1rem", fontWeight: "bold" }}>
-                  7-day Price Change:
-                </span>{" "}
-                ?
-              </p>
-            </div>
-            <button className="btn btn-primary">Add to Portfolio</button>
-          </div>
         </div>
         {/* <div className='w-100 h-100 d-flex flex-row'>
                     <div id="left-display" className='ps-3 h-100 w-100 d-flex flex-column justify-content-center gap-2' >
@@ -376,9 +362,10 @@ const Product = () => {
 
                     </div>
   </div> */}
-        <h2>Card Details</h2>
         {card.tcgplayer?.prices?.holofoil ? (
-          <div className="chart-container">
+        
+        <div className="chart-container w-50 h-25">
+        <h2 className="text-center">Price Over Time</h2>
             <Bar data={data} options={options} />
           </div>
         ) : (
