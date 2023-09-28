@@ -386,7 +386,7 @@ const Product = () => {
             )}
 
           <div id="selling-listings" className="w-100 h-100 d-flex gap-2 flex-column align-items-center m-2">
-
+          <h2 className="text-center">Listings</h2>
           <div className="w-75 d-flex justify-content-between align-items-center p-3" style={{background: "white", borderRadius: "20px", boxShadow: "1px 1px 3px black"}}>
               
               <img src={UserIcon} alt="Profile Image" width={100} height={100} style={{width: "10%", height: "auto"}}/>
