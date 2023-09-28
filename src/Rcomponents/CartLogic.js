@@ -1,10 +1,10 @@
 import React from "react";
 
-function CartLogic({ cart, setCart }) {
+function CartLogic({ cart, setCart, cartQuantity, setCartQuantity }) {
   const calculateTotalPrice = () => {
     return cart.reduce((total, card) => {
       const cardPrice = card?.tcgplayer?.prices?.holofoil?.market || 0;
-      return total + cardPrice;
+      return total + cardPrice * card.cartQuantity;
     }, 0);
   };
 
@@ -22,19 +22,25 @@ function CartLogic({ cart, setCart }) {
           <ul className="list-group">
             {cart.map((card) => (
               <li key={card.id} className="list-group-item mb-3">
-                <div className="d-flex justify-content-between align-items-center">
-                  <div className="d-flex align-items-center">
+                {/* <div className="d-flex align-items-center"> */}
+                <div className="row align-items-center">
+                  <div className="col-md-2">
                     <img
                       src={card.images.small}
                       alt={card.name}
-                      className="card-image me-3"
+                      className="card-image img-fluid"
                     />
-                    <div>
-                      <h5 className="mb-0">{card.name}</h5>
-                      <p className="mb-0">
-                        ${card?.tcgplayer?.prices?.holofoil?.market}
-                      </p>
-                    </div>
+                  </div>
+                  <div className="col-md-6">
+                    <h5 className="mb-0">{card.name}</h5>
+                    <p className="mb-0">
+                      ${card?.tcgplayer?.prices?.holofoil?.market}
+                    </p>
+                  </div>
+                  <div className="col-md-2">
+                    <p>Quantity: {card.cartQuantity}</p>
+                  </div>
+                  <div className="col-md-2">
                     <button
                       className="btn btn-danger"
                       onClick={() => removeCardFromCart(card.id)}
@@ -43,6 +49,7 @@ function CartLogic({ cart, setCart }) {
                     </button>
                   </div>
                 </div>
+                {/* </div> */}
               </li>
             ))}
           </ul>

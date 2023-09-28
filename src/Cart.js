@@ -1,10 +1,9 @@
-import SampleProductImage from './image/baseball/card1.jpg'
-import MainNavbarMarketplace from './Rcomponents/MainNavbarMarketplace'
-import {LinkContainer} from 'react-router-bootstrap'
+import SampleProductImage from "./image/baseball/card1.jpg";
+import MainNavbarMarketplace from "./Rcomponents/MainNavbarMarketplace";
+import { LinkContainer } from "react-router-bootstrap";
 import CartLogic from "./Rcomponents/CartLogic";
-const Cart = ({ cart, setCart }) =>{
-
-   /* return (
+const Cart = ({ cart, setCart, cartQuantity, setCartQuantity }) => {
+  /* return (
 
         
             <div className='h-100 w-100 d-flex flex-column'>
@@ -74,15 +73,19 @@ const Cart = ({ cart, setCart }) =>{
     )
 }
 */
-    
 
-    return (
+  return (
     <div className="h-100 w-100 d-flex flex-column">
       <div id="main-navbar" style={{ marginBottom: "130px" }}>
         <MainNavbarMarketplace />
       </div>
       <div id="container" className="h-100 w-100 d-flex flex-row">
-        <CartLogic cart={cart} setCart={setCart} />
+        <CartLogic
+          cart={cart}
+          setCart={setCart}
+          cartQuantity={cartQuantity}
+          setCartQuantity={setCartQuantity}
+        />
       </div>
     </div>
   );

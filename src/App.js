@@ -37,6 +37,7 @@ import MarketplaceProvider from "./app/MarketplaceProvider";
 
 function App() {
   const [cart, setCart] = useState([]);
+  const [cartQuantity, setCartQuantity] = useState(0);
   return (
     <div className="App" style={{ backgroundColor: "#5cdb95" }}>
       <div className="container" style={{ overflow: "auto" }}>
@@ -100,11 +101,25 @@ function App() {
               <Route path="cards/:productID" element={<Product />} />
               <Route
                 path="search-results"
-                element={<MarketplaceSearch cart={cart} setCart={setCart} />}
+                element={
+                  <MarketplaceSearch
+                    cart={cart}
+                    setCart={setCart}
+                    cartQuantity={cartQuantity}
+                    setCartQuantity={setCartQuantity}
+                  />
+                }
               />
               <Route
                 path="cart"
-                element={<Cart cart={cart} setCart={setCart} />}
+                element={
+                  <Cart
+                    cart={cart}
+                    setCart={setCart}
+                    cartQuantity={cartQuantity}
+                    setCartQuantity={setCartQuantity}
+                  />
+                }
               />
               <Route path="payment">
                 <Route index element={<PaymentInfo />} />

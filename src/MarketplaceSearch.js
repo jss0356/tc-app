@@ -4,7 +4,12 @@ import { useState, useEffect, useContext } from "react";
 import Card from "react-bootstrap/Card";
 import { MarketplaceContext } from "./app/MarketplaceProvider";
 import { Link } from "react-router-dom";
-const MarketplaceSearch = ({ cart, setCart }) => {
+const MarketplaceSearch = ({
+  cart,
+  setCart,
+  cartQuantity,
+  setCartQuantity,
+}) => {
   const [cards, setCards] = useState([]);
 
   const [filteredCards, setFilteredCards] = useState([]);
@@ -106,6 +111,21 @@ const MarketplaceSearch = ({ cart, setCart }) => {
     }
   };
 
+  const handleQuantityInput = (e) => {
+    setCartQuantity(e.target.value);
+  };
+
+  const handleAddingQuantity = (card) => {
+    if (cart.some((item) => item.id === card.id)) {
+      setCart(
+        ([...cart][cart.some((item) => item.id === card.id)].cartQuantity =
+          +parseInt(cartQuantity))
+      );
+    } else {
+      setCart([...cart, { ...card, cartQuantity: parseInt(cartQuantity) }]);
+    }
+  };
+
   return (
     <div id="container" className="h-100 w-100 d-flex flex-column">
       <div id="mainNavMarketplace" style={{ marginBottom: "130px" }}>
@@ -147,24 +167,23 @@ const MarketplaceSearch = ({ cart, setCart }) => {
             filteredCards
               .map((card) => {
                 return (
-                  
-                    <Card
-                      key={card.id}
-                      className="card-item"
-                      style={{
-                        width: "100%",
-                        cursor: "pointer",
-                        transition: "box-shadow 10s",
-                        ":hover": {
-                          boxShadow: "0 5px 10px rgba(0, 0, 0, 0.2)",
-                        },
-                      }}
-                    >
-                      <Link
-                    to={`/marketplace/cards/${card.id}`}
+                  <Card
                     key={card.id}
-                    className="card-link"
+                    className="card-item"
+                    style={{
+                      width: "100%",
+                      cursor: "pointer",
+                      transition: "box-shadow 10s",
+                      ":hover": {
+                        boxShadow: "0 5px 10px rgba(0, 0, 0, 0.2)",
+                      },
+                    }}
                   >
+                    <Link
+                      to={`/marketplace/cards/${card.id}`}
+                      key={card.id}
+                      className="card-link"
+                    >
                       <Card.Img
                         variant="top"
                         src={card.images.small}
@@ -172,30 +191,38 @@ const MarketplaceSearch = ({ cart, setCart }) => {
                         //make the image smaller
                         style={{ height: "auto", width: "100%" }}
                       />
-                                        </Link>
+                    </Link>
 
-                      <Card.Body>
-                        <Card.Title className="card-name">
-                          {card.name}
-                        </Card.Title>
-                        <Card.Text className="card-price">
-                          ${card?.tcgplayer?.prices?.holofoil?.market}
-                        </Card.Text>
-                        <button
-                          //className="btn btn-primary add-to-cart-btn"
-                          className={`btn ${
-                            addedCards.includes(card.id)
-                              ? "btn-danger"
-                              : "btn-primary"
-                          }`}
-                          onClick={() => handleCart(card)}
-                        >
-                          {addedCards.includes(card.id)
-                            ? "Remove from Cart"
-                            : "Add to Cart"}
-                        </button>
-                      </Card.Body>
-                    </Card>
+                    <Card.Body>
+                      <Card.Title className="card-name">{card.name}</Card.Title>
+                      <Card.Text className="card-price">
+                        ${card?.tcgplayer?.prices?.holofoil?.market}
+                      </Card.Text>
+                      <input
+                        type="number"
+                        placeholder="quantity"
+                        style={{ width: "90px" }}
+                        value={cartQuantity}
+                        onChange={handleQuantityInput}
+                      />
+                      <button
+                        //className="btn btn-primary add-to-cart-btn"
+                        className={`btn ${
+                          addedCards.includes(card.id)
+                            ? "btn-danger"
+                            : "btn-primary"
+                        }`}
+                        onClick={() => {
+                          handleCart(card);
+                          handleAddingQuantity(card);
+                        }}
+                      >
+                        {addedCards.includes(card.id)
+                          ? "Remove from Cart"
+                          : "Add to Cart"}
+                      </button>
+                    </Card.Body>
+                  </Card>
                 );
               })
               .slice(lowerBound, 16 * currPage)
