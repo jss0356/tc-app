@@ -8,6 +8,9 @@ import AuctionIcon from "./logos/MarketplaceUploadIcon.png";
 import { useState } from "react";
 import { useEffect } from "react";
 import LineGraph from "./Rcomponents/LineGraph";
+
+import UserIcon from './logos/default-profile.jpg'
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -382,8 +385,44 @@ const Product = () => {
               </div>
             )}
 
-          <div id="selling-listings" className="w-100 d-flex flex-column align-items-center ">
-            Listings will go here
+          <div id="selling-listings" className="w-100 h-100 d-flex gap-2 flex-column align-items-center m-2">
+
+          <div className="w-75 d-flex justify-content-between align-items-center p-3" style={{background: "white", borderRadius: "20px", boxShadow: "1px 1px 3px black"}}>
+              
+              <img src={UserIcon} alt="Profile Image" width={100} height={100} style={{width: "10%", height: "auto"}}/>
+              <div id="lister-email" className="d-flex flex-column justify-content-between">
+                <div className="text-center" style={{fontWeight: "bold"}}>Seller Email</div>
+                <div>xyz@gmail.com</div>
+              </div>
+              <div id="grade" className="d-flex flex-column justify-content-between">
+                <div className="text-center" style={{fontWeight: "bold"}}>Grade</div>
+                <div>PSA 9</div>
+              </div>
+              <div id="price" className="d-flex flex-column justify-content-between">
+                <div className="text-center" style={{fontWeight: "bold"}}>Price</div>
+                <div>$8.99</div>
+              </div>
+              <img src={ShoppingCartIcon} alt="Profile Image" width={100} height={100} style={{width: "7%", height: "auto"}}/>
+
+            </div>
+            <div className="w-75 d-flex justify-content-between align-items-center p-3" style={{background: "white", borderRadius: "20px", boxShadow: "1px 1px 3px black"}}>
+              
+              <img src={UserIcon} alt="Profile Image" width={100} height={100} style={{width: "10%", height: "auto"}}/>
+              <div id="lister-email" className="d-flex flex-column justify-content-between">
+                <div className="text-center" style={{fontWeight: "bold"}}>Seller Email</div>
+                <div>xyz@gmail.com</div>
+              </div>
+              <div id="grade" className="d-flex flex-column justify-content-between">
+                <div className="text-center" style={{fontWeight: "bold"}}>Grade</div>
+                <div>PSA 9</div>
+              </div>
+              <div id="price" className="d-flex flex-column justify-content-between">
+                <div className="text-center" style={{fontWeight: "bold"}}>Price</div>
+                <div>$8.99</div>
+              </div>
+              <img src={ShoppingCartIcon} alt="Profile Image" width={100} height={100} style={{width: "7%", height: "auto"}}/>
+
+            </div>
           </div>
 
         </div>
