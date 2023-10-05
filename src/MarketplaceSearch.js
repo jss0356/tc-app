@@ -15,6 +15,7 @@ const MarketplaceSearch = ({
   const [filteredCards, setFilteredCards] = useState([]);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [filterDropDown, setFilterDropDown] = useState("All");
 
   const {
     search,
@@ -80,9 +81,19 @@ const MarketplaceSearch = ({
   }
 
   useEffect(() => {
-    const filtered = cards.filter((card) =>
-      card.name.toLowerCase().startsWith(search.toLowerCase())
-    );
+    const filtered = cards.filter((card) => {
+      const inputFilter =
+        card.name.toLowerCase().includes(search.toLowerCase()) ||
+        search.trim() === "";
+
+      const dropDownSetFilter =
+        filterDropDown === "All" || card?.set?.name === filterDropDown;
+
+      return (
+        (filterDropDown === "All" && search.trim() === "") ||
+        (inputFilter && dropDownSetFilter)
+      );
+    });
     setFilteredCards(
       filtered.sort((a, b) => {
         if (a.name < b.name) {
@@ -95,7 +106,7 @@ const MarketplaceSearch = ({
         return 0;
       })
     );
-  }, [search, cards]);
+  }, [search, cards, filterDropDown]);
 
   console.log(addedCards);
 
@@ -133,10 +144,20 @@ const MarketplaceSearch = ({
     }
   };
 
+  function handleFilterDropDown(e) {
+    setFilterDropDown(e.target.value);
+  }
+
   return (
     <div id="container" className="h-100 w-100 d-flex flex-column">
       <div id="mainNavMarketplace" style={{ marginBottom: "130px" }}>
-        <MainNavbarMarketplace />
+        <MainNavbarMarketplace
+          cards={cards}
+          setCards={setCards}
+          filterDropDown={filterDropDown}
+          setFilterDropDown={setFilterDropDown}
+          handleFilterDropDown={handleFilterDropDown}
+        />
       </div>
 
       <div
