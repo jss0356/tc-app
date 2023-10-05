@@ -4,7 +4,7 @@ function CartLogic({ cart, setCart, cartQuantity, setCartQuantity }) {
   const calculateTotalPrice = () => {
     return cart.reduce((total, card) => {
       const cardPrice = card?.tcgplayer?.prices?.holofoil?.market || 0;
-      return total + cardPrice * card.cartQuantity;
+      return total + cardPrice * (cartQuantity[card.id] || 1);
     }, 0);
   };
 
@@ -38,7 +38,9 @@ function CartLogic({ cart, setCart, cartQuantity, setCartQuantity }) {
                     </p>
                   </div>
                   <div className="col-md-2">
-                    <p>Quantity: {card.cartQuantity}</p>
+                    <p key={card.cartQuantity}>
+                      Quantity: {cartQuantity[card.id] || 0}
+                    </p>
                   </div>
                   <div className="col-md-2">
                     <button

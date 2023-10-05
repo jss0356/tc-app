@@ -105,14 +105,21 @@ const MarketplaceSearch = ({
       setAddedCards(
         addedCards.filter((addedCardsID) => addedCardsID !== card.id)
       );
+      setCartQuantity((prevCartQuantity) => {
+        const { [card.id]: _, ...rest } = prevCartQuantity;
+        return rest;
+      });
     } else {
-      setCart([...cart, card]);
+      setCart([...cart, { ...card, cartQuantity: cartQuantity[card.id] || 0 }]);
       setAddedCards([...addedCards, card.id]);
     }
   };
 
-  const handleQuantityInput = (e) => {
-    setCartQuantity(e.target.value);
+  const handleQuantityInput = (event, cardId) => {
+    setCartQuantity((prevQuantity) => ({
+      ...prevQuantity,
+      [cardId]: parseInt(event.target.value) || 0,
+    }));
   };
 
   const handleAddingQuantity = (card) => {
@@ -202,8 +209,11 @@ const MarketplaceSearch = ({
                         type="number"
                         placeholder="quantity"
                         style={{ width: "90px" }}
-                        value={cartQuantity}
-                        onChange={handleQuantityInput}
+                        value={cartQuantity[card.id] || 0}
+                        onChange={(event) =>
+                          handleQuantityInput(event, card.id)
+                        }
+                        key={`quantity-input-${card.id}`}
                       />
                       <button
                         //className="btn btn-primary add-to-cart-btn"
