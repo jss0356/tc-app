@@ -1,8 +1,5 @@
 import {useParams} from 'react-router-dom'
-import {useState} from 'react'
-import Select from 'react-select'
-import { components } from 'react-select';
-import AsyncSelect from 'react-select/async'
+import {useState, useContext} from 'react'
 import MainNavbar from './Rcomponents/MainNavbar'
 import LineGraph from './Rcomponents/LineGraph'
 import SearchIcon from './logos/SearchIcon.png'
@@ -12,29 +9,39 @@ import Modal from 'react-bootstrap/Modal'
 import Button from "react-bootstrap/Button"
 import CalculateGradeForm from './CalculateGradeForm'
 import userService from './services/user.services'
-import pokemon from './config/pokemontcgsdk'
+import ChooseCardUpload from './ChooseCardUpload'
+import { CardContext } from './app/CardProvider'
 
 import { auth} from './config/firebase'
 import {collection, 
     addDoc,
     doc
 } from "firebase/firestore"
-import { upload } from '@testing-library/user-event/dist/upload'
 
 const Portfolio = () =>{
 
     const[selectedGraded, setSelectedGraded] = useState();
-    const [cardGrade, setCardGrade] = useState(0);
-    const [cardName, setCardName] = useState("");
-    const [cardID, setCardID] = useState("");
-    const [loading, setLoading] = useState(false)
+    const {
+        grade, setGrade,
+        id, setID
+    } = useContext(CardContext)
+    //const [grade, setGrade] = useState(0);
+    //const [id, setID] = useState("");
+
+    const changeID = (value) => {
+        setID(value)
+    }
+
+    const changeGrade = (value) => {
+        setGrade(value)
+    }
 
     const DisplayForm = (props) => {
         if(props.graded === "Yes") {
             return(
 
                 <div>
-                    <select className="form-select custom-select mb-2" value={cardGrade} onChange={e => setCardGrade(e.target.value)}>
+                    <select className="form-select custom-select mb-2" value={grade} onChange={e => setGrade(e.target.value)}>
                         <option value="">Select a Grade:</option>
                         <option value="N0">N0</option>
                         <option value="PR 1">PR 1</option>
@@ -49,17 +56,20 @@ const Portfolio = () =>{
                         <option value="MINT 9">MINT 9</option>
                         <option value="GEM-MT 10">GEM-MT 10</option>
                     </select>
-                    {<p> Grade: {cardGrade}</p>}
+                    {<p> Grade: {grade}</p>}
                 </div>
 
             )
         } else if (props.graded === "No") {
-            return <CalculateGradeForm/>
+            return (
+                <CalculateGradeForm />
+            )
         }
     }
 
     const {portfolioID} = useParams()
-    const uploadCard = async (name) => {
+
+    const uploadCard = async () => {
          
         console.log(portfolioID)
         const userID = await userService.getUserID(auth.currentUser.email)
@@ -67,47 +77,19 @@ const Portfolio = () =>{
         const portfolioRef = await userService.getPortfolio(userID, portfolioID)
         console.log(portfolioRef)
         const cardRef = collection(portfolioRef, "cards")
+        console.log(grade, id)
         addDoc(cardRef, {
-            cardGrade,
-            cardID
+            grade,
+            id
         })
         handleClose()
 
-    }
-
-        
-    const getCards = async inputValue => {
-        
-        
-        let arr = []
-        setLoading(true)
-            return pokemon.card.where({ q: `name:${inputValue}*`}).then(result => {   
-                result.data.map((card) => {
-                    return arr.push({value: card.id, label: card.name, setSymbol: card.set.images.symbol})
-                    })    
-                setLoading(false) 
-                return arr               
-            })
     }
 
     const [show, setShow] = useState(false);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-  
-    const selectionChange = (selectedOption) => {
-        if (selectedOption) { 
-            setCardID(selectedOption.value)
-        } else { setCardID('none') }
-    }
-    
-
-    const IconOption = (props) => (
-        <components.Option {...props}>
-            <img src={props.data.setSymbol} style={{ height: '30px', borderRadius: '50%', marginRight: '10px' }} alt={"set symbol"}/>
-            {props.data.label}
-        </components.Option>
-    );
 
     const uploadCardModal =  <div id="add-portfolio-modal">
     <Modal show={show} onHide={handleClose}>
@@ -119,11 +101,7 @@ const Portfolio = () =>{
     <form>
 
             <label htmlFor="add-portfolio-title">Card Name:</label>
-            <AsyncSelect className="basic-single mb-2" classNamePrefix="select" 
-            components={{Option: IconOption}} fe
-            onChange={selectionChange}
-            isLoading={loading} isClearable isSearchable 
-            loadOptions={getCards}/>
+            <ChooseCardUpload changeID={changeID}/>
 
             <select className="form-select mb-2" aria-labelledby="Select card genre" value={selectedGraded} onChange={e => setSelectedGraded(e.target.value)}>
                 <option value="">Do you know the PSA grade?</option>
@@ -137,7 +115,7 @@ const Portfolio = () =>{
                 <label htmlFor="card-description">Card Description</label>
                 <textarea className="form-control" id="card-description" rows="3"></textarea>
             </div>
-
+            {<p> Grade: {grade}</p>}
         </form>
 
 

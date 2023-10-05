@@ -34,6 +34,7 @@ import RegistrationSuccess from "./RegistrationSuccess";
 import { useState } from "react";
 import UserSettingsProvider from "./app/UserSettingsProvider";
 import MarketplaceProvider from "./app/MarketplaceProvider";
+import CardProvider from "./app/CardProvider";
 
 function App() {
   const [cart, setCart] = useState([]);
@@ -82,7 +83,11 @@ function App() {
               <Route path="my-portfolios">
                 <Route index element={<MyPortfolios />} />
                 <Route path=":portfolioID">
-                  <Route index element={<Portfolio />} />
+                  <Route index element={
+                    <CardProvider>
+                      <Portfolio />
+                    </CardProvider>
+                  } />
                   <Route path=":cardID" element={<PortfolioItem />} />
                 </Route>
               </Route>

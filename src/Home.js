@@ -23,7 +23,6 @@ import {collection,
     where
 } from "firebase/firestore"
 
-
 const Home = () => {
     const [show, setShow] = useState(false);
     const[portfolios, setPortfolios] = useState([]);
