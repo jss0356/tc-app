@@ -53,6 +53,7 @@ const Home = () => {
         
         const portfolioArray = [];
         querySnapshot.forEach((doc) => {
+            console.log(doc)
           const portfolioItem = doc;
           portfolioArray.push(portfolioItem);
         });

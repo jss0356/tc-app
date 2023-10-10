@@ -9,6 +9,8 @@ import { useState } from "react";
 import { useEffect } from "react";
 import LineGraph from "./Rcomponents/LineGraph";
 
+import UserDataService from './services/user.services'
+
 import UserIcon from './logos/default-profile.jpg'
 
 import {
@@ -35,8 +37,19 @@ ChartJS.register(
 const Product = () => {
   const { productID } = useParams();
   const [card, setCard] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [listings, setListings] = useState([])
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+
+
+const fetchAllListings = async (productID) => {
+  const listingsResult = await UserDataService.getListingsByProductID(productID)
+  
+  if(listingsResult === -1){
+    return
+  }
+  setListings(listingsResult)
+}
 
   const individualCardDetails = () => {
     setLoading(true);
@@ -45,7 +58,13 @@ const Product = () => {
         return response.json();
       })
       .then((data) => {
+        console.log(data)
         setCard(data.data);
+        return data.data
+        
+      })
+      .then((card) => {
+        fetchAllListings(card.id)
         setLoading(false);
       })
       .catch((error) => {
@@ -387,42 +406,27 @@ const Product = () => {
 
           <div id="selling-listings" className="w-100 h-100 d-flex gap-2 flex-column align-items-center m-2">
           <h2 className="text-center">Listings</h2>
-          <div className="w-75 d-flex justify-content-between align-items-center p-3" style={{background: "white", borderRadius: "20px", boxShadow: "1px 1px 3px black"}}>
+            {!loading && listings.map((listing) => (
+                        <div className="w-75 d-flex justify-content-between align-items-center p-3" style={{background: "white", borderRadius: "20px", boxShadow: "1px 1px 3px black"}}>
               
-              <img src={UserIcon} alt="Profile Image" width={100} height={100} style={{width: "10%", height: "auto"}}/>
-              <div id="lister-email" className="d-flex flex-column justify-content-between">
-                <div className="text-center" style={{fontWeight: "bold"}}>Seller Email</div>
-                <div>xyz@gmail.com</div>
-              </div>
-              <div id="grade" className="d-flex flex-column justify-content-between">
-                <div className="text-center" style={{fontWeight: "bold"}}>Grade</div>
-                <div>PSA 9</div>
-              </div>
-              <div id="price" className="d-flex flex-column justify-content-between">
-                <div className="text-center" style={{fontWeight: "bold"}}>Price</div>
-                <div>$8.99</div>
-              </div>
-              <img src={ShoppingCartIcon} alt="Profile Image" width={100} height={100} style={{width: "7%", height: "auto"}}/>
-
-            </div>
-            <div className="w-75 d-flex justify-content-between align-items-center p-3" style={{background: "white", borderRadius: "20px", boxShadow: "1px 1px 3px black"}}>
-              
-              <img src={UserIcon} alt="Profile Image" width={100} height={100} style={{width: "10%", height: "auto"}}/>
-              <div id="lister-email" className="d-flex flex-column justify-content-between">
-                <div className="text-center" style={{fontWeight: "bold"}}>Seller Email</div>
-                <div>xyz@gmail.com</div>
-              </div>
-              <div id="grade" className="d-flex flex-column justify-content-between">
-                <div className="text-center" style={{fontWeight: "bold"}}>Grade</div>
-                <div>PSA 9</div>
-              </div>
-              <div id="price" className="d-flex flex-column justify-content-between">
-                <div className="text-center" style={{fontWeight: "bold"}}>Price</div>
-                <div>$8.99</div>
-              </div>
-              <img src={ShoppingCartIcon} alt="Profile Image" width={100} height={100} style={{width: "7%", height: "auto"}}/>
-
-            </div>
+                        <img src={UserIcon} alt="Profile Image" width={100} height={100} style={{width: "10%", height: "auto"}}/>
+                        <div id="lister-email" className="d-flex flex-column justify-content-between">
+                          <div className="text-center" style={{fontWeight: "bold"}}>Seller Email</div>
+                          <div>{listing.sellerEmail}</div>
+                        </div>
+                        <div id="grade" className="d-flex flex-column justify-content-between">
+                          <div className="text-center" style={{fontWeight: "bold"}}>Grade</div>
+                          <div>{listing.Grade}</div>
+                        </div>
+                        <div id="price" className="d-flex flex-column justify-content-between">
+                          <div className="text-center" style={{fontWeight: "bold"}}>Price</div>
+                          <div>${listing.Price}</div>
+                        </div>
+                        <img src={ShoppingCartIcon} alt="Profile Image" width={100} height={100} style={{width: "7%", height: "auto"}}/>
+          
+                    </div>
+            ))}
+   
           </div>
 
         </div>
