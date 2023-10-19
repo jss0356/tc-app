@@ -1,5 +1,5 @@
 import React from "react";
-
+import { useState } from "react";
 function CartLogic({ cart, setCart, cartQuantity, setCartQuantity }) {
   const calculateTotalPrice = () => {
     return cart.reduce((total, card) => {
@@ -7,11 +7,20 @@ function CartLogic({ cart, setCart, cartQuantity, setCartQuantity }) {
       return total + cardPrice * (cartQuantity[card.id] || 1);
     }, 0);
   };
+  const [editCardQuantity, setEditCardQuantity] = useState([]);
+  const handleEditQuantity = (cardID) => {
+    setEditCardQuantity(cardID);
+  };
 
+  const handleSaveQuantity = (cardID) => {
+    setEditCardQuantity(null);
+  };
   const removeCardFromCart = (cardID) => {
     setCart(cart.filter((card) => card.id !== cardID));
   };
-
+  const handleEditQuantityInputChange = (cardID, quantity) => {
+    setCartQuantity({ ...cartQuantity, [cardID]: quantity });
+  };
   return (
     <div className="container mt-5">
       <h2 className="mb-4">Cart</h2>
@@ -38,17 +47,57 @@ function CartLogic({ cart, setCart, cartQuantity, setCartQuantity }) {
                     </p>
                   </div>
                   <div className="col-md-2">
-                    <p key={card.cartQuantity}>
-                      Quantity: {cartQuantity[card.id] || 0}
-                    </p>
-                  </div>
-                  <div className="col-md-2">
-                    <button
-                      className="btn btn-danger"
-                      onClick={() => removeCardFromCart(card.id)}
-                    >
-                      Remove
-                    </button>
+                    {card.id === editCardQuantity ? (
+                      <div className="d-flex align-items-center">
+                        <input
+                          type="number"
+                          value={cartQuantity[card.id] || 0}
+                          onChange={(event) =>
+                            handleEditQuantityInputChange(
+                              card.id,
+                              event.target.value
+                            )
+                          }
+                        />
+
+                        <div className="d-flex ml-2">
+                          <button
+                            className="btn btn-success"
+                            onClick={() => handleSaveQuantity(card.id)}
+                          >
+                            Save
+                          </button>
+                          <button
+                            className="btn btn-danger ml-2"
+                            onClick={() => setEditCardQuantity(null)}
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="d-flex align-items-center">
+                        <p className="mb-0">Quantity:</p>
+                        <p className="mb-0 mr-2">
+                          {cartQuantity[card.id] || 0}
+                        </p>
+                        <div className="d-flex">
+                          {/* <button></button> */}
+                          <button
+                            className="btn btn-warning"
+                            onClick={() => handleEditQuantity(card.id)}
+                          >
+                            Edit
+                          </button>
+                          <button
+                            className="btn btn-danger ml-2"
+                            onClick={() => removeCardFromCart(card.id)}
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
                 {/* </div> */}
