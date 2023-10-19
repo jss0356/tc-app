@@ -19,6 +19,10 @@ const MainNavbarMarketplace = ({
   handleFilterDropDown,
   cards,
   setCards,
+  maximumPrice,
+  minimumPrice,
+  handleMaximumPriceInput,
+  handleMinimumPriceInput,
 }) => {
   const navigate = useNavigate();
 
@@ -77,6 +81,35 @@ const MainNavbarMarketplace = ({
               className="input-group  w-50"
               style={{ position: "absolute", right: "300px" }}
             >
+              <span className="input-group-text rounded-0">$</span>
+
+              <input
+                type="number"
+                className="form-control"
+                placeholder="Min"
+                style={{ minWidth: "86px", borderRadius: "0" }}
+                onChange={handleMinimumPriceInput}
+                value={minimumPrice}
+              />
+              <div
+                className="input-group-text"
+                style={{ border: "none", background: "none" }}
+              >
+                to
+              </div>
+              <span className="input-group-text">$</span>
+              <input
+                type="number"
+                className="form-control"
+                placeholder="Max"
+                style={{
+                  minWidth: "86px",
+                  borderRadius: "0",
+                  marginRight: "5px",
+                }}
+                onChange={handleMaximumPriceInput}
+                value={maximumPrice}
+              />
               <select
                 className="form-select w-25"
                 style={{ maxWidth: "150px" }}
@@ -124,12 +157,12 @@ const MainNavbarMarketplace = ({
                 </LinkContainer>
               </div>
             </div>
-            <button
+            {/* <button
               className="btn"
               style={{ position: "absolute", right: "1250px" }}
             >
               <img src={FilterIcon} alt="filter" width="30px" />
-            </button>
+            </button> */}
 
             <NavDropdown
               style={{ position: "absolute", right: "70px", top: "1px" }}

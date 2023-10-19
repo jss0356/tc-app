@@ -16,6 +16,8 @@ const MarketplaceSearch = ({
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [filterDropDown, setFilterDropDown] = useState("All");
+  const [minimumPrice, setMinimumPrice] = useState(0);
+  const [maximumPrice, setMaximumPrice] = useState(0);
 
   const {
     search,
@@ -82,17 +84,30 @@ const MarketplaceSearch = ({
 
   useEffect(() => {
     const filtered = cards.filter((card) => {
+      const priceOfCard = card?.tcgplayer?.prices?.holofoil?.market;
       const inputFilter =
         card.name.toLowerCase().includes(search.toLowerCase()) ||
         search.trim() === "";
-
-      const dropDownSetFilter =
-        filterDropDown === "All" || card?.set?.name === filterDropDown;
-
-      return (
-        (filterDropDown === "All" && search.trim() === "") ||
-        (inputFilter && dropDownSetFilter)
-      );
+      const allSetsFilter = filterDropDown === "All";
+      if (allSetsFilter) {
+        return (
+          inputFilter &&
+          (!minimumPrice ||
+            minimumPrice === 0 ||
+            minimumPrice <= priceOfCard) &&
+          (!maximumPrice || maximumPrice === 0 || maximumPrice >= priceOfCard)
+        );
+      } else {
+        const dropDownSetFilter = card?.set?.name === filterDropDown;
+        return (
+          inputFilter &&
+          dropDownSetFilter &&
+          (!minimumPrice ||
+            minimumPrice === 0 ||
+            minimumPrice <= priceOfCard) &&
+          (!maximumPrice || maximumPrice === 0 || maximumPrice >= priceOfCard)
+        );
+      }
     });
     setFilteredCards(
       filtered.sort((a, b) => {
@@ -106,7 +121,7 @@ const MarketplaceSearch = ({
         return 0;
       })
     );
-  }, [search, cards, filterDropDown]);
+  }, [search, cards, filterDropDown, minimumPrice, maximumPrice]);
 
   console.log(addedCards);
 
@@ -148,6 +163,14 @@ const MarketplaceSearch = ({
     setFilterDropDown(e.target.value);
   }
 
+  const handleMaximumPriceInput = (event) => {
+    setMaximumPrice(event.target.value);
+  };
+
+  const handleMinimumPriceInput = (event) => {
+    setMinimumPrice(event.target.value);
+  };
+
   return (
     <div id="container" className="h-100 w-100 d-flex flex-column">
       <div id="mainNavMarketplace" style={{ marginBottom: "130px" }}>
@@ -157,6 +180,12 @@ const MarketplaceSearch = ({
           filterDropDown={filterDropDown}
           setFilterDropDown={setFilterDropDown}
           handleFilterDropDown={handleFilterDropDown}
+          minimumPrice={minimumPrice}
+          maximumPrice={maximumPrice}
+          handleMinimumPriceInput={handleMinimumPriceInput}
+          handleMaximumPriceInput={handleMaximumPriceInput}
+          setMinimumPrice={setMinimumPrice}
+          setMaximumPrice={setMaximumPrice}
         />
       </div>
 
@@ -227,9 +256,10 @@ const MarketplaceSearch = ({
                         ${card?.tcgplayer?.prices?.holofoil?.market}
                       </Card.Text>
                       <input
+                        className="mb-2"
                         type="number"
                         placeholder="quantity"
-                        style={{ width: "90px" }}
+                        style={{ width: "95px" }}
                         value={cartQuantity[card.id] || 0}
                         onChange={(event) =>
                           handleQuantityInput(event, card.id)
