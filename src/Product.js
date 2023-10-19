@@ -25,6 +25,7 @@ import {
 import { Bar } from "react-chartjs-2";
 import { Spinner } from "react-bootstrap";
 import pokemonTypes from "./constants/pokemonTypes";
+import Listing from "./Rcomponents/Listing";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -384,7 +385,7 @@ const fetchAllListings = async (productID) => {
 
                     </div>
   </div> */}
-      <div className="d-flex flex-row w-100">
+      <div className="d-flex flex-column w-100">
         {card.tcgplayer?.prices?.holofoil ? (
           
           <div className="chart-container h-25 w-100">
@@ -407,24 +408,13 @@ const fetchAllListings = async (productID) => {
           <div id="selling-listings" className="w-100 h-100 d-flex gap-2 flex-column align-items-center m-2">
           <h2 className="text-center">Listings</h2>
             {!loading && listings.map((listing) => (
-                        <div className="w-75 d-flex justify-content-between align-items-center p-3" style={{background: "white", borderRadius: "20px", boxShadow: "1px 1px 3px black"}}>
+
+              <>
+                <Listing sellerEmail={listing.sellerEmail} Grade={listing.Grade} Price={listing.Price}/>
+
               
-                        <img src={UserIcon} alt="Profile Image" width={100} height={100} style={{width: "10%", height: "auto"}}/>
-                        <div id="lister-email" className="d-flex flex-column justify-content-between">
-                          <div className="text-center" style={{fontWeight: "bold"}}>Seller Email</div>
-                          <div>{listing.sellerEmail}</div>
-                        </div>
-                        <div id="grade" className="d-flex flex-column justify-content-between">
-                          <div className="text-center" style={{fontWeight: "bold"}}>Grade</div>
-                          <div>{listing.Grade}</div>
-                        </div>
-                        <div id="price" className="d-flex flex-column justify-content-between">
-                          <div className="text-center" style={{fontWeight: "bold"}}>Price</div>
-                          <div>${listing.Price}</div>
-                        </div>
-                        <img src={ShoppingCartIcon} alt="Profile Image" width={100} height={100} style={{width: "7%", height: "auto"}}/>
-          
-                    </div>
+              </>
+                        
             ))}
    
           </div>
