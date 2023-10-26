@@ -133,43 +133,7 @@ import {useContext} from 'react'
             })
         }
 
-        getListingsByProductID = async (productID) => {
-            try{
-                const usersSnapshot = await getDocs(collection(firestore, 'users'));
-                const allUsers = []
-    
-    
-                if(usersSnapshot.empty){
-                    throw new Error("Unexpected error. No users found.")
-                }
-    
-                usersSnapshot.forEach((userDoc) => {
-                    allUsers.push(userDoc)
-                })
-    
-                for(const user of allUsers){
-                    const listingsCollectionRef = collection(firestore, `users/${user.id}/listings`)
-                    const q = query(listingsCollectionRef, where("productID", "==", productID))
-                    const querySnapshot = await getDocs(q)
-                    if(querySnapshot.empty){
-                        return -1
-                    }
-                    else{
-                        const allListings = []
-                        querySnapshot.forEach((listing) => {
-                            allListings.push(listing.data())
-                        })
-    
-                        return allListings
-                    }
-                }
-    
-    
-            }catch(err){
-                console.error(err)
-            }
-    
-        }
+
 
     }
 

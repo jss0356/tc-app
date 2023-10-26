@@ -41,7 +41,7 @@ function App() {
   const [cartQuantity, setCartQuantity] = useState(0);
   return (
     <div className="App" style={{ backgroundColor: "#5cdb95" }}>
-      <div className="container" style={{ overflow: "auto" }}>
+      <div className="container-fluid" style={{ overflow: "auto", minHeight: "100vh" }}>
         <MarketplaceProvider>
           <Routes>
             <Route path="/login" element={<Login />} />
@@ -103,7 +103,7 @@ function App() {
 
             <Route path="/marketplace">
               <Route index element={<Marketplace />} />
-              <Route path="cards/:productID" element={<Product />} />
+              <Route path="cards/:productID" element={<Product cart={cart} setCart={setCart} cartQuantity={cartQuantity} setCartQuantity={setCartQuantity} />} />
               <Route
                 path="search-results"
                 element={
@@ -127,7 +127,7 @@ function App() {
                 }
               />
               <Route path="payment">
-                <Route index element={<PaymentInfo />} />
+                <Route index element={<PaymentInfo cart={cart}/>} />
                 <Route path="success" element={<PaymentSuccess />} />
               </Route>
             </Route>

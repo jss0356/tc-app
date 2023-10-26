@@ -6,7 +6,9 @@ import {collection,
     addDoc, 
     updateDoc, 
     deleteDoc, 
-    doc
+    doc,
+    query,
+    where
 } from "firebase/firestore"
 
 const listingsCollectionRef = collection(firestore, "listings")
@@ -29,6 +31,49 @@ class ListingsDataService {
     deleteListing(listingID){
         const listingDocRef = doc(firestore, 'listings', listingID)
         return deleteDoc(listingDocRef)
+    }
+
+    getListingsByProductID = async (productID) => {
+        try{
+            const q = query(listingsCollectionRef, where("productID", "==", productID))
+            const listingsSnapshot = await getDocs(q);
+            console.log("ALL", listingsSnapshot)
+
+            const allListings = []
+
+
+            if(listingsSnapshot.empty){
+                return [];
+            }
+
+            listingsSnapshot.forEach((listingsDoc) => {
+                console.log("DOCUMENT", listingsDoc)
+                allListings.push(listingsDoc.data())
+            })
+
+            return allListings;
+
+        }catch(err){
+            console.error(err)
+        }
+
+    }
+
+    getAllListingPrices = async () => {
+        const q = query(listingsCollectionRef, where("isStartingPrice", "==", true))
+        const listingsSnapshot = await getDocs(q);
+        
+        const allListings = [];
+
+        if(listingsSnapshot.empty){
+            return []
+        }
+
+        listingsSnapshot.forEach((listingDoc) => {
+            allListings.push(listingDoc.data())
+        })
+
+        return allListings
     }
 }
 

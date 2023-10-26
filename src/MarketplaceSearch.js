@@ -4,13 +4,14 @@ import { useState, useEffect, useContext } from "react";
 import Card from "react-bootstrap/Card";
 import { MarketplaceContext } from "./app/MarketplaceProvider";
 import { Link } from "react-router-dom";
+
+import ListingDataService from './services/listings.services'
 const MarketplaceSearch = ({
   cart,
   setCart,
   cartQuantity,
   setCartQuantity,
 }) => {
-  const [cards, setCards] = useState([]);
 
   const [filteredCards, setFilteredCards] = useState([]);
   const [error, setError] = useState(false);
@@ -30,6 +31,8 @@ const MarketplaceSearch = ({
     setCurrPage,
     currPages,
     setCurrPages,
+    cards,
+    setCards
   } = useContext(MarketplaceContext);
 
   console.log(filteredCards);
@@ -41,7 +44,9 @@ const MarketplaceSearch = ({
   }
 
   useEffect(() => {
-    fetchCards();
+    if(cards.length === 0){
+      fetchCards();
+    }
   }, []);
 
   useEffect(() => {
@@ -63,6 +68,24 @@ const MarketplaceSearch = ({
     }
   };
 
+
+
+  const fetchAllListingsPrice = async (cardList) => {
+    const startingPriceListings = await ListingDataService.getAllListingPrices()
+    console.log("STARTING PRICE LISTINGS", startingPriceListings)
+    cardList.forEach((card, index) => {
+      const foundStartingPriceListing = startingPriceListings.find((listing) => listing.productID === card.id)
+      if(foundStartingPriceListing !== undefined){
+        cardList[index].startingPrice = "$" + foundStartingPriceListing.Price;
+      }
+      else{
+        cardList[index].startingPrice = "No Listings.";
+      }
+    })
+    setCards(cardList)
+    console.log("CARD LIST", cardList);
+  }
+
   const fetchCards = () => {
     setLoading(true);
     fetch(`https://api.pokemontcg.io/v2/cards`)
@@ -70,11 +93,18 @@ const MarketplaceSearch = ({
       .then((data) => {
         console.log(data);
         setCards(data.data);
-        setLoading(false);
+        return data.data
+      })
+      .then((cardList) => {
+        return fetchAllListingsPrice(cardList)
+      })
+      .then((result) => {
+        setLoading(false)
       })
       .catch((error) => {
         console.log(error);
         setError(true);
+        setLoading(false)
       });
   };
 
@@ -252,10 +282,16 @@ const MarketplaceSearch = ({
 
                     <Card.Body>
                       <Card.Title className="card-name">{card.name}</Card.Title>
-                      <Card.Text className="card-price">
-                        ${card?.tcgplayer?.prices?.holofoil?.market}
+                      <Card.Text style={card.startingPrice === "No Listings." ? {fontWeight: "bold"}: {}} className={`card-price ${card.startingPrice === "No Listings." ? "text-danger": ""}`}>
+                        {card.startingPrice === "No Listings." ? card.startingPrice : 
+                        <p>
+                        Starting from: <span style={{fontWeight: "bold", fontSize: "1.2rem", color: "rgb(92, 219, 149)"}}>{card.startingPrice}</span>
+                        
+                        </p>
+                        
+                        }
                       </Card.Text>
-                      <input
+                      {/* <input
                         className="mb-2"
                         type="number"
                         placeholder="quantity"
@@ -281,7 +317,7 @@ const MarketplaceSearch = ({
                         {addedCards.includes(card.id)
                           ? "Remove from Cart"
                           : "Add to Cart"}
-                      </button>
+                      </button> */}
                     </Card.Body>
                   </Card>
                 );

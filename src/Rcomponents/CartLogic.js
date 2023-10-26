@@ -1,20 +1,22 @@
 import React from "react";
 import { useState } from "react";
+import { LinkContainer } from "react-router-bootstrap";
 function CartLogic({ cart, setCart, cartQuantity, setCartQuantity }) {
   const calculateTotalPrice = () => {
     return cart.reduce((total, card) => {
-      const cardPrice = card?.tcgplayer?.prices?.holofoil?.market || 0;
-      return total + cardPrice * (cartQuantity[card.id] || 1);
+      console.log("DA CARD", card)
+      const cardPrice = card.listingPrice || 0;
+      return total + cardPrice;
     }, 0);
   };
-  const [editCardQuantity, setEditCardQuantity] = useState([]);
-  const handleEditQuantity = (cardID) => {
-    setEditCardQuantity(cardID);
-  };
+  // const [editCardQuantity, setEditCardQuantity] = useState([]);
+  // const handleEditQuantity = (cardID) => {
+  //   setEditCardQuantity(cardID);
+  // };
 
-  const handleSaveQuantity = (cardID) => {
-    setEditCardQuantity(null);
-  };
+  // const handleSaveQuantity = (cardID) => {
+  //   setEditCardQuantity(null);
+  // };
   const removeCardFromCart = (cardID) => {
     setCart(cart.filter((card) => card.id !== cardID));
   };
@@ -30,6 +32,7 @@ function CartLogic({ cart, setCart, cartQuantity, setCartQuantity }) {
         <div>
           <ul className="list-group">
             {cart.map((card) => (
+              <>
               <li key={card.id} className="list-group-item mb-3">
                 {/* <div className="d-flex align-items-center"> */}
                 <div className="row align-items-center">
@@ -40,61 +43,59 @@ function CartLogic({ cart, setCart, cartQuantity, setCartQuantity }) {
                       className="card-image img-fluid"
                     />
                   </div>
-                  <div className="col-md-6">
-                    <h5 className="mb-0">{card.name}</h5>
+
+                  <div className="col-md-2">
+                    <h5 className="mb-0">Product</h5>
                     <p className="mb-0">
-                      ${card?.tcgplayer?.prices?.holofoil?.market}
+                      {card.name}
                     </p>
                   </div>
-                  <div className="col-md-2">
-                    {card.id === editCardQuantity ? (
-                      <div className="d-flex align-items-center">
-                        <input
-                          type="number"
-                          value={cartQuantity[card.id] || 0}
-                          onChange={(event) =>
-                            handleEditQuantityInputChange(
-                              card.id,
-                              event.target.value
-                            )
-                          }
-                        />
 
-                        <div className="d-flex ml-2">
-                          <button
-                            className="btn btn-success"
-                            onClick={() => handleSaveQuantity(card.id)}
-                          >
-                            Save
-                          </button>
-                          <button
-                            className="btn btn-danger ml-2"
-                            onClick={() => setEditCardQuantity(null)}
-                          >
-                            Cancel
-                          </button>
-                        </div>
-                      </div>
-                    ) : (
+                  <div className="col-md-2">
+                    <h5 className="mb-0">Seller Email</h5>
+                    <p className="mb-0">
+                      {card.listingEmail}
+                    </p>
+                  </div>
+
+                  <div className="col-md-2">
+                    <h5 className="mb-0">Grade</h5>
+                    <p className="mb-0">
+                      {card.listingGrade}
+                    </p>
+                  </div>
+
+                  <div className="col-md-2">
+                    <h5 className="mb-0">Price</h5>
+                    <p className="mb-0">
+                      ${card.listingPrice}
+                    </p>
+                  </div>
+
+
+
+                  <div className="col-md-2">
+                    { (
                       <div className="d-flex align-items-center">
-                        <p className="mb-0">Quantity:</p>
+                        {/* <p className="mb-0">Quantity:</p>
                         <p className="mb-0 mr-2">
                           {cartQuantity[card.id] || 0}
-                        </p>
-                        <div className="d-flex">
+                        </p> */}
+                        <div className="d-flex flex-column gap-3">
                           {/* <button></button> */}
-                          <button
+                          {/* <button
                             className="btn btn-warning"
                             onClick={() => handleEditQuantity(card.id)}
                           >
                             Edit
-                          </button>
+                          </button> */}
                           <button
                             className="btn btn-danger ml-2"
                             onClick={() => removeCardFromCart(card.id)}
                           >
                             Remove
                           </button>
+                          <LinkContainer to={`/marketplace/cards/${card.id}`}><button className="btn btn-primary">View Product</button></LinkContainer>
                         </div>
                       </div>
                     )}
@@ -102,10 +103,15 @@ function CartLogic({ cart, setCart, cartQuantity, setCartQuantity }) {
                 </div>
                 {/* </div> */}
               </li>
+              
+              
+              
+              </>
             ))}
           </ul>
           <div className="flex fixed-bottom bg-light p-3 mr-3 text-center">
             <p className="h5">Total Price: ${calculateTotalPrice()}</p>
+            <LinkContainer to="/marketplace/payment"><button className='btn mt-3 btn-primary w-25'>Proceed to checkout</button></LinkContainer>
           </div>
         </div>
       )}

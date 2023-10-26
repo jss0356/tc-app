@@ -9,7 +9,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import LineGraph from "./Rcomponents/LineGraph";
 
-import UserDataService from './services/user.services'
+import ListingsDataService from './services/listings.services'
 
 import UserIcon from './logos/default-profile.jpg'
 
@@ -35,7 +35,7 @@ ChartJS.register(
   Legend
 );
 
-const Product = () => {
+const Product = ({cart, setCart}) => {
   const { productID } = useParams();
   const [card, setCard] = useState([]);
   const [listings, setListings] = useState([])
@@ -43,12 +43,14 @@ const Product = () => {
   const [error, setError] = useState(false);
 
 
+
 const fetchAllListings = async (productID) => {
-  const listingsResult = await UserDataService.getListingsByProductID(productID)
+  const listingsResult = await ListingsDataService.getListingsByProductID(productID)
   
-  if(listingsResult === -1){
+  if(listingsResult.length === 0){
     return
   }
+  
   setListings(listingsResult)
 }
 
@@ -65,8 +67,10 @@ const fetchAllListings = async (productID) => {
         
       })
       .then((card) => {
-        fetchAllListings(card.id)
-        setLoading(false);
+        return fetchAllListings(card.id)
+      })
+      .then((listingsResult) => {
+        setLoading(false)
       })
       .catch((error) => {
         setError(true);
@@ -77,6 +81,22 @@ const fetchAllListings = async (productID) => {
   useEffect(() => {
     individualCardDetails();
   }, []);
+
+
+
+  const determineStartingFrom = () => {
+    if(listings.length !== 0){
+      const listing = listings.find((listing) => listing.isStartingPrice === true)
+      return "$"+ String(listing.Price);
+    }
+    return "N/A"
+  }
+
+  useEffect(() => {
+    if(!loading){
+      determineStartingFrom()
+    }
+  }, [loading])
 
   if (!loading) {
     console.log({ card });
@@ -102,7 +122,7 @@ const fetchAllListings = async (productID) => {
       },
     ],
   };
-
+  console.log(cart)
   const [cardHoverEffect, setCardHoverEffect] = useState(false);
 
   const [hoverEffectStyle, setCardHoverEffectStyle] = useState({
@@ -165,7 +185,7 @@ const fetchAllListings = async (productID) => {
                   Starting from:
                 </div>
                 <div style={{fontSize: "2rem"}} className="text-green">
-                ${card?.cardmarket?.prices?.averageSellPrice}
+                {determineStartingFrom()}
                 </div>
                  
               </div>
@@ -408,9 +428,8 @@ const fetchAllListings = async (productID) => {
           <div id="selling-listings" className="w-100 h-100 d-flex gap-2 flex-column align-items-center m-2">
           <h2 className="text-center">Listings</h2>
             {!loading && listings.map((listing) => (
-
               <>
-                <Listing sellerEmail={listing.sellerEmail} Grade={listing.Grade} Price={listing.Price}/>
+                <Listing listingID={listing.listingID} sellerEmail={listing.sellerEmail} Grade={listing.Grade} Price={listing.Price} cart={cart} setCart={setCart} productID={productID} card={card}/>
 
               
               </>
