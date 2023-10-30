@@ -82,7 +82,7 @@ function App() {
               />
               <Route path="my-portfolios">
                 <Route index element={<MyPortfolios />} />
-                <Route path=":portfolioID">
+                <Route path=":portfolioID/:name">
                   <Route index element={
                     <CardProvider>
                       <Portfolio />

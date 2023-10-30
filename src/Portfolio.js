@@ -25,15 +25,9 @@ const Portfolio = () =>{
         grade, setGrade,
         id, setID
     } = useContext(CardContext)
-    //const [grade, setGrade] = useState(0);
-    //const [id, setID] = useState("");
 
     const changeID = (value) => {
         setID(value)
-    }
-
-    const changeGrade = (value) => {
-        setGrade(value)
     }
 
     const DisplayForm = (props) => {
@@ -42,7 +36,7 @@ const Portfolio = () =>{
 
                 <div>
                     <select className="form-select custom-select mb-2" value={grade} onChange={e => setGrade(e.target.value)}>
-                        <option value="">Select a Grade:</option>
+                        <option value="-">Select a Grade:</option>
                         <option value="N0">N0</option>
                         <option value="PR 1">PR 1</option>
                         <option value="FR 1.5">FR 1.5</option>
@@ -67,22 +61,28 @@ const Portfolio = () =>{
         }
     }
 
-    const {portfolioID} = useParams()
+    const {portfolioID, name} = useParams()
 
     const uploadCard = async () => {
          
-        console.log(portfolioID)
-        const userID = await userService.getUserID(auth.currentUser.email)
-        console.log(userID)
-        const portfolioRef = await userService.getPortfolio(userID, portfolioID)
-        console.log(portfolioRef)
-        const cardRef = collection(portfolioRef, "cards")
-        console.log(grade, id)
-        addDoc(cardRef, {
-            grade,
-            id
-        })
-        handleClose()
+        if (grade !== '-' && id !== 'none') {
+            console.log(portfolioID)
+            const userID = await userService.getUserID(auth.currentUser.email)
+            console.log(userID)
+            const portfolioRef = await userService.getPortfolio(userID, portfolioID)
+            console.log(portfolioRef)
+            const cardRef = collection(portfolioRef, "cards")
+            console.log(grade, id)
+            addDoc(cardRef, {
+                grade,
+                id
+            })
+            handleClose()
+            setID("none")
+            setGrade("-")
+        } else {
+            alert("Grade or Card must be selected")
+        }
 
     }
 
@@ -154,7 +154,7 @@ const Portfolio = () =>{
                 </div>
 
 
-                <h1 className='text-center d-inline'>Portfolio {portfolioID} details:</h1>
+                <h1 className='text-center d-inline'>Portfolio {name} details:</h1>
                 <hr />
 
                 <div id="inner-display" className='w-100 h-100 d-flex flex-row'>
@@ -221,62 +221,6 @@ const Portfolio = () =>{
                                 </ul>
                             </nav>
                         </div>
-
-                        <h4 className='text-center'>Football:</h4>
-
-                        <div className="input-group m-0 w-100">
-                        <input type="text" className="form-control" style={{height:"30px"}} placeholder="Filter by Card-Name" aria-label="card-name"/>
-                            <span className="input-group-text"><button className='btn d-grid' style={{height:"15px", placeContent:"center"}} ><img src={SearchIcon} height="20px" alt="" /></button></span>
-                        </div>
-
-                        <LinkContainer to="/my-account/my-portfolios/1/4"><p className='border border-dark text-center bg-light m-0'> <span className='d-inline p-2'>Card 4</span> <span className='d-inline'>$5.00 </span> <span className='d-inline text-success'>+$1.00(Past Year)</span> </p></LinkContainer>
-                        <LinkContainer to="/my-account/my-portfolios/1/5"><p className='border border-dark text-center bg-light m-0'><span className='d-inline p-2'>Card 5</span>  <span className='d-inline'>$5.00 </span> <span className='d-inline'>+$0.00(Past Year)</span></p></LinkContainer>
-                        <LinkContainer to="/my-account/my-portfolios/1/6"><p className='border border-dark text-center bg-light m-0'><span className='d-inline p-2'>Card 6</span> <span className='d-inline'>$5.00 </span> <span className='d-inline text-danger'>-$1.00(Past Year)</span></p></LinkContainer>
-                        <div className='d-flex flex-row h-100 w-100 justify-content-center'>
-                            <nav aria-label="...">
-                                <ul className="pagination">
-                                    <li className="page-item disabled">
-                                    <a className="page-link" href="#" tabIndex="-1">Previous</a>
-                                    </li>
-                                    <li className="page-item active"><a className="page-link" href="#">1</a></li>
-                                    <li className="page-item disabled">
-                                    <a className="page-link" href="#">2 </a>
-                                    </li>
-                                    <li className="page-item disabled"><a className="page-link" href="#">3</a></li>
-                                    <li className="page-item disabled">
-                                    <a className="page-link" href="#">Next</a>
-                                    </li>
-                                </ul>
-                            </nav>
-                        </div>
-
-
-                        <h4 className='text-center'>Baseball:</h4>
-                        <div className="input-group m-0 w-100">
-                        <input type="text" className="form-control" style={{height:"30px"}} placeholder="Filter by Card-Name" aria-label="card-name"/>
-                            <span className="input-group-text"><button className='btn d-grid' style={{height:"15px", placeContent:"center"}} ><img src={SearchIcon} height="20px" alt="" /></button></span>
-                        </div>
-                        <LinkContainer to="/my-account/my-portfolios/1/7"><p className='border border-dark text-center bg-light m-0'> <span className='d-inline p-2'>Card 7</span> <span className='d-inline'>$10.00 </span>  <span className='d-inline text-success'>+$1.00(Past Year)</span> </p></LinkContainer>
-                        <LinkContainer to="/my-account/my-portfolios/1/8"><p className='border border-dark text-center bg-light m-0'><span className='d-inline p-2'>Card 8</span> <span className='d-inline'>$10.00 </span> <span className='d-inline'>+$0.00(Past Year)</span></p></LinkContainer>
-                        <LinkContainer to="/my-account/my-portfolios/1/9"><p className='border border-dark text-center bg-light m-0'><span className='d-inline p-2'>Card 9</span> <span className='d-inline'>$10.00 </span> <span className='d-inline text-danger'>-$1.00(Past Year)</span></p></LinkContainer>
-                        <div className='d-flex flex-row h-100 w-100 justify-content-center'>
-                            <nav aria-label="...">
-                                <ul className="pagination">
-                                    <li className="page-item disabled">
-                                    <a className="page-link" href="#" tabIndex="-1">Previous</a>
-                                    </li>
-                                    <li className="page-item active"><a className="page-link" href="#">1</a></li>
-                                    <li className="page-item disabled">
-                                    <a className="page-link" href="#">2 </a>
-                                    </li>
-                                    <li className="page-item disabled"><a className="page-link" href="#">3</a></li>
-                                    <li className="page-item disabled">
-                                    <a className="page-link" href="#">Next</a>
-                                    </li>
-                                </ul>
-                            </nav>
-                        </div>
-
 
                     </div>
 

@@ -23,6 +23,8 @@ import {collection,
     where
 } from "firebase/firestore"
 
+import userService from './services/user.services';
+
 const Home = () => {
     const [show, setShow] = useState(false);
     const[portfolios, setPortfolios] = useState([]);
@@ -51,20 +53,37 @@ const Home = () => {
         
         const querySnapshot = await getDocs(userPortfoliosCollectionRef);
         
+        
         const portfolioArray = [];
-        querySnapshot.forEach((doc) => {
-            console.log(doc)
-          const portfolioItem = doc;
-          portfolioArray.push(portfolioItem);
+        querySnapshot.forEach(async (doc) => {
+
+            const portfolioItem = {id: doc.id, name: doc.data().name, cards: []};
+            //console.log(portfolioItem)
+            portfolioArray.push(portfolioItem);
         });
-    
-        setPortfolios(portfolioArray);
+
+        portfolioArray.forEach(async (portfolio) => {
+            const uid = await userService.getUserID(auth.currentUser.email)
+            const cards = await userService.getPortfolioCards(uid, portfolio.id)
+            let cardArr = []
+            cards.forEach((card) => {
+                cardArr.push( {id: card.data().id, grade: card.data().grade} )
+            })
+
+            portfolio.cards = cardArr
+            setPortfolios(portfolioArray)
+        })
+        
       };
 
       useEffect(() => {
         // fetches the portfolios
         fetchPortfolios();
       }, []);
+
+      useEffect(() => {
+        console.log(portfolios)
+      }, [portfolios])
   
     const addPortfolioModal=  <div id="add-portfolio-modal">
     <Modal show={show} onHide={handleClose}>
@@ -141,11 +160,20 @@ const Home = () => {
                         </div>
 
                         {portfolios.map((portfolio, index) => (
+                        <>
                             <div key={index} className='portfolio title'>
-                                <LinkContainer to={`/my-account/my-portfolios/${portfolio.id}`}>
-                                    <h2 role="button">{portfolio.data().name}</h2>
+                                <LinkContainer to={`/my-account/my-portfolios/${portfolio.id}/${portfolio.name}`}>
+                                    <h2 role="button">{portfolio.name}</h2>
                                 </LinkContainer>
                             </div>
+                            <Carousel variant="dark" style={{width:"220px"}}>
+                                {portfolio.cards.map((card, index) => {
+                                    <div key={index} className='card'>
+                                    <p>{card.id}</p>
+                                    </div>
+                                })}
+                            </Carousel>
+                        </>
                         ))}
                             <div className='portfolio title'>
                                 <LinkContainer to="/my-account/my-portfolios/1"><h2>Portfolio 1</h2></LinkContainer> 
