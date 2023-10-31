@@ -168,6 +168,18 @@ import {useContext} from 'react'
 
             return allCards
         }
+        getCard = async (userID, portfolioID, cardID) => {
+            const cardRef = doc(firestore, `users/${userID}/userPortfolios/${portfolioID}/cards/${cardID}`);
+            const card = await getDoc(cardRef)
+            return card.data();
+        }
+        determinePortfolioNameFromID = async (userID, portfolioID) => {
+            const portfolioRef = doc(firestore, `users/${userID}/userPortfolios/${portfolioID}`)
+            const portfolio = await getDoc(portfolioRef);
+            const portfolioData = portfolio.data()
+
+            return portfolioData.name 
+        }
     }
 
 

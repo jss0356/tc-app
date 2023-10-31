@@ -3,6 +3,46 @@ import {useState} from 'react'
 import { CardContext } from './app/CardProvider';
 const CalculateGradeForm = () => {
 
+    const convertGrade = (g) => {
+        switch(g){
+            case 0:
+                setGrade('N0')
+                break
+            case 1:
+                setGrade('PR 1')
+                break
+            case 1.5:
+                setGrade('FR 1.5')
+                break
+            case 2:
+                setGrade('GOOD 2')
+                break
+            case 3:
+                setGrade('VG 3')
+                break
+            case 4:
+                setGrade('VG-EX 4')
+                break
+            case 5:
+                setGrade('EX 5')
+                break
+            case 6:
+                setGrade('EX-MT 6')
+                break
+            case 7:
+                setGrade('NM 7')
+                break
+            case 8:
+                setGrade('NM-MT 8')
+                break
+            case 9:
+                setGrade('MINT 9')
+                break
+            default:
+                setGrade('GEM-MT 10')
+        }
+    }
+
     const {
         id, setID,
         grade, setGrade,
@@ -22,22 +62,25 @@ const CalculateGradeForm = () => {
         selectedInTact, setSelectedInTact,
         selectedFrontCentering, setSelectedFrontCentering,
         selectedBackCentering, setSelectedBackCentering
-
     } = useContext(CardContext)
 
 
     useEffect(()=> {
 
-        let newGrade = Math.min(Number(selectedAltered), Number(selectedSurfaceWear), Number(selectedDiscoloration), 
-        Number(selectedScratch), Number(selectedStain), Number(selectedDefect), Number(selectedCornersRounded), 
-        Number(selectedCrease), Number(selectedBorder), Number(selectedCornersFraying), Number(selectedEdges), 
-        Number(selectedFocus), Number(selectedGloss), Number(selectedInTact), Number(selectedFrontCentering),
-        Number(selectedBackCentering))
-        //console.log(newGrade)
-        if (newGrade === 11)
+        let selections = [Number(selectedAltered), Number(selectedSurfaceWear), Number(selectedDiscoloration), 
+            Number(selectedScratch), Number(selectedStain), Number(selectedDefect), Number(selectedCornersRounded), 
+            Number(selectedCrease), Number(selectedBorder), Number(selectedCornersFraying), Number(selectedEdges), 
+            Number(selectedFocus), Number(selectedGloss), Number(selectedInTact), Number(selectedFrontCentering),
+            Number(selectedBackCentering)]
+
+        if (selections.includes(11)){
             setGrade("-")
-        else
-            setGrade(newGrade)
+        } else {
+            let newGrade = Math.min.apply(Math, selections)
+            //setGrade(newGrade)
+            convertGrade(newGrade)
+        }
+
         
     },[selectedAltered, selectedSurfaceWear, selectedDiscoloration, 
         selectedScratch, selectedStain, selectedDefect, selectedCornersRounded, selectedCrease, selectedBorder, 

@@ -19,7 +19,9 @@ import {collection,
     doc,
     query,
     where,
-    getDocs
+    getDocs,
+    setDoc,
+    getDoc
 } from "firebase/firestore"
 import { Spinner } from 'react-bootstrap'
 
@@ -84,53 +86,57 @@ const Portfolio = () =>{
 
     const {portfolioID} = useParams()
 
-    useEffect(() => {
-        const getPortfolioData = async () => {
-            try{
-            const q = query(collection(firestore, 'users'), where('email', '==', auth.currentUser.email));
-            const foundUser = await getDocs(q);
-            const userID = foundUser.docs[0].id;
-    
-            const portfolioData = await userServices.getUserPortfolio(portfolioID, userID)
-            const cardsData = await userServices.getPortfolioCards(portfolioID, userID)
+    const getPortfolioData = async () => {
+        setLoading(true)
+        try{
+        const q = query(collection(firestore, 'users'), where('email', '==', auth.currentUser.email));
+        const foundUser = await getDocs(q);
+        const userID = foundUser.docs[0].id;
 
-            
+        const portfolioData = await userServices.getUserPortfolio(portfolioID, userID)
+        const cardsData = await userServices.getPortfolioCards(portfolioID, userID)
+
+        
 
 
-            setPortfolio(portfolioData)
-            
-            if(cardsData !== "no cards."){
-                setPortfolioCards(cardsData)
-                console.log("DATA" ,cardsData)
+        setPortfolio(portfolioData)
+        
+        if(cardsData !== "no cards."){
+            setPortfolioCards(cardsData)
+            console.log("DATA" ,cardsData)
 
-                const images = [];
-                for(const card of cardsData){
-                    try{
-                        const response = await fetch(`https://api.pokemontcg.io/v2/cards/${card.Id}`)
-                        const responseData = await response.json();
-                        const cardData = responseData.data;
-                        images.push({image: cardData.images.small, id: card.Id})
-    
-                    }catch(err){
-                        console.error(err)
-                    }
+            const images = [];
+            for(const card of cardsData){
+                try{
+                    const response = await fetch(`https://api.pokemontcg.io/v2/cards/${card.Id}`)
+                    const responseData = await response.json();
+                    const cardData = responseData.data;
+                    images.push({image: cardData?.images?.small, id: card.cardID})
+
+                }catch(err){
+                    console.error(err)
                 }
-                console.log("IMAGES", images)
-                setCardImages(images)
-         
             }
-           
-
-
-
-            }catch(err){
-                setError(true)
-            }
-            finally{
-                setLoading(false)
-            }
-
+            console.log("IMAGES", images)
+            setCardImages(images)
+     
         }
+       
+
+
+
+        }catch(err){
+            setError(true)
+        }
+        finally{
+            setLoading(false)
+            setError(false)
+        }
+
+    }
+
+    useEffect(() => {
+        
         getPortfolioData()
 
 
@@ -144,14 +150,31 @@ const Portfolio = () =>{
         const userID = await userService.getUserID(auth.currentUser.email)
         console.log(userID)
         const portfolioRef = await userService.getPortfolio(userID, portfolioID)
-        console.log(portfolioRef)
+        const portfolio = await getDoc(portfolioRef)
+        const portfolioData  = portfolio.data();
+        console.log(portfolioData)
+
+        const newTotal = portfolioData.itemCount + 1;
+
+        const response = await fetch(`https://api.pokemontcg.io/v2/cards/${id}`)
+        const responseData = await response.json();
+        const cardData = responseData.data
+
+
+        const newTotalMarketValue = portfolioData.totalMarketValue + (cardData.tcgplayer?.prices?.holofoil?.market || 0)
         const cardRef = collection(portfolioRef, "cards")
+
         console.log(grade, id)
-        addDoc(cardRef, {
-            grade,
-            id
+        const addedRef = await addDoc(cardRef, {
+            Grade: grade,
+            Id: id,
+            
         })
+        await setDoc(addedRef, {cardID: addedRef.id}, {merge: true})
+        await setDoc(portfolioRef, {itemCount: newTotal, totalMarketValue: newTotalMarketValue}, {merge: true})
+
         handleClose()
+        await getPortfolioData()
 
     }
 

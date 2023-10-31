@@ -48,34 +48,18 @@ const Product = ({cart, setCart}) => {
   const [high, setHigh] = useState(0);
   const [average, setAverage] = useState(0);
 
-  const [more, setMore] = useState(true);
 
-  const [currRender, setCurrRender] = useState(1);
 
-const fetchMoreListings = async () => {
-  if(listings.length < 3){
-    const listingsResult = await ListingsDataService.getListingsByProductID(productID, currRender)
-  setCurrRender((prev) => prev + 1);
-  setListings(listingsResult.sort((a, b) => a.Price - b.Price))
-  }
-  else{
-    setMore(false);
-  }
-
-}
  
 const fetchAllListings = async (productID) => {
-  console.log("EXECUTING")
   const listingsResult = await ListingsDataService.getListingsByProductID(productID)
   const allListings = await ListingsDataService.getAllListings(productID)
-  setCurrRender(2)
   if(listingsResult.length === 0 || allListings.length === 0){
     return
   }
   
   setListings(listingsResult.sort((a, b) => a.Price - b.Price))
   setListingPrices(allListings.map((listing) => ({Price: listing.Price, isStartingPrice: listing.isStartingPrice})))
-  console.log("RESULT", allListings.map((listing) => ({Price: listing.Price, isStartingPrice: listing.isStartingPrice})))
 }
 
   const individualCardDetails = () => {
@@ -285,7 +269,7 @@ const fetchAllListings = async (productID) => {
                       </p>
                     </>
                   ) : (
-                    <p>Error, no type avaiable</p>
+                    <p className="text-danger" style={{fontWeight: "bold"}}>Error, no type available.</p>
                   )}
                 </div>
               ))}
@@ -457,31 +441,19 @@ const fetchAllListings = async (productID) => {
                     </div>
   </div> */}
       <div className="d-flex flex-column w-100">
-        {card.tcgplayer?.prices?.holofoil ? (
-          
-          <div className="chart-container h-25 w-100">
-            <h2 className="text-center">Price Statistics (In USD)</h2>
-                <Bar data={data} options={options} />
-              </div>
-            ) : (
-              <div className="d-flex justify-content-center align-items-center vh-100">
-                <Spinner
-                  animation="border"
-                  variant="primary"
-                  className="custom-spinner spinner-lg w-20 h-20"
-                />
-                <span className="loading-message fs-4">
-                  Loading Card Details...
-                </span>
-              </div>
-            )}
+          <div className="w-100 h-100 d-flex flex-row justify-content-center">
+
+            <div className="chart-container h-100 w-50">
+              <h2 className="text-center">Price Statistics (In USD)</h2>
+              <Bar data={data} options={options} />
+            </div>
+
+          </div>
+            
 
           <div id="selling-listings" className="w-100 h-100 d-flex gap-2 flex-column align-items-center m-2">
           <h2 className="text-center">Listings</h2>
-            {!loading && 
-            
-           
-
+            {!loading && listings.length > 0 ?
             listings.map((listing) => (
               <>
                 <Listing listingID={listing.listingID} sellerEmail={listing.sellerEmail} Grade={listing.Grade} Price={listing.Price} cart={cart} setCart={setCart} productID={productID} card={card}/>
@@ -489,7 +461,7 @@ const fetchAllListings = async (productID) => {
               
               </>
                         
-            ))
+            )) : <span className="text-danger" style={{fontWeight: "bold"}}>No listings available.</span>
 
             }
    

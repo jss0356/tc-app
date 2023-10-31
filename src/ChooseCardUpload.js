@@ -14,7 +14,7 @@ const ChooseCardUpload = ({changeID}) => {
         setLoading(true)
             return pokemon.card.where({ q: `name:${inputValue}*`}).then(result => {   
                 result.data.map((card) => {
-                    return arr.push({value: card.id, label: card.name, setSymbol: card.set.images.symbol})
+                    return arr.push({value: card.id, label: card.name, cardImg: card.images.small})
                     })    
                 setLoading(false) 
                 return arr               
@@ -30,7 +30,7 @@ const ChooseCardUpload = ({changeID}) => {
 
     const IconOption = (props) => (
         <components.Option {...props}>
-            <img src={props.data.setSymbol} style={{ height: '30px', borderRadius: '50%', marginRight: '10px' }} alt={"set symbol"}/>
+            <img src={props.data.cardImg} style={{ height: '100px', marginRight: '10px' }} alt={"Card Img"}/>
             {props.data.label}
         </components.Option>
     );

@@ -3,7 +3,7 @@ import {createContext, useState} from 'react'
 export const CardContext = createContext(null)
 
 const CardProvider = ({children}) => {
-    const [id, setID] = useState("")
+    const [id, setID] = useState("none")
     const [grade, setGrade] = useState("-")
     const[selectedAltered, setSelectedAltered] = useState(11);
     const[selectedSurfaceWear, setSelectedSurfaceWear] = useState(11);

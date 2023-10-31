@@ -46,7 +46,7 @@ const Listing = (props) => {
     }
 
     return (
-        <div className="w-75 d-flex justify-content-between align-items-center p-3" style={{background: "white", borderRadius: "20px", boxShadow: "1px 1px 3px black"}}>
+        <div className="w-50 d-flex justify-content-between align-items-center p-3" style={{background: "white", borderRadius: "20px", boxShadow: "1px 1px 3px black"}}>
               
               <img src={UserIcon} alt="Profile Image" width={100} height={100} style={{width: "10%", height: "auto"}}/>
               <div id="lister-email" className="d-flex flex-column justify-content-between">

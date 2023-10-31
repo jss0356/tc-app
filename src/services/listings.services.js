@@ -10,7 +10,8 @@ import {collection,
     query,
     where,
     limit,
-    orderBy
+    orderBy,
+    setDoc
 } from "firebase/firestore"
 
 const listingsCollectionRef = collection(firestore, "listings")
@@ -96,6 +97,12 @@ class ListingsDataService {
         })
 
         return allListings
+    }
+
+    createNewListing = async (listingToCreate) => {
+        const addRef = await addDoc(listingsCollectionRef, listingToCreate)
+        await setDoc(doc(firestore, `listings/${addRef.id}`), {listingID: addRef.id}, {merge: true})
+        return
     }
 }
 
