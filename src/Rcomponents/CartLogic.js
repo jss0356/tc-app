@@ -1,7 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useState } from "react";
 import { LinkContainer } from "react-router-bootstrap";
+import { MarketplaceContext } from "../app/MarketplaceProvider";
 function CartLogic({ cart, setCart, cartQuantity, setCartQuantity }) {
+
+  const {setCartCount} = useContext(MarketplaceContext);
+
   const calculateTotalPrice = () => {
     return cart.reduce((total, card) => {
       console.log("DA CARD", card)
@@ -18,7 +22,8 @@ function CartLogic({ cart, setCart, cartQuantity, setCartQuantity }) {
   //   setEditCardQuantity(null);
   // };
   const removeCardFromCart = (cardID) => {
-    setCart(cart.filter((card) => card.id !== cardID));
+    setCart(cart.filter((card) => card.listingID !== cardID));
+    setCartCount((prev) => prev - 1);
   };
   const handleEditQuantityInputChange = (cardID, quantity) => {
     setCartQuantity({ ...cartQuantity, [cardID]: quantity });
@@ -91,7 +96,7 @@ function CartLogic({ cart, setCart, cartQuantity, setCartQuantity }) {
                           </button> */}
                           <button
                             className="btn btn-danger ml-2"
-                            onClick={() => removeCardFromCart(card.id)}
+                            onClick={() => removeCardFromCart(card.listingID)}
                           >
                             Remove
                           </button>

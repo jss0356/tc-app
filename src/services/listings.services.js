@@ -8,10 +8,14 @@ import {collection,
     deleteDoc, 
     doc,
     query,
-    where
+    where,
+    limit,
+    orderBy
 } from "firebase/firestore"
 
 const listingsCollectionRef = collection(firestore, "listings")
+
+const LISTINGS_PER_FETCH = 1;
 
 class ListingsDataService {
     addListing(newListing){
@@ -35,7 +39,8 @@ class ListingsDataService {
 
     getListingsByProductID = async (productID) => {
         try{
-            const q = query(listingsCollectionRef, where("productID", "==", productID))
+            const q = query(listingsCollectionRef, where("productID", "==", productID), orderBy("Price"), 
+            )
             const listingsSnapshot = await getDocs(q);
             console.log("ALL", listingsSnapshot)
 
@@ -59,8 +64,25 @@ class ListingsDataService {
 
     }
 
-    getAllListingPrices = async () => {
+    getStartingPrices = async () => {
         const q = query(listingsCollectionRef, where("isStartingPrice", "==", true))
+        const listingsSnapshot = await getDocs(q);
+        
+        const allListings = [];
+
+        if(listingsSnapshot.empty){
+            return []
+        }
+
+        listingsSnapshot.forEach((listingDoc) => {
+            allListings.push(listingDoc.data())
+        })
+
+        return allListings
+    }
+
+    getAllListings = async (productID) => {
+        const q = query(listingsCollectionRef, where("productID" ,"==", productID))
         const listingsSnapshot = await getDocs(q);
         
         const allListings = [];

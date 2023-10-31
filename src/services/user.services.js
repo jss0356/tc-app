@@ -134,7 +134,40 @@ import {useContext} from 'react'
         }
 
 
+        getAllUserPortfolios = async (userID) => {
+            const portfoliosRef = collection(firestore, `users/${userID}/userPortfolios`)
 
+            const q = query(portfoliosRef, where("ownerID", "==", userID));
+            const portfolios = await getDocs(q);
+            const allPortfolios = []
+
+            portfolios.forEach((portfolio) => {
+                allPortfolios.push(portfolio.data())
+            })
+            return allPortfolios;
+        }
+        getUserPortfolio = async (portfolioID, userID) => {
+            const portfolioRef = doc(firestore, `users/${userID}/userPortfolios/${portfolioID}`)
+            let portfolio = {};
+            portfolio = await getDoc(portfolioRef);
+            
+            return portfolio.data();
+        }
+
+        getPortfolioCards = async (portfolioID, userID) => {
+            const cardsRef = collection(firestore, `users/${userID}/userPortfolios/${portfolioID}/cards`)
+            const cardsResult = await getDocs(cardsRef)
+            if(cardsResult.empty){
+                return "no cards."
+            }
+
+            const allCards = []
+            cardsResult.forEach((card) =>{
+                allCards.push(card.data())
+            })
+
+            return allCards
+        }
     }
 
 

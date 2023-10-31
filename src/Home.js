@@ -20,7 +20,8 @@ import {collection,
     deleteDoc, 
     doc,
     query,
-    where
+    where,
+    setDoc
 } from "firebase/firestore"
 
 const Home = () => {
@@ -36,7 +37,8 @@ const Home = () => {
             const foundUser = await getDocs(q)
             const userID = foundUser._snapshot.docChanges[0].doc.data.value.mapValue.fields.userID.stringValue
             const userPortfoliosCollectionRef = collection(firestore, `users/${userID}/userPortfolios`)
-            addDoc(userPortfoliosCollectionRef, {name:portfolioName})
+            const addRef = await addDoc(userPortfoliosCollectionRef, {name:portfolioName, ownerID: userID, itemCount: 0, totalMarketValue: 0})
+            await setDoc(addRef,{portfolioID: addRef.id},  {merge: true})
 
             // Re-fetches the portfolio after adding the portfolio    
             fetchPortfolios();
@@ -147,10 +149,8 @@ const Home = () => {
                                 </LinkContainer>
                             </div>
                         ))}
-                            <div className='portfolio title'>
-                                <LinkContainer to="/my-account/my-portfolios/1"><h2>Portfolio 1</h2></LinkContainer> 
-                            </div>   
-                            <Carousel variant="dark" style={{width:"220px"}}>
+
+                            {/* <Carousel variant="dark" style={{width:"220px"}}>
                             <Carousel.Item>
                                     <Card>
                                         <Card.Img variant="top" src={Card1Baseball} style={{height:"200px", width: "200px"}}/>
@@ -210,7 +210,7 @@ const Home = () => {
                                         </Card.Body>
                                     </Card>
                             </Carousel.Item>
-                        </Carousel>
+                        </Carousel> */}
 
                         <LinkContainer className='text-center pt-3' to="/my-account/my-portfolios"><a href="#">View All Portfolios...</a></LinkContainer> 
                         </div>

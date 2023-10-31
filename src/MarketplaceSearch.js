@@ -35,7 +35,6 @@ const MarketplaceSearch = ({
     setCards
   } = useContext(MarketplaceContext);
 
-  console.log(filteredCards);
 
   let lowerBound = 0;
 
@@ -71,7 +70,7 @@ const MarketplaceSearch = ({
 
 
   const fetchAllListingsPrice = async (cardList) => {
-    const startingPriceListings = await ListingDataService.getAllListingPrices()
+    const startingPriceListings = await ListingDataService.getStartingPrices()
     console.log("STARTING PRICE LISTINGS", startingPriceListings)
     cardList.forEach((card, index) => {
       const foundStartingPriceListing = startingPriceListings.find((listing) => listing.productID === card.id)
@@ -82,23 +81,29 @@ const MarketplaceSearch = ({
         cardList[index].startingPrice = "No Listings.";
       }
     })
-    setCards(cardList)
-    console.log("CARD LIST", cardList);
   }
 
   const fetchCards = () => {
     setLoading(true);
+
     fetch(`https://api.pokemontcg.io/v2/cards`)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
-        setCards(data.data);
+        console.log("Done getting data");
+        if(cards.length === 0){
+          console.log(cards)
+          setCards(data.data)
+        }
         return data.data
       })
       .then((cardList) => {
+        console.log("fetching prices");
+
         return fetchAllListingsPrice(cardList)
       })
       .then((result) => {
+        console.log("done fetching prices");
+
         setLoading(false)
       })
       .catch((error) => {
@@ -142,7 +147,7 @@ const MarketplaceSearch = ({
     setFilteredCards(
       filtered.sort((a, b) => {
         if (a.name < b.name) {
-          console.log(a.name, b.name);
+         // console.log(a.name, b.name);
           return -1;
         }
         if (a.name > b.name) {

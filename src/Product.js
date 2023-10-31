@@ -26,6 +26,8 @@ import { Bar } from "react-chartjs-2";
 import { Spinner } from "react-bootstrap";
 import pokemonTypes from "./constants/pokemonTypes";
 import Listing from "./Rcomponents/Listing";
+import InfiniteScroll from "react-infinite-scroller";
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -39,19 +41,41 @@ const Product = ({cart, setCart}) => {
   const { productID } = useParams();
   const [card, setCard] = useState([]);
   const [listings, setListings] = useState([])
+  const [listingPrices, setListingPrices] = useState([])
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [low, setLow] = useState(0);
+  const [high, setHigh] = useState(0);
+  const [average, setAverage] = useState(0);
 
+  const [more, setMore] = useState(true);
 
+  const [currRender, setCurrRender] = useState(1);
 
+const fetchMoreListings = async () => {
+  if(listings.length < 3){
+    const listingsResult = await ListingsDataService.getListingsByProductID(productID, currRender)
+  setCurrRender((prev) => prev + 1);
+  setListings(listingsResult.sort((a, b) => a.Price - b.Price))
+  }
+  else{
+    setMore(false);
+  }
+
+}
+ 
 const fetchAllListings = async (productID) => {
+  console.log("EXECUTING")
   const listingsResult = await ListingsDataService.getListingsByProductID(productID)
-  
-  if(listingsResult.length === 0){
+  const allListings = await ListingsDataService.getAllListings(productID)
+  setCurrRender(2)
+  if(listingsResult.length === 0 || allListings.length === 0){
     return
   }
   
-  setListings(listingsResult)
+  setListings(listingsResult.sort((a, b) => a.Price - b.Price))
+  setListingPrices(allListings.map((listing) => ({Price: listing.Price, isStartingPrice: listing.isStartingPrice})))
+  console.log("RESULT", allListings.map((listing) => ({Price: listing.Price, isStartingPrice: listing.isStartingPrice})))
 }
 
   const individualCardDetails = () => {
@@ -67,11 +91,10 @@ const fetchAllListings = async (productID) => {
         
       })
       .then((card) => {
-        return fetchAllListings(card.id)
-      })
-      .then((listingsResult) => {
-        setLoading(false)
-      })
+        fetchAllListings(card.id).then((listingsResult) => {
+          setLoading(false)
+        })
+      })   
       .catch((error) => {
         setError(true);
         setLoading(false);
@@ -85,16 +108,45 @@ const fetchAllListings = async (productID) => {
 
 
   const determineStartingFrom = () => {
-    if(listings.length !== 0){
-      const listing = listings.find((listing) => listing.isStartingPrice === true)
+    if(listingPrices.length !== 0){
+      const listing = listingPrices.find((listing) => listing.isStartingPrice === true)
       return "$"+ String(listing.Price);
     }
     return "N/A"
   }
 
+  const determineChartPrices = () => {
+    
+    if(listingPrices.length !== 0){
+      const listings = listingPrices.map((listing) => listing.Price);
+      //calculate low and high
+      let currLow = listings[0];
+      let currHigh = listings[0];
+
+      for(const listingPrice of listings){
+        if(currLow > listingPrice){
+          currLow = listingPrice
+        }
+        if(currHigh < listingPrice){
+          currHigh = listingPrice;
+        }
+      }
+      setLow(currLow)
+      setHigh(currHigh)
+      //calculate average.
+
+      const totalPriceSum = listings.reduce((prev, curr) => curr + prev);
+      console.log("TOTAL SUM", listings)
+      setAverage(totalPriceSum / listings.length);
+    }
+    
+
+  }
+
   useEffect(() => {
     if(!loading){
-      determineStartingFrom()
+      determineStartingFrom();
+      determineChartPrices();
     }
   }, [loading])
 
@@ -106,16 +158,15 @@ const fetchAllListings = async (productID) => {
     maintainAspectRatio: true
   };
   const data = {
-    labels: ["low", "mid", "high", "market", "direct low"],
+    labels: ["low", "high", "average", "market"],
     datasets: [
       {
         label: "Card Prices",
         data: [
-          card.tcgplayer?.prices?.holofoil?.low || 0,
-          card.tcgplayer?.prices?.holofoil?.mid || 0,
-          card.tcgplayer?.prices?.holofoil?.high || 0,
+          low || 0,
+          high || 0,
+          average || 0,
           card.tcgplayer?.prices?.holofoil?.market || 0,
-          card.tcgplayer?.prices?.holofoil?.directLow || 0,
         ],
         backgroundColor: "rgba(70, 184, 184, 0.2)",
         borderWidth: 2,
@@ -409,7 +460,7 @@ const fetchAllListings = async (productID) => {
         {card.tcgplayer?.prices?.holofoil ? (
           
           <div className="chart-container h-25 w-100">
-            <h2 className="text-center">Price Over Time</h2>
+            <h2 className="text-center">Price Statistics (In USD)</h2>
                 <Bar data={data} options={options} />
               </div>
             ) : (
@@ -427,14 +478,20 @@ const fetchAllListings = async (productID) => {
 
           <div id="selling-listings" className="w-100 h-100 d-flex gap-2 flex-column align-items-center m-2">
           <h2 className="text-center">Listings</h2>
-            {!loading && listings.map((listing) => (
+            {!loading && 
+            
+           
+
+            listings.map((listing) => (
               <>
                 <Listing listingID={listing.listingID} sellerEmail={listing.sellerEmail} Grade={listing.Grade} Price={listing.Price} cart={cart} setCart={setCart} productID={productID} card={card}/>
 
               
               </>
                         
-            ))}
+            ))
+
+            }
    
           </div>
 

@@ -73,7 +73,7 @@ const MainNavbarMarketplace = ({
             <LinkContainer to="/home">
               <Nav.Link>Home</Nav.Link>
             </LinkContainer>
-            <LinkContainer to="/marketplace">
+            <LinkContainer to="/marketplace/search-results">
               <Nav.Link>Marketplace</Nav.Link>
             </LinkContainer>
 

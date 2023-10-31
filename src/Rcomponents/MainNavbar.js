@@ -32,7 +32,7 @@ const MainNavbar = () => {
          <Navbar.Collapse id="basic-navbar-nav">
          <Nav className="me-auto">
              <LinkContainer to="/home"><Nav.Link>Home</Nav.Link></LinkContainer>
-             <LinkContainer to="/marketplace"><Nav.Link>Marketplace</Nav.Link></LinkContainer>
+             <LinkContainer to="/marketplace/search-results"><Nav.Link>Marketplace</Nav.Link></LinkContainer>
              <NavDropdown style={{position: "absolute", right: "70px", top: "1px"}} title={<img className="border rounded-circle"src={DefaultProfile} alt="profile picture" width="60px"></img>} id="basic-nav-dropdown">
              <LinkContainer to="/my-account/my-friends"><NavDropdown.Item >
                  My Friends
