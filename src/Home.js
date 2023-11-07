@@ -25,6 +25,7 @@ import {collection,
 } from "firebase/firestore"
 
 import userService from './services/user.services';
+import { CarouselItem } from 'react-bootstrap';
 
 const Home = () => {
     const [show, setShow] = useState(false);
@@ -239,6 +240,71 @@ const Home = () => {
                                     </Card>
                             </Carousel.Item>
                         </Carousel> */}
+
+                        <div className='portfolio-title'>
+                            <LinkContainer to="/my-account/my-portfolios/1">
+                                <h2>Portfolio 1</h2>
+                            </LinkContainer>
+                        </div>
+                        <Carousel variant="dark" style={{width:"220px"}}>
+                            <Carousel.Item>
+                                <Card>
+                                    <Card.Img variant="top" src={CardBaseball} style={{height:"200px", width:"200px"}}/>
+                                    <Card.Body>
+                                        <LinkContainer to="my-account/my-portfolios/1/1">
+                                            <Card.Title className="text-center">Card 1</Card.Title>
+                                        </LinkContainer>
+                                    </Card.Body>
+                                </Card>
+                            </Carousel.Item>
+                            <Carousel.Item>
+                                <Card>
+                                    <Card.Img variant="top" src={CardBaseball} style={{height:"200px", width:"200px"}}/>
+                                    <Card.Body>
+                                        <LinkContainer to="my-account/my-portfolios/1/2">
+                                            <Card.Title className="text-center">Card 2</Card.Title>
+                                        </LinkContainer>
+                                    </Card.Body>
+                                </Card>
+                            </Carousel.Item>
+                            
+                        </Carousel>
+                        <div className='portfolio-title'>
+                            <LinkContainer to="/my-account/my-portfolios/2">
+                                <h2>Portfolio 2</h2>
+                            </LinkContainer>
+                        </div>
+                        <Carousel variant="dark" style={{width:"220px"}}>
+                            <Carousel.Item>
+                                <Card>
+                                    <Card.Img variant="top" src={CardBaseball} style={{height:"200px", width:"200px"}}/>
+                                    <Card.Body>
+                                        <LinkContainer to="my-account/my-portfolios/2/1">
+                                            <Card.Title className="text-center">Card 1</Card.Title>
+                                        </LinkContainer>
+                                    </Card.Body>
+                                </Card>
+                            </Carousel.Item>
+                            <Carousel.Item>
+                                <Card>
+                                    <Card.Img variant="top" src={CardBaseball} style={{height:"200px", width:"200px"}}/>
+                                    <Card.Body>
+                                        <LinkContainer to="my-account/my-portfolios/2/2">
+                                            <Card.Title className="text-center">Card 2</Card.Title>
+                                        </LinkContainer>
+                                    </Card.Body>
+                                </Card>
+                            </Carousel.Item>
+                            <Carousel.Item>
+                                <Card>
+                                    <Card.Body>
+                                        <div style={{width:"220px", height:"220px"}}></div>
+                                        <Card.Title className="tetx-center">Sample</Card.Title>
+                                    </Card.Body>
+                                </Card>
+                            </Carousel.Item>
+                        </Carousel>
+
 
                         <LinkContainer className='text-center pt-3' to="/my-account/my-portfolios"><a href="#">View All Portfolios...</a></LinkContainer> 
                         </div>
