@@ -178,69 +178,6 @@ const Home = () => {
                             </Carousel>
                         </>
                         ))}
-
-                            {/* <Carousel variant="dark" style={{width:"220px"}}>
-                            <Carousel.Item>
-                                    <Card>
-                                        <Card.Img variant="top" src={Card1Baseball} style={{height:"200px", width: "200px"}}/>
-                                        <Card.Body>
-                                            <LinkContainer to="/my-account/my-portfolios/1/1"><Card.Title className="text-center">Card 1</Card.Title></LinkContainer>
-
-                                        </Card.Body>
-                                    </Card>
-                            </Carousel.Item>
-                            <Carousel.Item>
-                                <Card>
-                                        <Card.Img variant="top" src={Card2Baseball} style={{height:"200px", width: "200px"}}/>
-                                        <Card.Body>
-                                        <LinkContainer to="/my-account/my-portfolios/1/2"><Card.Title className="text-center">Card 2</Card.Title></LinkContainer>
-
-                                        </Card.Body>
-                                </Card>
-                            </Carousel.Item>
-                            <Carousel.Item>
-                            <Card>
-                                        <Card.Body>
-                                            <div style={{width:"200px", height:"200px"}}></div>
-                                            <Card.Title className="text-center">...</Card.Title>
-
-                                        </Card.Body>
-                                    </Card>
-                            </Carousel.Item>
-                        </Carousel>
-                        <div className='portfolio title'>
-                        <LinkContainer to="/my-account/my-portfolios/2"><h2>Portfolio 2</h2></LinkContainer> 
-                        </div>
-                        <Carousel variant="dark" style={{width:"220px"}}>
-                            <Carousel.Item>
-                                    <Card>
-                                        <Card.Img variant="top" src={Card1Baseball} style={{height:"200px", width: "200px"}}/>
-                                        <Card.Body>
-                                        <LinkContainer to="/my-account/my-portfolios/2/1"><Card.Title className="text-center">Card 1</Card.Title></LinkContainer>
-
-                                        </Card.Body>
-                                    </Card>
-                            </Carousel.Item>
-                            <Carousel.Item>
-                                <Card>
-                                        <Card.Img variant="top" src={Card2Baseball} style={{height:"200px", width: "200px"}}/>
-                                        <Card.Body>
-                                        <LinkContainer to="/my-account/my-portfolios/2/2"><Card.Title className="text-center">Card 2</Card.Title></LinkContainer>
-
-                                        </Card.Body>
-                                </Card>
-                            </Carousel.Item>
-                            <Carousel.Item>
-                            <Card>
-                                        <Card.Body>
-                                            <div style={{width:"200px", height:"200px"}}></div>
-                                            <Card.Title className="text-center">...</Card.Title>
-
-                                        </Card.Body>
-                                    </Card>
-                            </Carousel.Item>
-                        </Carousel> */}
-
                         <div className='portfolio-title'>
                             <LinkContainer to="/my-account/my-portfolios/1">
                                 <h2>Portfolio 1</h2>
@@ -249,7 +186,7 @@ const Home = () => {
                         <Carousel variant="dark" style={{width:"220px"}}>
                             <Carousel.Item>
                                 <Card>
-                                    <Card.Img variant="top" src={CardBaseball} style={{height:"200px", width:"200px"}}/>
+                                    <Card.Img variant="top" src={Card1Baseball} style={{height:"200px", width:"200px"}}/>
                                     <Card.Body>
                                         <LinkContainer to="my-account/my-portfolios/1/1">
                                             <Card.Title className="text-center">Card 1</Card.Title>
@@ -259,7 +196,7 @@ const Home = () => {
                             </Carousel.Item>
                             <Carousel.Item>
                                 <Card>
-                                    <Card.Img variant="top" src={CardBaseball} style={{height:"200px", width:"200px"}}/>
+                                    <Card.Img variant="top" src={Card2Baseball} style={{height:"200px", width:"200px"}}/>
                                     <Card.Body>
                                         <LinkContainer to="my-account/my-portfolios/1/2">
                                             <Card.Title className="text-center">Card 2</Card.Title>
@@ -277,7 +214,7 @@ const Home = () => {
                         <Carousel variant="dark" style={{width:"220px"}}>
                             <Carousel.Item>
                                 <Card>
-                                    <Card.Img variant="top" src={CardBaseball} style={{height:"200px", width:"200px"}}/>
+                                    <Card.Img variant="top" src={Card1Baseball} style={{height:"200px", width:"200px"}}/>
                                     <Card.Body>
                                         <LinkContainer to="my-account/my-portfolios/2/1">
                                             <Card.Title className="text-center">Card 1</Card.Title>
@@ -287,7 +224,7 @@ const Home = () => {
                             </Carousel.Item>
                             <Carousel.Item>
                                 <Card>
-                                    <Card.Img variant="top" src={CardBaseball} style={{height:"200px", width:"200px"}}/>
+                                    <Card.Img variant="top" src={Card2Baseball} style={{height:"200px", width:"200px"}}/>
                                     <Card.Body>
                                         <LinkContainer to="my-account/my-portfolios/2/2">
                                             <Card.Title className="text-center">Card 2</Card.Title>
