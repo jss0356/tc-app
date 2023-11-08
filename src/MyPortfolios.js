@@ -1,24 +1,39 @@
 import { useState, useEffect } from "react"
 import { Spinner } from "react-bootstrap"
 import {auth, firestore} from './config/firebase'
-import { collection, query, where, getDocs } from "firebase/firestore"
 import MainNavbar from "./Rcomponents/MainNavbar"
 import SearchIcon from "./logos/SearchIcon.png"
 import UserServices from './services/user.services'
 import { LinkContainer } from "react-router-bootstrap"
 import { Link } from "react-router-dom"
+import AddIcon from './logos/Add-Icon.png'
+import Modal from 'react-bootstrap/Modal'
+import Button from "react-bootstrap/Button"
+import {collection, 
+  query, 
+  where, 
+  getDocs, 
+  addDoc, 
+  setDoc, 
+} from "firebase/firestore"
+import userService from './services/user.services';
 
 const MyPortfolios = () => {
 
     const [portfolioName, setPortfolioName] = useState("")
     const [sortBy, setSortBy] = useState("");
-    const [portfoliios, setPortfolios] = useState([]);
+    const [portfolios, setPortfolios] = useState([]);
     const [filteredPortfolios, setFilteredPortfolios] = useState([])
     const [currPage, setCurrPage] = useState(1);
     const [currPages, setCurrPages] = useState([1,2,3])
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false)
+    const handleClose = () => setShow(false);
+    const [show, setShow] = useState(false);
+    const handleShow = () => setShow(true);
+    const [newPortfolioName, setNewPortfolioName] = useState("")
+    
 
 
     let lowerBound = 0;
@@ -62,7 +77,7 @@ const MyPortfolios = () => {
 
     useEffect(() => {
         const filterPortfolios = () => {
-            setFilteredPortfolios(portfoliios.filter((portfolio) => {
+            setFilteredPortfolios(portfolios.filter((portfolio) => {
                 
                 console.log(portfolio.name.toUpperCase())
                 console.log(portfolioName.toUpperCase())
@@ -76,7 +91,7 @@ const MyPortfolios = () => {
     
     console.log(filteredPortfolios)
 
-    console.log("PORTFOLIOS", portfoliios)
+    console.log("PORTFOLIOS", portfolios)
 
     console.log(portfolioName)
     const handlePaginationClick = (clickedButton) => {
@@ -94,6 +109,79 @@ const MyPortfolios = () => {
         }
       };
 
+      const handleSaveChanges = async () => {
+        const q = query(collection(firestore, 'users'), where('email','==',auth.currentUser.email))
+        const foundUser = await getDocs(q)
+        const userID = foundUser._snapshot.docChanges[0].doc.data.value.mapValue.fields.userID.stringValue
+        const userPortfoliosCollectionRef = collection(firestore, `users/${userID}/userPortfolios`)
+        const addRef = await addDoc(userPortfoliosCollectionRef, {name:newPortfolioName, ownerID: userID, itemCount: 0, totalMarketValue: 0})
+        await setDoc(addRef,{portfolioID: addRef.id},  {merge: true})
+
+        // Re-fetches the portfolio after adding the portfolio    
+        fetchPortfolios();
+        /*handleClose();*/
+}
+
+const fetchPortfolios = async () => {
+    const q = query(collection(firestore, 'users'), where('email', '==', auth.currentUser.email));
+    const foundUser = await getDocs(q);
+    const userID = foundUser.docs[0].id;
+    const userPortfoliosCollectionRef = collection(firestore, `users/${userID}/userPortfolios`);
+    
+    const querySnapshot = await getDocs(userPortfoliosCollectionRef);
+    
+    
+    const portfolioArray = [];
+    querySnapshot.forEach(async (doc) => {
+
+        const portfolioItem = {id: doc.id, name: doc.data().name, cards: []};
+        //console.log(portfolioItem)
+        portfolioArray.push(portfolioItem);
+    });
+
+    portfolioArray.forEach(async (portfolio) => {
+        const uid = await userService.getUserID(auth.currentUser.email)
+        const cards = await userService.getPortfolioCards(uid, portfolio.id)
+        let cardArr = []
+        cards.forEach((card) => {
+            cardArr.push( {id: card.data().id, grade: card.data().grade} )
+        })
+
+        portfolio.cards = cardArr
+        setPortfolios(portfolioArray)
+    })
+    
+  };
+
+  useEffect(() => {
+    // fetches the portfolios
+    fetchPortfolios();
+  }, []);
+
+  useEffect(() => {
+    console.log(portfolios)
+  }, [portfolios])
+
+      const addPortfolioModal=  <div id="add-portfolio-modal">
+    <Modal show={show} onHide={handleClose}>
+    <Modal.Header closeButton>
+        <Modal.Title>Add Portfolio:</Modal.Title>
+    </Modal.Header>
+    <Modal.Body>
+    <label htmlFor="add-portfolio-title">New Portfolio Title:</label>
+    <input className="form-control" type="text" id="add-portfolio-title" value={newPortfolioName} onChange={(e) =>setNewPortfolioName(e.target.value)}/>
+    </Modal.Body>
+    <Modal.Footer>
+        <Button variant="secondary" onClick={handleClose}>
+        Close
+        </Button>
+        <Button variant="primary" onClick={() => {handleSaveChanges();handleClose();}}>
+        Save Changes
+        </Button>
+    </Modal.Footer>
+    </Modal>
+    </div>
+
     return(
         <div id="container" className='w-100 h-100 d-flex flex-column align-items-center justify-content-center'>
             <div id="main-navbar" style={{marginTop:"130px"}}>
@@ -101,6 +189,13 @@ const MyPortfolios = () => {
             </div>
 
             <div id="my-portfolios-container" className="w-75 h-75 d-flex flex-column border rounded align-items-center" style={{backgroundColor:"#edf5e1"}}>
+
+            {addPortfolioModal}
+            <div id="portfolio-showcase" className="d-flex flex-column align-items-center">
+                            <div id="add-portfolio" className="w-75 d-flex align-items-center justify-content-center" style={{height:"50px", placeContent:"center"}}>
+                                <button variant="primary" onClick={handleShow} className='d-grid' style={{height:"40px", width:"300px", placeContent:"center", backgroundColor:"none"}}><img src={AddIcon} alt="" width="20px"/></button>
+                            </div>
+            </div>
 
             <div className="input-group mb-3 mt-2 w-75">
                     <select className="form-select w-25" style={{maxWidth:"100px"}}aria-labelledby="sort-showcase-by" value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
