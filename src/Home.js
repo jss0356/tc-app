@@ -64,6 +64,7 @@ const Home = () => {
             //console.log(portfolioItem)
             portfolioArray.push(portfolioItem);
         });
+        setPortfolios(portfolioArray);
 
         portfolioArray.forEach(async (portfolio) => {
             const uid = await userService.getUserID(auth.currentUser.email)
@@ -112,15 +113,14 @@ const Home = () => {
         <div id="homepage-container" className="d-flex w-100 h-100 flex-column ">
             <div id="homepage-main-nav" style={{marginBottom:"130px"}}>
                 <MainNavbar/>
-
             </div>
             
-            {addPortfolioModal}
+                {addPortfolioModal}
             
-            <div id="homepage-content" className="h-100 w-100 d-flex flex-row mb-2">
-                <div style={{backgroundColor:"#edf5e1"}} id="friends-list-container" className="h-100 w-25 ms-3 border rounded">
-                    <h2 className='text-center'>Friends List</h2>
-                    <hr />
+                <div id="homepage-content" className="h-100 w-100 d-flex flex-row mb-2">
+                    <div style={{backgroundColor:"#edf5e1"}} id="friends-list-container" className="h-100 w-25 ms-3 border rounded">
+                        <h2 className='text-center'>Friends List</h2>
+                        <hr />
                     <div className="vstack gap-1">
                         <LinkContainer to="/user/friend-1">
                             <div className="bg-light border border-dark d-flex flex-row gap-2">
@@ -149,36 +149,68 @@ const Home = () => {
                 </div>
                 <div id="homepage-portfolio-showcase" style={{backgroundColor:"#edf5e1"}} className="h-100 w-75 ms-3 border rounded">
                     <div id="sort-by-container" className="d-flex flex-row w-100">
-                    <select className="form-select w-25" style={{maxWidth:"100px"}}aria-labelledby="sort-showcase-by">
-                        <option value="">Sort by:</option>
-                        <option value="creationDate">Creation Date</option>
-                        <option value="lastEdited">Last Edited</option>
-                    </select>
+                        <select className="form-select w-25" style={{maxWidth:"100px"}}aria-labelledby="sort-showcase-by">
+                            <option value="">Sort by:</option>
+                            <option value="creationDate">Creation Date</option>
+                            <option value="lastEdited">Last Edited</option>
+                        </select>
                     </div>
                     <h2 className='text-center'>My Portfolios</h2>
                     <hr />
                     <div id="portfolio-showcase" className="d-flex flex-column align-items-center">
-                            <div id="add-portfolio" className="w-75 d-flex align-items-center justify-content-center" style={{height:"50px", placeContent:"center"}}>
+                            <div id="add-portfolio" className="w-100 mb-5 d-flex align-items-center justify-content-center" style={{height:"50px", placeContent:"center"}}>
                                 <button variant="primary" onClick={handleShow} className='d-grid' style={{height:"40px", width:"300px", placeContent:"center", backgroundColor:"none"}}><img src={AddIcon} alt="" width="20px"/></button>
-                        </div>
-
-                        {portfolios.map((portfolio, index) => (
-                        <>
-                            <div key={index} className='portfolio title'>
-                                <LinkContainer to={`/my-account/my-portfolios/${portfolio.id}`}>
-                                    <h2 role="button">{portfolio.name}</h2>
-                                </LinkContainer>
                             </div>
-                            <Carousel variant="dark" style={{width:"220px"}}>
-                                {portfolio.cards.map((card, index) => {
-                                    <div key={index} className='card'>
-                                    <p>{card.id}</p>
+
+                            
+
+
+                            <div className="d-flex flex-wrap">
+                                {/*{portfolios.map((portfolio, index) => (
+                                <>
+
+                                    <Carousel variant="dark" style={{width:"220px"}}>
+                                        {portfolio.cards.map((card, index) => {
+                                            <div key={index} className='card'>
+                                                <p>{card.id}</p>
+                                            </div>
+                                        })}
+                                    </Carousel>
+                                    <div key={index} className='portfolio title'>
+                                        <LinkContainer to={`/my-account/my-portfolios/${portfolio.id}`}>
+                                            <h2 role="button">{portfolio.name}</h2>
+                                        </LinkContainer>
                                     </div>
-                                })}
-                            </Carousel>
-                        </>
-                        ))}
-                        <div className='portfolio-title'>
+                                </>
+                                    ))}*/}
+                                {portfolios.map((portfolio, index) => (
+      <div key={index} className="portfolio-container text-center mx-2">
+        <Carousel variant="dark" style={{ width: "220px" }}>
+          {portfolio.cards.map((card, index) => (
+            <Carousel.Item key={index}>
+              <div className='card text-center'>
+                <p>{card.id}</p>
+              </div>
+            </Carousel.Item>
+          ))}
+        </Carousel>
+
+        <LinkContainer to={`/my-account/my-portfolios/${portfolio.id}`}>
+          <h2 role="button">{portfolio.name}</h2>
+        </LinkContainer>
+      </div>
+    ))}
+                            </div>
+                            <LinkContainer className='text-center pt-5' to="/my-account/my-portfolios">
+                                <a href="#">View All Portfolios...</a>
+                            </LinkContainer> 
+                        </div>
+                    </div>
+                </div>
+        </div>
+    )
+}
+{/*<div className='portfolio-title'>
                             <LinkContainer to="/my-account/my-portfolios/1">
                                 <h2>Portfolio 1</h2>
                             </LinkContainer>
@@ -240,17 +272,7 @@ const Home = () => {
                                     </Card.Body>
                                 </Card>
                             </Carousel.Item>
-                        </Carousel>
-
-
-                        <LinkContainer className='text-center pt-3' to="/my-account/my-portfolios"><a href="#">View All Portfolios...</a></LinkContainer> 
-                        </div>
-                </div>
-            </div>
-
-        </div>
-    )
-}
+                            </Carousel>*/}
 
 
 export default Home
