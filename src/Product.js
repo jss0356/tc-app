@@ -8,11 +8,11 @@ import AuctionIcon from "./logos/MarketplaceUploadIcon.png";
 import { useState } from "react";
 import { useEffect } from "react";
 import LineGraph from "./Rcomponents/LineGraph";
-
 import ListingsDataService from "./services/listings.services";
-
 import UserIcon from "./logos/default-profile.jpg";
-
+import { MarketplaceContext } from "./app/MarketplaceProvider";
+import { useContext } from "react";
+import Modal from "react-bootstrap/Modal";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -39,7 +39,7 @@ ChartJS.register(
 
 const Product = ({ cart, setCart, watchlist, setWatchlist }) => {
   const { productID } = useParams();
-  const [card, setCard] = useState([]);
+  const [productInfo, setProductInfo] = useState([]);
   const [listings, setListings] = useState([]);
   const [listingPrices, setListingPrices] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -47,6 +47,19 @@ const Product = ({ cart, setCart, watchlist, setWatchlist }) => {
   const [low, setLow] = useState(0);
   const [high, setHigh] = useState(0);
   const [average, setAverage] = useState(0);
+
+  const [cardToCompareWith, setCardToCompareWith] = useState(null);
+  const [popUpSectionToCompare, setPopUpSectionToCompare] = useState(false);
+  const { cards, setCards } = useContext(MarketplaceContext);
+  const openPopUpSectionToCompare = (card) => {
+    setCardToCompareWith(card);
+    setPopUpSectionToCompare(true);
+  };
+
+  const closePopUpSectionToCompare = () => {
+    setCardToCompareWith(null);
+    setPopUpSectionToCompare(false);
+  };
 
   const handleAddToWatchList = (card) => {
     if (watchlist.some((c) => c.id === card.id)) {
@@ -82,7 +95,7 @@ const Product = ({ cart, setCart, watchlist, setWatchlist }) => {
       })
       .then((data) => {
         console.log(data);
-        setCard(data.data);
+        setProductInfo(data.data);
         return data.data;
       })
       .then((card) => {
@@ -143,7 +156,7 @@ const Product = ({ cart, setCart, watchlist, setWatchlist }) => {
   }, [loading]);
 
   if (!loading) {
-    console.log({ card });
+    console.log({ card: productInfo });
   }
 
   const options = { responsive: true, maintainAspectRatio: true };
@@ -156,7 +169,7 @@ const Product = ({ cart, setCart, watchlist, setWatchlist }) => {
           low || 0,
           high || 0,
           average || 0,
-          card.tcgplayer?.prices?.holofoil?.market || 0,
+          productInfo.tcgplayer?.prices?.holofoil?.market || 0,
         ],
         backgroundColor: "rgba(70, 184, 184, 0.2)",
         borderWidth: 2,
@@ -218,8 +231,8 @@ const Product = ({ cart, setCart, watchlist, setWatchlist }) => {
               className="d-flex flex-column align-items-center"
             >
               <div className="d-flex align-items-center">
-                <h2>{card.name}</h2>
-                <span className="px-2">{card.subtypes}</span>
+                <h2>{productInfo.name}</h2>
+                <span className="px-2">{productInfo.subtypes}</span>
               </div>
               <div className="d-flex flex-row w-100 justify-content-center align-items-center">
                 <div className="px-2" style={{ fontWeight: "bold" }}>
@@ -230,7 +243,7 @@ const Product = ({ cart, setCart, watchlist, setWatchlist }) => {
                 </div>
               </div>
               <img
-                src={card.images?.small}
+                src={productInfo.images?.small}
                 alt="Product"
                 width="250px"
                 className="pt-2 border rounded"
@@ -243,7 +256,7 @@ const Product = ({ cart, setCart, watchlist, setWatchlist }) => {
           </div>
           <div className="col-md-4 justify-content-center">
             <div className="d-flex flex-column ">
-              {card?.types?.map((type) => (
+              {productInfo?.types?.map((type) => (
                 <div className="d-flex flex-row ">
                   <p
                     className="px-4"
@@ -281,7 +294,7 @@ const Product = ({ cart, setCart, watchlist, setWatchlist }) => {
                 </div>
               ))}
 
-              {card?.weaknesses?.map((weakness) => (
+              {productInfo?.weaknesses?.map((weakness) => (
                 <div className="d-flex flex-row w-100">
                   <p
                     className="px-4"
@@ -328,7 +341,7 @@ const Product = ({ cart, setCart, watchlist, setWatchlist }) => {
                     top: "25%",
                   }}
                 >
-                  {card?.hp}HP
+                  {productInfo?.hp}HP
                 </p>
               </div>
             </div>
@@ -339,39 +352,127 @@ const Product = ({ cart, setCart, watchlist, setWatchlist }) => {
                 Set:
               </span>
               <img
-                src={card?.set?.images?.symbol}
+                src={productInfo?.set?.images?.symbol}
                 alt="set logo"
                 style={{ width: "50px", height: "auto", marginLeft: "0.5em" }}
               />
-              <p className="mb-0">{card?.set?.name}</p>
+              <p className="mb-0">{productInfo?.set?.name}</p>
             </div>
             <p className="mb-3">
               <span style={{ fontWeight: "bold", fontSize: "1.1rem" }}>
                 Artist:
               </span>{" "}
-              {card?.artist}
+              {productInfo?.artist}
             </p>
             <p className="mb-3">
               <span style={{ fontWeight: "bold", fontSize: "1.1rem" }}>
                 Release Date:
               </span>{" "}
-              {card?.set?.releaseDate}
+              {productInfo?.set?.releaseDate}
             </p>
             <p className="mb-3">
               <span style={{ fontWeight: "bold", fontSize: "1.1.rem" }}>
                 Printed Total:{" "}
               </span>{" "}
-              {card?.set?.printedTotal}
+              {productInfo?.set?.printedTotal}
             </p>
             <div className="mt-4">
-              <button onClick={() => handleAddToWatchList(card)}>
-                {watchlist.some((c) => c.id === card.id) ? (
+              <button onClick={() => handleAddToWatchList(productInfo)}>
+                {watchlist.some((c) => c.id === productInfo.id) ? (
                   <span className="text-danger">Remove from Watchlist</span>
                 ) : (
                   <span className="text-success">Add to Watchlist</span>
                 )}
               </button>
             </div>
+
+            <div class="dropdown mt-3">
+              <button
+                class="btn btn-secondary dropdown-toggle"
+                type="button"
+                id="dropdownMenuToCompare"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Compare With
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenuToCompare">
+                <li>
+                  {cards &&
+                    cards.map((card) => {
+                      return (
+                        <button
+                          class="dropdown-item"
+                          type="button"
+                          onClick={() => openPopUpSectionToCompare(card)}
+                        >
+                          {card.name}
+                        </button>
+                      );
+                    })}
+                </li>
+              </ul>
+            </div>
+
+            {popUpSectionToCompare && (
+              <Modal
+                show={popUpSectionToCompare}
+                onHide={closePopUpSectionToCompare}
+              >
+                <Modal.Header closeButton>
+                  <Modal.Title>Compare Cards</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <div className="row">
+                    <div className="col-md-6">
+                      <h3>{cardToCompareWith.name}</h3>
+                      <img
+                        src={cardToCompareWith?.images?.small}
+                        alt="Product"
+                        width="200px"
+                        className="pt-2 border rounded"
+                      />
+                      <strong>
+                        <p>{cardToCompareWith?.name}</p>
+                      </strong>
+                      <p>hp: {cardToCompareWith?.hp}</p>
+                      <p>types: {cardToCompareWith?.types}</p>
+                      <p>evolvesTo: {cardToCompareWith?.evolvesTo}</p>
+                      <p>weaknesses: {cardToCompareWith?.weaknesses?.type}</p>
+                      <p>set: {cardToCompareWith?.set?.name}</p>
+                      <p>
+                        market price:
+                        {cardToCompareWith?.tcgplayer?.prices?.holofoil?.market}
+                      </p>
+                    </div>
+                    <div className="col-md-6">
+                      <h3>{productInfo?.name}</h3>
+                      <img
+                        src={productInfo?.images?.small}
+                        alt="Product"
+                        width="200px"
+                        className="pt-2 border rounded"
+                      />
+                      <strong>
+                        <p>{productInfo?.name}</p>
+                      </strong>
+                      <p>hp: {productInfo?.hp}</p>
+                      <p>types: {productInfo?.types}</p>
+                      <p>evolvesTo: {productInfo?.evolvesTo}</p>
+                      <p>weaknesses: {productInfo?.weaknesses?.type}</p>
+                      <p>set: {productInfo?.set?.name}</p>
+                      <p>
+                        market price:
+                        {productInfo?.tcgplayer?.prices?.holofoil?.market}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="d-flex justify-content-center mt-3">
+                    <button onClick={closePopUpSectionToCompare}>Close</button>
+                  </div>
+                </Modal.Body>
+              </Modal>
+            )}
           </div>
         </div>
         {/* <div className='w-100 h-100 d-flex flex-row'>
@@ -481,7 +582,7 @@ const Product = ({ cart, setCart, watchlist, setWatchlist }) => {
                     cart={cart}
                     setCart={setCart}
                     productID={productID}
-                    card={card}
+                    card={productInfo}
                   />
                 </>
               ))
