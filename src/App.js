@@ -35,13 +35,18 @@ import { useState } from "react";
 import UserSettingsProvider from "./app/UserSettingsProvider";
 import MarketplaceProvider from "./app/MarketplaceProvider";
 import CardProvider from "./app/CardProvider";
+import WatchList from "./WatchList";
 
 function App() {
   const [cart, setCart] = useState([]);
   const [cartQuantity, setCartQuantity] = useState(0);
+  const [watchlist, setWatchlist] = useState([]);
   return (
     <div className="App" style={{ backgroundColor: "#5cdb95" }}>
-      <div className="container-fluid" style={{ overflow: "auto", minHeight: "100vh" }}>
+      <div
+        className="container-fluid"
+        style={{ overflow: "auto", minHeight: "100vh" }}
+      >
         <MarketplaceProvider>
           <Routes>
             <Route path="/login" element={<Login />} />
@@ -83,11 +88,14 @@ function App() {
               <Route path="my-portfolios">
                 <Route index element={<MyPortfolios />} />
                 <Route path=":portfolioID">
-                  <Route index element={
-                    <CardProvider>
-                      <Portfolio />
-                    </CardProvider>
-                  } />
+                  <Route
+                    index
+                    element={
+                      <CardProvider>
+                        <Portfolio />
+                      </CardProvider>
+                    }
+                  />
                   <Route path=":cardID" element={<PortfolioItem />} />
                 </Route>
               </Route>
@@ -103,7 +111,19 @@ function App() {
 
             <Route path="/marketplace">
               <Route index element={<Marketplace />} />
-              <Route path="cards/:productID" element={<Product cart={cart} setCart={setCart} cartQuantity={cartQuantity} setCartQuantity={setCartQuantity} />} />
+              <Route
+                path="cards/:productID"
+                element={
+                  <Product
+                    cart={cart}
+                    setCart={setCart}
+                    cartQuantity={cartQuantity}
+                    setCartQuantity={setCartQuantity}
+                    watchlist={watchlist}
+                    setWatchlist={setWatchlist}
+                  />
+                }
+              />
               <Route
                 path="search-results"
                 element={
@@ -127,13 +147,19 @@ function App() {
                 }
               />
               <Route path="payment">
-                <Route index element={<PaymentInfo cart={cart}/>} />
+                <Route index element={<PaymentInfo cart={cart} />} />
                 <Route path="success" element={<PaymentSuccess />} />
               </Route>
             </Route>
             <Route path="/" element={<TestNav />} />
             <Route path="*" element={<NotFound />} />
             <Route path="/user/:id" element={<User />} />
+            <Route
+              path="/watchlist"
+              element={
+                <WatchList watchlist={watchlist} setWatchlist={setWatchlist} />
+              }
+            />
           </Routes>
         </MarketplaceProvider>
       </div>
