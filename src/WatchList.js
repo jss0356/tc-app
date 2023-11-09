@@ -4,7 +4,7 @@ import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-
+import { LinkContainer } from "react-router-bootstrap";
 const WatchList = ({ watchlist, setWatchlist }) => {
   const removeCard = (cardId) => {
     setWatchlist(watchlist.filter((card) => card.id !== cardId));
@@ -19,10 +19,20 @@ const WatchList = ({ watchlist, setWatchlist }) => {
           {watchlist.map((card, index) => (
             <Col key={index} xs={12} sm={6} md={4} lg={3}>
               <Card style={{ margin: "20px", maxWidth: "300px" }}>
-                <Card.Img src={card.images.small} alt="Card" />
+                <LinkContainer
+                  to={`/marketplace/cards/${card.id}`}
+                  key={card.id}
+                  className="card-link"
+                  style={{ cursor: "pointer" }}
+                >
+                  <Card.Img src={card.images.small} alt="Card" />
+                </LinkContainer>
                 <Card.Body>
                   <div
-                    style={{ display: "flex", justifyContent: "space-between" }}
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                    }}
                   >
                     <Card.Title>{card.name}</Card.Title>
                     <button
