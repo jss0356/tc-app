@@ -21,10 +21,11 @@ import {collection,
     doc,
     query,
     where,
-    setDoc
+    setDoc,
+    limit
 } from "firebase/firestore"
 
-import userService from './services/user.services';
+import userServices from './services/user.services';
 import { CarouselItem } from 'react-bootstrap';
 
 const Home = () => {
@@ -33,6 +34,7 @@ const Home = () => {
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+    const [loading, setLoading] = useState(true);
 
     const [portfolioName, setPortfolioName] = useState("");
     const handleSaveChanges = async () => {
@@ -49,7 +51,14 @@ const Home = () => {
     }
 
     const fetchPortfolios = async () => {
-        const q = query(collection(firestore, 'users'), where('email', '==', auth.currentUser.email));
+        setLoading(true);
+
+        //const q = query(collection(firestore, 'users'), where('email', '==', auth.currentUser.email));
+        const q = query(
+            collection(firestore, 'users'),
+            where('email', '==', auth.currentUser.email),
+            limit(3)
+        );
         const foundUser = await getDocs(q);
         const userID = foundUser.docs[0].id;
         const userPortfoliosCollectionRef = collection(firestore, `users/${userID}/userPortfolios`);
@@ -59,7 +68,6 @@ const Home = () => {
         
         const portfolioArray = [];
         querySnapshot.forEach(async (doc) => {
-
             const portfolioItem = {id: doc.id, name: doc.data().name, cards: []};
             //console.log(portfolioItem)
             portfolioArray.push(portfolioItem);
@@ -67,15 +75,20 @@ const Home = () => {
         setPortfolios(portfolioArray);
 
         portfolioArray.forEach(async (portfolio) => {
-            const uid = await userService.getUserID(auth.currentUser.email)
-            const cards = await userService.getPortfolioCards(uid, portfolio.id)
-            let cardArr = []
-            cards.forEach((card) => {
-                cardArr.push( {id: card.data().id, grade: card.data().grade} )
-            })
+            const uid = await userServices.getUserID(auth.currentUser.email);
+            const cards = await userServices.getPortfolioCards(portfolio.id, uid);
+            let cardArr = [];
+            console.log(cards);
 
-            portfolio.cards = cardArr
-            setPortfolios(portfolioArray)
+            if(cards !== 'no cards.') {
+                cards.forEach((card) => {
+                    cardArr.push( {id: card.Id, grade: card.Grade} );
+                });
+            }
+
+            portfolio.cards = cardArr;
+            console.log('This is the cards for this portfolio: ', portfolio.cards);
+            setPortfolios(portfolioArray);
         })
         
       };
@@ -165,52 +178,29 @@ const Home = () => {
                             
 
 
-                            <div className="d-flex flex-wrap">
-                                {/*{portfolios.map((portfolio, index) => (
-                                <>
+                            <div className="d-flex flex-wrap">                          
+                                 {portfolios.map((portfolio, index) => (
+                                    <div key={index} className="portfolio-container text-center mx-2">
+                                        <Carousel variant="dark" style={{ width: "220px" }}>
+                                            {portfolio.cards.map((card, index) => (
+                                                <Carousel.Item key={index}>
+                                                    <Card.body>
+                                                        <Card.Title className="text-center">Meow</Card.Title>
+                                                    </Card.body>
+                                                    <div className='card text-center'>
+                                                        <p>Meow</p>
+                                                    </div>
+                                                </Carousel.Item>
+                                            ))}
+                                        </Carousel>
 
-                                    <Carousel variant="dark" style={{width:"220px"}}>
-                                        {portfolio.cards.map((card, index) => {
-                                            <div key={index} className='card'>
-                                                <p>{card.id}</p>
-                                            </div>
-                                        })}
-                                    </Carousel>
-                                    <div key={index} className='portfolio title'>
-                                        <LinkContainer to={`/my-account/my-portfolios/${portfolio.id}`}>
-                                            <h2 role="button">{portfolio.name}</h2>
-                                        </LinkContainer>
+                                         <LinkContainer to={`/my-account/my-portfolios/${portfolio.id}`}>
+                                                <h2 role="button">{portfolio.name}</h2>
+                                            </LinkContainer>
                                     </div>
-                                </>
-                                    ))}*/}
-                                {portfolios.map((portfolio, index) => (
-      <div key={index} className="portfolio-container text-center mx-2">
-        <Carousel variant="dark" style={{ width: "220px" }}>
-          {portfolio.cards.map((card, index) => (
-            <Carousel.Item key={index}>
-              <div className='card text-center'>
-                <p>{card.id}</p>
-              </div>
-            </Carousel.Item>
-          ))}
-        </Carousel>
-
-        <LinkContainer to={`/my-account/my-portfolios/${portfolio.id}`}>
-          <h2 role="button">{portfolio.name}</h2>
-        </LinkContainer>
-      </div>
-    ))}
+                                ))}
                             </div>
-                            <LinkContainer className='text-center pt-5' to="/my-account/my-portfolios">
-                                <a href="#">View All Portfolios...</a>
-                            </LinkContainer> 
-                        </div>
-                    </div>
-                </div>
-        </div>
-    )
-}
-{/*<div className='portfolio-title'>
+                            {/*<div className='portfolio-title'>
                             <LinkContainer to="/my-account/my-portfolios/1">
                                 <h2>Portfolio 1</h2>
                             </LinkContainer>
@@ -272,7 +262,18 @@ const Home = () => {
                                     </Card.Body>
                                 </Card>
                             </Carousel.Item>
-                            </Carousel>*/}
+                                            </Carousel>*/}
+
+                            <LinkContainer className='text-center pt-5' to="/my-account/my-portfolios">
+                                <a href="#">View All Portfolios...</a>
+                            </LinkContainer> 
+                        </div>
+                    </div>
+                </div>
+        </div>
+    )
+}
+
 
 
 export default Home
