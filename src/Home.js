@@ -37,6 +37,7 @@ const Home = () => {
     const [loading, setLoading] = useState(true);
 
     const [portfolioName, setPortfolioName] = useState("");
+
     const handleSaveChanges = async () => {
             const q = query(collection(firestore, 'users'), where('email','==',auth.currentUser.email))
             const foundUser = await getDocs(q)
@@ -56,8 +57,7 @@ const Home = () => {
         //const q = query(collection(firestore, 'users'), where('email', '==', auth.currentUser.email));
         const q = query(
             collection(firestore, 'users'),
-            where('email', '==', auth.currentUser.email),
-            limit(3)
+            where('email', '==', auth.currentUser.email)
         );
         const foundUser = await getDocs(q);
         const userID = foundUser.docs[0].id;
@@ -67,14 +67,55 @@ const Home = () => {
         
         
         const portfolioArray = [];
-        querySnapshot.forEach(async (doc) => {
-            const portfolioItem = {id: doc.id, name: doc.data().name, cards: []};
-            //console.log(portfolioItem)
-            portfolioArray.push(portfolioItem);
-        });
-        setPortfolios(portfolioArray);
+        const tempArray = [];
+        querySnapshot.forEach(async (portfolioItem) => {
+            /*const uid = await userServices.getUserID(auth.currentUser.email);
+            const cards = await userServices.getPortfolioCards(doc.id, uid);
+            let cardArr = [];
 
-        portfolioArray.forEach(async (portfolio) => {
+            if(cards !== 'no cards.') {
+                cards.forEach((card) => {
+                    cardArr.push( {id: card.Id, grade: card.Grade} );
+                });
+            }
+
+            const portfolioItem = {id: doc.id, name: doc.data().name, cards: cardArr};*/
+
+        tempArray.push(portfolioItem.data());
+        
+        });
+
+        for(const portfolio of tempArray){
+            const uid = await userServices.getUserID(auth.currentUser.email);
+            const cards = await userServices.getPortfolioCards(portfolio.portfolioID, uid);
+            let cardArr = [];
+
+            if(cards !== 'no cards.') {
+                cards.forEach((card) => {
+                    cardArr.push( {id: card.Id, grade: card.Grade} );
+                });
+            }
+
+            const portfolioItem = {id: portfolio.portfolioID, name: portfolio.name, cards: cardArr};
+
+        portfolioArray.push(portfolioItem)    
+        }
+
+        for(const portfolio of portfolioArray){
+            for(const card of portfolio.cards){
+                const response = await fetch(`https://api.pokemontcg.io/v2/cards/${card.id}`)
+                const responseData = await response.json();
+                const cardData = responseData.data;
+                card.name = cardData.name;
+                card.image = cardData.images.small;
+            }
+        }
+
+        setPortfolios(portfolioArray);
+        setLoading(false);
+        console.log(portfolioArray);
+
+        /*portfolioArray.forEach(async (portfolio) => {
             const uid = await userServices.getUserID(auth.currentUser.email);
             const cards = await userServices.getPortfolioCards(portfolio.id, uid);
             let cardArr = [];
@@ -89,18 +130,18 @@ const Home = () => {
             portfolio.cards = cardArr;
             console.log('This is the cards for this portfolio: ', portfolio.cards);
             setPortfolios(portfolioArray);
-        })
+        })*/
         
-      };
+    };
 
-      useEffect(() => {
-        // fetches the portfolios
-        fetchPortfolios();
-      }, []);
+    useEffect(() => {
+    // fetches the portfolios
+    fetchPortfolios();
+    }, []);
 
-      useEffect(() => {
-        console.log(portfolios)
-      }, [portfolios])
+    useEffect(() => {
+    console.log(portfolios);
+    }, [portfolios]);
   
     const addPortfolioModal=  <div id="add-portfolio-modal">
     <Modal show={show} onHide={handleClose}>
@@ -177,29 +218,48 @@ const Home = () => {
 
                             
 
-
-                            <div className="d-flex flex-wrap">                          
+                            {!loading &&
+                            <div className="d-flex flex-wrap">                     
                                  {portfolios.map((portfolio, index) => (
                                     <div key={index} className="portfolio-container text-center mx-2">
-                                        <Carousel variant="dark" style={{ width: "220px" }}>
-                                            {portfolio.cards.map((card, index) => (
+                                        {portfolio.cards && (
+                                            <Carousel variant="dark" style={{ width: "220px" }}>
+                                                {/*portfolio.cards.map((card, index) => (
                                                 <Carousel.Item key={index}>
-                                                    <Card.body>
-                                                        <Card.Title className="text-center">Meow</Card.Title>
-                                                    </Card.body>
+                                                    <div className='card text-center'>
+                                                    <p>{index}</p>
+                                                    </div>
+                                                </Carousel.Item>
+                                                ))*/}
+                                                <Carousel.Item key="1">
+                                                    <div className='card text-center'>
+                                                        <p>carousel test</p>
+                                                    </div>
+                                                </Carousel.Item>
+
+                                            </Carousel>
+                                        )}
+                                        {/*<Carousel variant="dark" style={{ width: "220px" }}>
+                                            {/*portfolio.cards.map((card, index) => (
+                                                <Carousel.Item key={index}>
                                                     <div className='card text-center'>
                                                         <p>Meow</p>
                                                     </div>
                                                 </Carousel.Item>
                                             ))}
-                                        </Carousel>
+                                            <Carousel.Item key="1">
+                                                <div className='card text-center'>
+                                                    <p>{portfolio.cards[0]}</p>
+                                                </div>
+                                            </Carousel.Item>
+                                        </Carousel>*/}
 
-                                         <LinkContainer to={`/my-account/my-portfolios/${portfolio.id}`}>
-                                                <h2 role="button">{portfolio.name}</h2>
-                                            </LinkContainer>
+                                        <LinkContainer to={`/my-account/my-portfolios/${portfolio.id}`}>
+                                            <h2 role="button">{portfolio.name}</h2>
+                                        </LinkContainer>
                                     </div>
                                 ))}
-                            </div>
+                            </div>}
                             {/*<div className='portfolio-title'>
                             <LinkContainer to="/my-account/my-portfolios/1">
                                 <h2>Portfolio 1</h2>
