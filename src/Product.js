@@ -8,11 +8,11 @@ import AuctionIcon from "./logos/MarketplaceUploadIcon.png";
 import { useState } from "react";
 import { useEffect } from "react";
 import LineGraph from "./Rcomponents/LineGraph";
-
-import ListingsDataService from './services/listings.services'
-
-import UserIcon from './logos/default-profile.jpg'
-
+import ListingsDataService from "./services/listings.services";
+import UserIcon from "./logos/default-profile.jpg";
+import { MarketplaceContext } from "./app/MarketplaceProvider";
+import { useContext } from "react";
+import Modal from "react-bootstrap/Modal";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -37,30 +37,55 @@ ChartJS.register(
   Legend
 );
 
-const Product = ({cart, setCart}) => {
+const Product = ({ cart, setCart, watchlist, setWatchlist }) => {
   const { productID } = useParams();
-  const [card, setCard] = useState([]);
-  const [listings, setListings] = useState([])
-  const [listingPrices, setListingPrices] = useState([])
+  const [productInfo, setProductInfo] = useState([]);
+  const [listings, setListings] = useState([]);
+  const [listingPrices, setListingPrices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [low, setLow] = useState(0);
   const [high, setHigh] = useState(0);
   const [average, setAverage] = useState(0);
 
+  const [cardToCompareWith, setCardToCompareWith] = useState(null);
+  const [popUpSectionToCompare, setPopUpSectionToCompare] = useState(false);
+  const { cards, setCards } = useContext(MarketplaceContext);
+  const openPopUpSectionToCompare = (card) => {
+    setCardToCompareWith(card);
+    setPopUpSectionToCompare(true);
+  };
 
+  const closePopUpSectionToCompare = () => {
+    setCardToCompareWith(null);
+    setPopUpSectionToCompare(false);
+  };
 
- 
-const fetchAllListings = async (productID) => {
-  const listingsResult = await ListingsDataService.getListingsByProductID(productID)
-  const allListings = await ListingsDataService.getAllListings(productID)
-  if(listingsResult.length === 0 || allListings.length === 0){
-    return
-  }
-  
-  setListings(listingsResult.sort((a, b) => a.Price - b.Price))
-  setListingPrices(allListings.map((listing) => ({Price: listing.Price, isStartingPrice: listing.isStartingPrice})))
-}
+  const handleAddToWatchList = (card) => {
+    if (watchlist.some((c) => c.id === card.id)) {
+      setWatchlist(watchlist.filter((c) => c.id !== card.id));
+    } else {
+      setWatchlist([...watchlist, card]);
+    }
+  };
+
+  const fetchAllListings = async (productID) => {
+    const listingsResult = await ListingsDataService.getListingsByProductID(
+      productID
+    );
+    const allListings = await ListingsDataService.getAllListings(productID);
+    if (listingsResult.length === 0 || allListings.length === 0) {
+      return;
+    }
+
+    setListings(listingsResult.sort((a, b) => a.Price - b.Price));
+    setListingPrices(
+      allListings.map((listing) => ({
+        Price: listing.Price,
+        isStartingPrice: listing.isStartingPrice,
+      }))
+    );
+  };
 
   const individualCardDetails = () => {
     setLoading(true);
@@ -69,16 +94,15 @@ const fetchAllListings = async (productID) => {
         return response.json();
       })
       .then((data) => {
-        console.log(data)
-        setCard(data.data);
-        return data.data
-        
+        console.log(data);
+        setProductInfo(data.data);
+        return data.data;
       })
       .then((card) => {
         fetchAllListings(card.id).then((listingsResult) => {
-          setLoading(false)
-        })
-      })   
+          setLoading(false);
+        });
+      })
       .catch((error) => {
         setError(true);
         setLoading(false);
@@ -89,58 +113,53 @@ const fetchAllListings = async (productID) => {
     individualCardDetails();
   }, []);
 
-
-
   const determineStartingFrom = () => {
-    if(listingPrices.length !== 0){
-      const listing = listingPrices.find((listing) => listing.isStartingPrice === true)
-      return "$"+ String(listing.Price);
+    if (listingPrices.length !== 0) {
+      const listing = listingPrices.find(
+        (listing) => listing.isStartingPrice === true
+      );
+      return "$" + String(listing.Price);
     }
-    return "N/A"
-  }
+    return "N/A";
+  };
 
   const determineChartPrices = () => {
-    
-    if(listingPrices.length !== 0){
+    if (listingPrices.length !== 0) {
       const listings = listingPrices.map((listing) => listing.Price);
       //calculate low and high
       let currLow = listings[0];
       let currHigh = listings[0];
 
-      for(const listingPrice of listings){
-        if(currLow > listingPrice){
-          currLow = listingPrice
+      for (const listingPrice of listings) {
+        if (currLow > listingPrice) {
+          currLow = listingPrice;
         }
-        if(currHigh < listingPrice){
+        if (currHigh < listingPrice) {
           currHigh = listingPrice;
         }
       }
-      setLow(currLow)
-      setHigh(currHigh)
+      setLow(currLow);
+      setHigh(currHigh);
       //calculate average.
 
       const totalPriceSum = listings.reduce((prev, curr) => curr + prev);
-      console.log("TOTAL SUM", listings)
+      console.log("TOTAL SUM", listings);
       setAverage(totalPriceSum / listings.length);
     }
-    
-
-  }
+  };
 
   useEffect(() => {
-    if(!loading){
+    if (!loading) {
       determineStartingFrom();
       determineChartPrices();
     }
-  }, [loading])
+  }, [loading]);
 
   if (!loading) {
-    console.log({ card });
+    console.log({ card: productInfo });
   }
 
-  const options = {responsive: true,
-    maintainAspectRatio: true
-  };
+  const options = { responsive: true, maintainAspectRatio: true };
   const data = {
     labels: ["low", "high", "average", "market"],
     datasets: [
@@ -150,26 +169,24 @@ const fetchAllListings = async (productID) => {
           low || 0,
           high || 0,
           average || 0,
-          card.tcgplayer?.prices?.holofoil?.market || 0,
+          productInfo.tcgplayer?.prices?.holofoil?.market || 0,
         ],
         backgroundColor: "rgba(70, 184, 184, 0.2)",
         borderWidth: 2,
       },
     ],
   };
-  console.log(cart)
+  console.log(cart);
   const [cardHoverEffect, setCardHoverEffect] = useState(false);
 
   const [hoverEffectStyle, setCardHoverEffectStyle] = useState({
-  width: "80%", 
-  padding: "1rem",
-  transition: "all 0.5s ease",
-  transform: cardHoverEffect ? "scale(1)" : "scale(1)",
-  boxShadow: cardHoverEffect ? "0 0 10px rgba(0, 0, 0, 0.5)" : "none",
-  cursor: cardHoverEffect ? "pointer" : "default"})
-
- 
-
+    width: "80%",
+    padding: "1rem",
+    transition: "all 0.5s ease",
+    transform: cardHoverEffect ? "scale(1)" : "scale(1)",
+    boxShadow: cardHoverEffect ? "0 0 10px rgba(0, 0, 0, 0.5)" : "none",
+    cursor: cardHoverEffect ? "pointer" : "default",
+  });
 
   const handleHoverOverCard = (e) => {
     setCardHoverEffect(true);
@@ -179,19 +196,22 @@ const fetchAllListings = async (productID) => {
     console.log("CLIENT X: ", e.clientX);
     console.log("CLIENT Y: ", e.clientY);
     const dampeningFactor = 0.13;
-    setCardHoverEffectStyle({...hoverEffectStyle, transform: `rotateX(${(e.clientY-300) * dampeningFactor}deg) rotateY(${(e.clientX-190) * dampeningFactor}deg)`})
-    
-  }
+    setCardHoverEffectStyle({
+      ...hoverEffectStyle,
+      transform: `rotateX(${(e.clientY - 300) * dampeningFactor}deg) rotateY(${
+        (e.clientX - 190) * dampeningFactor
+      }deg)`,
+    });
+  };
 
   const handleHoverOffCard = () => {
     setCardHoverEffect(false);
   };
 
-
   const nonHoverEffectStyle = {
     transition: "all 0.5s ease",
     width: "60%",
-  }
+  };
 
   return (
     <div id="container" className="w-100 d-flex flex-column">
@@ -211,21 +231,19 @@ const fetchAllListings = async (productID) => {
               className="d-flex flex-column align-items-center"
             >
               <div className="d-flex align-items-center">
-                <h2>{card.name}</h2>
-                <span className="px-2">{card.subtypes}</span>
+                <h2>{productInfo.name}</h2>
+                <span className="px-2">{productInfo.subtypes}</span>
               </div>
               <div className="d-flex flex-row w-100 justify-content-center align-items-center">
-
-                <div className="px-2" style={{fontWeight: "bold"}}>
+                <div className="px-2" style={{ fontWeight: "bold" }}>
                   Starting from:
                 </div>
-                <div style={{fontSize: "2rem"}} className="text-green">
-                {determineStartingFrom()}
+                <div style={{ fontSize: "2rem" }} className="text-green">
+                  {determineStartingFrom()}
                 </div>
-                 
               </div>
               <img
-                src={card.images?.small}
+                src={productInfo.images?.small}
                 alt="Product"
                 width="250px"
                 className="pt-2 border rounded"
@@ -238,7 +256,7 @@ const fetchAllListings = async (productID) => {
           </div>
           <div className="col-md-4 justify-content-center">
             <div className="d-flex flex-column ">
-              {card?.types?.map((type) => (
+              {productInfo?.types?.map((type) => (
                 <div className="d-flex flex-row ">
                   <p
                     className="px-4"
@@ -269,12 +287,14 @@ const fetchAllListings = async (productID) => {
                       </p>
                     </>
                   ) : (
-                    <p className="text-danger" style={{fontWeight: "bold"}}>Error, no type available.</p>
+                    <p className="text-danger" style={{ fontWeight: "bold" }}>
+                      Error, no type available.
+                    </p>
                   )}
                 </div>
               ))}
 
-              {card?.weaknesses?.map((weakness) => (
+              {productInfo?.weaknesses?.map((weakness) => (
                 <div className="d-flex flex-row w-100">
                   <p
                     className="px-4"
@@ -321,7 +341,7 @@ const fetchAllListings = async (productID) => {
                     top: "25%",
                   }}
                 >
-                  {card?.hp}HP
+                  {productInfo?.hp}HP
                 </p>
               </div>
             </div>
@@ -332,30 +352,128 @@ const fetchAllListings = async (productID) => {
                 Set:
               </span>
               <img
-                src={card?.set?.images?.symbol}
+                src={productInfo?.set?.images?.symbol}
                 alt="set logo"
                 style={{ width: "50px", height: "auto", marginLeft: "0.5em" }}
               />
-              <p className="mb-0">{card?.set?.name}</p>
+              <p className="mb-0">{productInfo?.set?.name}</p>
             </div>
             <p className="mb-3">
               <span style={{ fontWeight: "bold", fontSize: "1.1rem" }}>
                 Artist:
               </span>{" "}
-              {card?.artist}
+              {productInfo?.artist}
             </p>
             <p className="mb-3">
               <span style={{ fontWeight: "bold", fontSize: "1.1rem" }}>
                 Release Date:
               </span>{" "}
-              {card?.set?.releaseDate}
+              {productInfo?.set?.releaseDate}
             </p>
             <p className="mb-3">
               <span style={{ fontWeight: "bold", fontSize: "1.1.rem" }}>
-                Printed Total: </span> {card?.set?.printedTotal}
+                Printed Total:{" "}
+              </span>{" "}
+              {productInfo?.set?.printedTotal}
             </p>
-          </div>
+            <div className="mt-4">
+              <button onClick={() => handleAddToWatchList(productInfo)}>
+                {watchlist.some((c) => c.id === productInfo.id) ? (
+                  <span className="text-danger">Remove from Watchlist</span>
+                ) : (
+                  <span className="text-success">Add to Watchlist</span>
+                )}
+              </button>
+            </div>
 
+            <div class="dropdown mt-3">
+              <button
+                class="btn btn-secondary dropdown-toggle"
+                type="button"
+                id="dropdownMenuToCompare"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Compare With
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenuToCompare">
+                <li>
+                  {cards &&
+                    cards.map((card) => {
+                      return (
+                        <button
+                          class="dropdown-item"
+                          type="button"
+                          onClick={() => openPopUpSectionToCompare(card)}
+                        >
+                          {card.name}
+                        </button>
+                      );
+                    })}
+                </li>
+              </ul>
+            </div>
+
+            {popUpSectionToCompare && (
+              <Modal
+                show={popUpSectionToCompare}
+                onHide={closePopUpSectionToCompare}
+              >
+                <Modal.Header closeButton>
+                  <Modal.Title>Compare Cards</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <div className="row">
+                    <div className="col-md-6">
+                      <h3>{cardToCompareWith.name}</h3>
+                      <img
+                        src={cardToCompareWith?.images?.small}
+                        alt="Product"
+                        width="200px"
+                        className="pt-2 border rounded"
+                      />
+                      <strong>
+                        <p>{cardToCompareWith?.name}</p>
+                      </strong>
+                      <p>hp: {cardToCompareWith?.hp}</p>
+                      <p>types: {cardToCompareWith?.types}</p>
+                      <p>evolvesTo: {cardToCompareWith?.evolvesTo}</p>
+                      <p>weaknesses: {cardToCompareWith?.weaknesses?.type}</p>
+                      <p>set: {cardToCompareWith?.set?.name}</p>
+                      <p>
+                        market price:
+                        {cardToCompareWith?.tcgplayer?.prices?.holofoil?.market}
+                      </p>
+                    </div>
+                    <div className="col-md-6">
+                      <h3>{productInfo?.name}</h3>
+                      <img
+                        src={productInfo?.images?.small}
+                        alt="Product"
+                        width="200px"
+                        className="pt-2 border rounded"
+                      />
+                      <strong>
+                        <p>{productInfo?.name}</p>
+                      </strong>
+                      <p>hp: {productInfo?.hp}</p>
+                      <p>types: {productInfo?.types}</p>
+                      <p>evolvesTo: {productInfo?.evolvesTo}</p>
+                      <p>weaknesses: {productInfo?.weaknesses?.type}</p>
+                      <p>set: {productInfo?.set?.name}</p>
+                      <p>
+                        market price:
+                        {productInfo?.tcgplayer?.prices?.holofoil?.market}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="d-flex justify-content-center mt-3">
+                    <button onClick={closePopUpSectionToCompare}>Close</button>
+                  </div>
+                </Modal.Body>
+              </Modal>
+            )}
+          </div>
         </div>
         {/* <div className='w-100 h-100 d-flex flex-row'>
                     <div id="left-display" className='ps-3 h-100 w-100 d-flex flex-column justify-content-center gap-2' >
@@ -440,37 +558,42 @@ const fetchAllListings = async (productID) => {
 
                     </div>
   </div> */}
-      <div className="d-flex flex-column w-100">
+        <div className="d-flex flex-column w-100">
           <div className="w-100 h-100 d-flex flex-row justify-content-center">
-
             <div className="chart-container h-100 w-50">
               <h2 className="text-center">Price Statistics (In USD)</h2>
               <Bar data={data} options={options} />
             </div>
-
-          </div>
-            
-
-          <div id="selling-listings" className="w-100 h-100 d-flex gap-2 flex-column align-items-center m-2">
-          <h2 className="text-center">Listings</h2>
-            {!loading && listings.length > 0 ?
-            listings.map((listing) => (
-              <>
-                <Listing listingID={listing.listingID} sellerEmail={listing.sellerEmail} Grade={listing.Grade} Price={listing.Price} cart={cart} setCart={setCart} productID={productID} card={card}/>
-
-              
-              </>
-                        
-            )) : <span className="text-danger" style={{fontWeight: "bold"}}>No listings available.</span>
-
-            }
-   
           </div>
 
+          <div
+            id="selling-listings"
+            className="w-100 h-100 d-flex gap-2 flex-column align-items-center m-2"
+          >
+            <h2 className="text-center">Listings</h2>
+            {!loading && listings.length > 0 ? (
+              listings.map((listing) => (
+                <>
+                  <Listing
+                    listingID={listing.listingID}
+                    sellerEmail={listing.sellerEmail}
+                    Grade={listing.Grade}
+                    Price={listing.Price}
+                    cart={cart}
+                    setCart={setCart}
+                    productID={productID}
+                    card={productInfo}
+                  />
+                </>
+              ))
+            ) : (
+              <span className="text-danger" style={{ fontWeight: "bold" }}>
+                No listings available.
+              </span>
+            )}
+          </div>
         </div>
-
       </div>
-
     </div>
   );
 };
