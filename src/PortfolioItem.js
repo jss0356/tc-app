@@ -42,6 +42,8 @@ const PortfolioItem = () =>{
 
     const [show, setShow] = useState(false);
 
+    const [showMoveCard, setShowMoveCard] = useState(false);
+
     const [card, setCard] = useState({})
     const [cardApiInfo, setCardApiInfo] = useState({})
     const [loading, setLoading] = useState(true);
@@ -146,6 +148,13 @@ const PortfolioItem = () =>{
     console.log("CARD API INFO", cardApiInfo)
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+
+    const handleShowMoveCard = () => setShowMoveCard(true);
+    const handleCloseMoveCard = () => setShowMoveCard(false);
+
+
+    
+
 
     const getCardData = async () => {
         try{
@@ -261,7 +270,41 @@ const PortfolioItem = () =>{
 
 
 
+const moveCardModal =  <div id="move-card-modal">
+    <Modal show={showMoveCard} onHide={handleCloseMoveCard}>
+    <Modal.Header closeButton>
+        <Modal.Title>Move Card to New Portfolio</Modal.Title>
+    </Modal.Header>
+    <Modal.Body>
+    
+        <form>
+            <div className="w-100 d-flex flex-row justify-content-center">
+                <img src={cardApiInfo?.images?.small} alt="Card Image" className='border rounded' width="150px"/>
+            </div>
 
+            <div className='w-full d-flex flex-row justify-content-center align-items-center gap-2'>
+                <p className='fs-7'>Current Location:</p>
+                <p className='fs-4'>{portfolioLocation}</p>
+            </div>
+
+         
+
+
+        </form>
+
+
+
+    </Modal.Body>
+    <Modal.Footer>
+        <Button variant="secondary" onClick={handleCloseMoveCard}>
+        Close
+        </Button>
+        <Button variant="primary" onClick={() => {}}>
+        Move Card
+        </Button>
+    </Modal.Footer>
+    </Modal>
+</div>
 
 
 
@@ -276,6 +319,7 @@ const PortfolioItem = () =>{
                 {!loading && !error && <>
                 
                     {PortfolioToMarketplaceModal}
+                    {moveCardModal}
 
                     <button id="placeOnMarketplace" className='btn btn-light border border-dark d-grid' onClick={() => {setShow(true)}}style={{width:"30px", height:"30px", placeContent:"center"}}><img src={MarketplaceIcon} alt="Add" width="30px"/></button>
 
@@ -433,7 +477,7 @@ const PortfolioItem = () =>{
                             <p className='d-inline'>"{portfolioLocation}"</p>
 
                             <div className='d-inline'>
-                                <button className="btn  d-grid" style={{width:"20px", height:"20px", placeContent:"center"}}><img src={EditIcon} alt="edit" width="20px" height="20px"/></button>
+                                <button className="btn  d-grid" style={{width:"20px", height:"20px", placeContent:"center"}}><img src={EditIcon} alt="edit" width="20px" height="20px" onClick={handleShowMoveCard}/></button>
                             </div>
                             <br />
                             <br />
