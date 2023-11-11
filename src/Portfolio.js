@@ -111,7 +111,9 @@ const Portfolio = () =>{
                     const response = await fetch(`https://api.pokemontcg.io/v2/cards/${card.Id}`)
                     const responseData = await response.json();
                     const cardData = responseData.data;
-                    images.push({image: cardData?.images?.small, id: card.cardID})
+                    if(cardData?.images?.small){
+                        images.push({image: cardData?.images?.small, id: card.cardID})
+                    }
 
                 }catch(err){
                     console.error(err)
