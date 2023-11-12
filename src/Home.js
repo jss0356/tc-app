@@ -49,7 +49,7 @@ const Home = () => {
                 itemCount: 0,
                 totalMarketValue: 0
             });
-            
+
             await setDoc(
                 addRef,
                 {portfolioID: addRef.id},
@@ -121,6 +121,13 @@ const Home = () => {
                 const cardData = responseData.data;
                 card.name = cardData.name;
                 card.image = cardData.images.small;
+                
+        if (cardData.cardmarket && cardData.cardmarket.prices) {
+            const marketData = cardData.cardmarket.prices;
+            card.market = marketData.averageSellPrice || 0;
+        } else {
+            card.market = 0;
+        }
             }
         }
     
@@ -230,7 +237,10 @@ const Home = () => {
                                                 <Carousel.Item key={index}>
                                                     <div className='card text-center'>
                                                         <img src={card.image} alt={card.name} style={{ maxWidth: '100%', maxHeight: '100%' }}/>
-                                                        <p>{card.name}</p>
+                                                        <p>Card Name: {card.name}</p>
+                                                        <p>Card Grade: {card.grade}</p>
+                                                        <p>Average Sell Price: ${card.market}</p>
+                                                        <p>{/*formatting space*/}</p>
                                                     </div>
                                                 </Carousel.Item>
                                                 )}
