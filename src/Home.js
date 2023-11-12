@@ -39,108 +39,103 @@ const Home = () => {
     const [portfolioName, setPortfolioName] = useState("");
 
     const handleSaveChanges = async () => {
-            const q = query(collection(firestore, 'users'), where('email','==',auth.currentUser.email))
-            const foundUser = await getDocs(q)
-            const userID = foundUser._snapshot.docChanges[0].doc.data.value.mapValue.fields.userID.stringValue
-            const userPortfoliosCollectionRef = collection(firestore, `users/${userID}/userPortfolios`)
-            const addRef = await addDoc(userPortfoliosCollectionRef, {name:portfolioName, ownerID: userID, itemCount: 0, totalMarketValue: 0})
-            await setDoc(addRef,{portfolioID: addRef.id},  {merge: true})
+            const userQuery = query(collection(firestore, 'users'), where('email','==',auth.currentUser.email));
+            const foundUser = await getDocs(userQuery);
+            const userID = foundUser._snapshot.docChanges[0].doc.data.value.mapValue.fields.userID.stringValue;
+            const userPortfoliosCollectionRef = collection(firestore, `users/${userID}/userPortfolios`);
+            const addRef = await addDoc(userPortfoliosCollectionRef, {
+                name:portfolioName,
+                ownerID: userID,
+                itemCount: 0,
+                totalMarketValue: 0
+            });
+            
+            await setDoc(
+                addRef,
+                {portfolioID: addRef.id},
+                {merge: true}
+            );
 
-            // Re-fetches the portfolio after adding the portfolio    
+            // Re-fetches the portfolio after creating the portfolio    
             fetchPortfolios();
-            /*handleClose();*/
     }
 
     const fetchPortfolios = async () => {
         setLoading(true);
 
-        //const q = query(collection(firestore, 'users'), where('email', '==', auth.currentUser.email));
-        const q = query(
+        const userQuery = query(
             collection(firestore, 'users'),
             where('email', '==', auth.currentUser.email)
         );
-        const foundUser = await getDocs(q);
+
+        const foundUser = await getDocs(userQuery);
         const userID = foundUser.docs[0].id;
-        const userPortfoliosCollectionRef = collection(firestore, `users/${userID}/userPortfolios`);
+
+        if(!userID) {
+            setLoading(false);
+            return;
+        }
+
+        const userPortfoliosCollectionRef = collection(
+            firestore,
+            `users/${userID}/userPortfolios`
+        );
         
-        const querySnapshot = await getDocs(userPortfoliosCollectionRef);
+        const querySnapshot = await getDocs(
+            query(userPortfoliosCollectionRef, limit(3))
+        );
         
         
         const portfolioArray = [];
         const tempArray = [];
-        querySnapshot.forEach(async (portfolioItem) => {
-            /*const uid = await userServices.getUserID(auth.currentUser.email);
-            const cards = await userServices.getPortfolioCards(doc.id, uid);
-            let cardArr = [];
-
-            if(cards !== 'no cards.') {
-                cards.forEach((card) => {
-                    cardArr.push( {id: card.Id, grade: card.Grade} );
-                });
-            }
-
-            const portfolioItem = {id: doc.id, name: doc.data().name, cards: cardArr};*/
-
-        tempArray.push(portfolioItem.data());
         
+        querySnapshot.forEach(async (portfolioItem) => {
+            tempArray.push(portfolioItem.data());
         });
 
-        for(const portfolio of tempArray){
+        for(const portfolio of tempArray) {
             const uid = await userServices.getUserID(auth.currentUser.email);
             const cards = await userServices.getPortfolioCards(portfolio.portfolioID, uid);
-            let cardArr = [];
+            
+            // Check if cards is an array before attempting to slice
+            const cardsLimit = Array.isArray(cards) ? cards.slice(0, 3) : [];
 
-            if(cards !== 'no cards.') {
-                cards.forEach((card) => {
+            let cardArr = [];
+            if(cardsLimit !== 'no cards.') {
+                cardsLimit.forEach((card) => {
                     cardArr.push( {id: card.Id, grade: card.Grade} );
                 });
             }
 
             const portfolioItem = {id: portfolio.portfolioID, name: portfolio.name, cards: cardArr};
 
-        portfolioArray.push(portfolioItem)    
+            portfolioArray.push(portfolioItem);    
         }
 
         for(const portfolio of portfolioArray){
             for(const card of portfolio.cards){
-                const response = await fetch(`https://api.pokemontcg.io/v2/cards/${card.id}`)
+                const response = await fetch(
+                    `https://api.pokemontcg.io/v2/cards/${card.id}`
+                );
                 const responseData = await response.json();
                 const cardData = responseData.data;
                 card.name = cardData.name;
                 card.image = cardData.images.small;
             }
         }
-
+    
         setPortfolios(portfolioArray);
         setLoading(false);
         console.log(portfolioArray);
-
-        /*portfolioArray.forEach(async (portfolio) => {
-            const uid = await userServices.getUserID(auth.currentUser.email);
-            const cards = await userServices.getPortfolioCards(portfolio.id, uid);
-            let cardArr = [];
-            console.log(cards);
-
-            if(cards !== 'no cards.') {
-                cards.forEach((card) => {
-                    cardArr.push( {id: card.Id, grade: card.Grade} );
-                });
-            }
-
-            portfolio.cards = cardArr;
-            console.log('This is the cards for this portfolio: ', portfolio.cards);
-            setPortfolios(portfolioArray);
-        })*/
-        
     };
 
     useEffect(() => {
-    // fetches the portfolios
-    fetchPortfolios();
+        // fetches the portfolios
+        fetchPortfolios();
     }, []);
 
     useEffect(() => {
-    console.log(portfolios);
+        console.log(portfolios);
     }, [portfolios]);
   
     const addPortfolioModal=  <div id="add-portfolio-modal">
@@ -231,12 +226,14 @@ const Home = () => {
                                                     </div>
                                                 </Carousel.Item>
                                                 ))*/}
-                                                <Carousel.Item key="1">
+                                                {portfolio.cards.map((card, index) =>
+                                                <Carousel.Item key={index}>
                                                     <div className='card text-center'>
-                                                        <p>carousel test</p>
+                                                        <img src={card.image} alt={card.name} style={{ maxWidth: '100%', maxHeight: '100%' }}/>
+                                                        <p>{card.name}</p>
                                                     </div>
                                                 </Carousel.Item>
-
+                                                )}
                                             </Carousel>
                                         )}
                                         {/*<Carousel variant="dark" style={{ width: "220px" }}>
