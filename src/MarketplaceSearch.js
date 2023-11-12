@@ -4,15 +4,14 @@ import { useState, useEffect, useContext } from "react";
 import Card from "react-bootstrap/Card";
 import { MarketplaceContext } from "./app/MarketplaceProvider";
 import { Link } from "react-router-dom";
-
-import ListingDataService from './services/listings.services'
+import SideBarProductFilters from "./Rcomponents/SideBarProductFilters";
+import ListingDataService from "./services/listings.services";
 const MarketplaceSearch = ({
   cart,
   setCart,
   cartQuantity,
   setCartQuantity,
 }) => {
-
   const [filteredCards, setFilteredCards] = useState([]);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -32,9 +31,8 @@ const MarketplaceSearch = ({
     currPages,
     setCurrPages,
     cards,
-    setCards
+    setCards,
   } = useContext(MarketplaceContext);
-
 
   let lowerBound = 0;
 
@@ -43,7 +41,7 @@ const MarketplaceSearch = ({
   }
 
   useEffect(() => {
-    if(cards.length === 0){
+    if (cards.length === 0) {
       fetchCards();
     }
   }, []);
@@ -67,21 +65,20 @@ const MarketplaceSearch = ({
     }
   };
 
-
-
   const fetchAllListingsPrice = async (cardList) => {
-    const startingPriceListings = await ListingDataService.getStartingPrices()
-    console.log("STARTING PRICE LISTINGS", startingPriceListings)
+    const startingPriceListings = await ListingDataService.getStartingPrices();
+    console.log("STARTING PRICE LISTINGS", startingPriceListings);
     cardList.forEach((card, index) => {
-      const foundStartingPriceListing = startingPriceListings.find((listing) => listing.productID === card.id)
-      if(foundStartingPriceListing !== undefined){
+      const foundStartingPriceListing = startingPriceListings.find(
+        (listing) => listing.productID === card.id
+      );
+      if (foundStartingPriceListing !== undefined) {
         cardList[index].startingPrice = "$" + foundStartingPriceListing.Price;
-      }
-      else{
+      } else {
         cardList[index].startingPrice = "No Listings.";
       }
-    })
-  }
+    });
+  };
 
   const fetchCards = () => {
     setLoading(true);
@@ -90,26 +87,26 @@ const MarketplaceSearch = ({
       .then((response) => response.json())
       .then((data) => {
         console.log("Done getting data");
-        if(cards.length === 0){
-          console.log(cards)
-          setCards(data.data)
+        if (cards.length === 0) {
+          console.log(cards);
+          setCards(data.data);
         }
-        return data.data
+        return data.data;
       })
       .then((cardList) => {
         console.log("fetching prices");
 
-        return fetchAllListingsPrice(cardList)
+        return fetchAllListingsPrice(cardList);
       })
       .then((result) => {
         console.log("done fetching prices");
 
-        setLoading(false)
+        setLoading(false);
       })
       .catch((error) => {
         console.log(error);
         setError(true);
-        setLoading(false)
+        setLoading(false);
       });
   };
 
@@ -147,7 +144,7 @@ const MarketplaceSearch = ({
     setFilteredCards(
       filtered.sort((a, b) => {
         if (a.name < b.name) {
-         // console.log(a.name, b.name);
+          // console.log(a.name, b.name);
           return -1;
         }
         if (a.name > b.name) {
@@ -223,80 +220,112 @@ const MarketplaceSearch = ({
           setMaximumPrice={setMaximumPrice}
         />
       </div>
-
-      <div
-        id="marketplace-search-container"
-        className="w-100 h-100 d-flex flex-column"
-        style={{ backgroundColor: "#edf5e1" }}
-      >
-        <p className="text-center">Search Results:</p>
+      <div className="d-flex flex-row">
+        <SideBarProductFilters
+          filterDropDown={filterDropDown}
+          setFilterDropDown={setFilterDropDown}
+          cards={cards}
+          maximumPrice={maximumPrice}
+          minimumPrice={minimumPrice}
+          handleMaximumPriceInput={handleMaximumPriceInput}
+          handleMinimumPriceInput={handleMinimumPriceInput}
+          handleFilterDropDown={handleFilterDropDown}
+        />
         <div
-          id="search-results-container"
-          className="h-100 w-100  "
-          style={
-            loading
-              ? {}
-              : {
-                  overflow: "hidden",
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr",
-                  gap: "1em",
-                  gridTemplateRows: "1fr 1fr",
-                }
-          }
+          id="marketplace-search-container"
+          className="w-100 h-100 d-flex flex-column"
+          style={{ backgroundColor: "#edf5e1" }}
         >
-          {loading ? (
-            <div className="d-flex justify-content-center align-items-center vh-100">
-              <Spinner
-                animation="border"
-                variant="primary"
-                className="custom-spinner spinner-lg w-20 h-20"
-              />
-              <span className="loading-message fs-4">Loading cards...</span>
-            </div>
-          ) : (
-            filteredCards &&
-            filteredCards
-              .map((card) => {
-                return (
-                  <Card
-                    key={card.id}
-                    className="card-item"
-                    style={{
-                      width: "100%",
-                      cursor: "pointer",
-                      transition: "box-shadow 10s",
-                      ":hover": {
-                        boxShadow: "0 5px 10px rgba(0, 0, 0, 0.2)",
-                      },
-                    }}
-                  >
-                    <Link
-                      to={`/marketplace/cards/${card.id}`}
+          <p className="text-center">Search Results:</p>
+          <div
+            id="search-results-container"
+            className="h-100 w-100  "
+            style={
+              loading
+                ? {}
+                : {
+                    overflow: "hidden",
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr",
+                    gap: "1em",
+                    gridTemplateRows: "1fr 1fr",
+                  }
+            }
+          >
+            {loading ? (
+              <div className="d-flex justify-content-center align-items-center vh-100">
+                <Spinner
+                  animation="border"
+                  variant="primary"
+                  className="custom-spinner spinner-lg w-20 h-20"
+                />
+                <span className="loading-message fs-4">Loading cards...</span>
+              </div>
+            ) : (
+              filteredCards &&
+              filteredCards
+                .map((card) => {
+                  return (
+                    <Card
                       key={card.id}
-                      className="card-link"
+                      className="card-item"
+                      style={{
+                        width: "100%",
+                        cursor: "pointer",
+                        transition: "box-shadow 10s",
+                        ":hover": {
+                          boxShadow: "0 5px 10px rgba(0, 0, 0, 0.2)",
+                        },
+                      }}
                     >
-                      <Card.Img
-                        variant="top"
-                        src={card.images.small}
-                        alt={card.name}
-                        //make the image smaller
-                        style={{ height: "auto", width: "100%" }}
-                      />
-                    </Link>
+                      <Link
+                        to={`/marketplace/cards/${card.id}`}
+                        key={card.id}
+                        className="card-link"
+                      >
+                        <Card.Img
+                          variant="top"
+                          src={card.images.small}
+                          alt={card.name}
+                          //make the image smaller
+                          style={{ height: "auto", width: "100%" }}
+                        />
+                      </Link>
 
-                    <Card.Body>
-                      <Card.Title className="card-name">{card.name}</Card.Title>
-                      <Card.Text style={card.startingPrice === "No Listings." ? {fontWeight: "bold"}: {}} className={`card-price ${card.startingPrice === "No Listings." ? "text-danger": ""}`}>
-                        {card.startingPrice === "No Listings." ? card.startingPrice : 
-                        <p>
-                        Starting from: <span style={{fontWeight: "bold", fontSize: "1.2rem", color: "rgb(92, 219, 149)"}}>{card.startingPrice}</span>
-                        
-                        </p>
-                        
-                        }
-                      </Card.Text>
-                      {/* <input
+                      <Card.Body>
+                        <Card.Title className="card-name">
+                          {card.name}
+                        </Card.Title>
+                        <Card.Text
+                          style={
+                            card.startingPrice === "No Listings."
+                              ? { fontWeight: "bold" }
+                              : {}
+                          }
+                          className={`card-price ${
+                            card.startingPrice === "No Listings."
+                              ? "text-danger"
+                              : ""
+                          }`}
+                        >
+                          {card.startingPrice === "No Listings." ? (
+                            card.startingPrice
+                          ) : (
+                            <p>
+                              Starting from:{" "}
+                              <span
+                                style={{
+                                  fontWeight: "bold",
+                                  fontSize: "1.2rem",
+                                  color: "rgb(92, 219, 149)",
+                                }}
+                              >
+                                {card.startingPrice}
+                              </span>
+                            </p>
+                          )}
+                        </Card.Text>
+                        {/* <input
                         className="mb-2"
                         type="number"
                         placeholder="quantity"
@@ -323,44 +352,47 @@ const MarketplaceSearch = ({
                           ? "Remove from Cart"
                           : "Add to Cart"}
                       </button> */}
-                    </Card.Body>
-                  </Card>
-                );
-              })
-              .slice(lowerBound, 16 * currPage)
-          )}
-        </div>
-        <div className="d-flex flex-row justify-content-center w-100 pt-5">
-          <nav aria-label="...">
-            <ul className="pagination">
-              <li
-                className={`page-item ${currPages[0] === 1 ? "disabled" : ""}`}
-                onClick={() => handlePaginationClick("Prev")}
-              >
-                <a className="page-link" href="#" tabIndex="-1">
-                  Previous
-                </a>
-              </li>
-              {currPages.map((page) => (
+                      </Card.Body>
+                    </Card>
+                  );
+                })
+                .slice(lowerBound, 16 * currPage)
+            )}
+          </div>
+          <div className="d-flex flex-row justify-content-center w-100 pt-5">
+            <nav aria-label="...">
+              <ul className="pagination">
                 <li
-                  className={`page-item ${currPage === page ? "active" : ""}`}
-                  onClick={() => handlePaginationClick(page)}
+                  className={`page-item ${
+                    currPages[0] === 1 ? "disabled" : ""
+                  }`}
+                  onClick={() => handlePaginationClick("Prev")}
                 >
-                  <a className="page-link" href="#">
-                    {page}
+                  <a className="page-link" href="#" tabIndex="-1">
+                    Previous
                   </a>
                 </li>
-              ))}
-              <li
-                className="page-item"
-                onClick={() => handlePaginationClick("Next")}
-              >
-                <a className="page-link" href="#">
-                  Next
-                </a>
-              </li>
-            </ul>
-          </nav>
+                {currPages.map((page) => (
+                  <li
+                    className={`page-item ${currPage === page ? "active" : ""}`}
+                    onClick={() => handlePaginationClick(page)}
+                  >
+                    <a className="page-link" href="#">
+                      {page}
+                    </a>
+                  </li>
+                ))}
+                <li
+                  className="page-item"
+                  onClick={() => handlePaginationClick("Next")}
+                >
+                  <a className="page-link" href="#">
+                    Next
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
         </div>
       </div>
     </div>

@@ -432,18 +432,189 @@ const Product = ({ cart, setCart, watchlist, setWatchlist }) => {
                         width="200px"
                         className="pt-2 border rounded"
                       />
-                      <strong>
-                        <p>{cardToCompareWith?.name}</p>
-                      </strong>
-                      <p>hp: {cardToCompareWith?.hp}</p>
-                      <p>types: {cardToCompareWith?.types}</p>
-                      <p>evolvesTo: {cardToCompareWith?.evolvesTo}</p>
-                      <p>weaknesses: {cardToCompareWith?.weaknesses?.type}</p>
-                      <p>set: {cardToCompareWith?.set?.name}</p>
-                      <p>
-                        market price:
-                        {cardToCompareWith?.tcgplayer?.prices?.holofoil?.market}
-                      </p>
+                      {cardToCompareWith?.hp ? (
+                        <p>
+                          <span
+                            style={{ fontWeight: "bold", fontSize: "1.1rem" }}
+                          >
+                            hp:{" "}
+                          </span>
+                          <span style={{ fontSize: "1.1rem" }}>
+                            {cardToCompareWith?.hp}
+                          </span>
+                        </p>
+                      ) : (
+                        <p>
+                          <span
+                            style={{ fontWeight: "bold", fontSize: "1.1rem" }}
+                          >
+                            hp :
+                          </span>
+                          <span
+                            style={{
+                              fontSize: " 1.1rem",
+                              fontStyle: "italic",
+                              color: "red",
+                            }}
+                          >
+                            N/A
+                          </span>
+                        </p>
+                      )}
+
+                      {cardToCompareWith?.types ? (
+                        <p>
+                          <span
+                            style={{ fontWeight: "bold", fontSize: "1.1rem" }}
+                          >
+                            types:{" "}
+                          </span>{" "}
+                          <span style={{ fontsize: "1.1 rem" }}>
+                            {cardToCompareWith?.types}
+                          </span>{" "}
+                        </p>
+                      ) : (
+                        <p
+                          style={{
+                            fontWeight: "bold",
+                            fontSize: "1.1rem",
+                            color: "red",
+                          }}
+                        >
+                          types:
+                          <span
+                            style={{ fontSize: "1.1rem", fontStyle: "italic" }}
+                          >
+                            N/A
+                          </span>
+                        </p>
+                      )}
+
+                      {cardToCompareWith?.evolvesTo ? (
+                        <p>
+                          <span
+                            style={{ fontWeight: "bold", fontSize: "1.1rem" }}
+                          >
+                            evolvesTo:
+                          </span>{" "}
+                          <span style={{ fontSize: "1.1rem" }}>
+                            {cardToCompareWith?.evolvesTo}
+                          </span>
+                        </p>
+                      ) : (
+                        <p>
+                          <span
+                            style={{ fontWeight: "bold", fontSize: "1.1rem" }}
+                          >
+                            evolvesTo:{" "}
+                          </span>
+                          <span
+                            style={{
+                              fontSize: "1.1rem",
+                              fontStyle: "italic",
+                              color: "red",
+                            }}
+                          >
+                            N/A
+                          </span>
+                        </p>
+                      )}
+
+                      {cardToCompareWith?.weaknesses?.type ? (
+                        <p>
+                          <span
+                            style={{ fontWeight: "bold", fontSize: "1.1rem" }}
+                          >
+                            weaknesses:{" "}
+                          </span>
+                          <span>{cardToCompareWith?.weaknesses?.type}</span>
+                        </p>
+                      ) : (
+                        <p>
+                          <span
+                            style={{ fontWeight: "bold", fontSize: "1.1rem" }}
+                          >
+                            weaknesses:{" "}
+                          </span>
+                          <span
+                            style={{
+                              fontSize: "1.1rem",
+                              fontStyle: "italic",
+                              color: "red",
+                            }}
+                          >
+                            N/A
+                          </span>
+                        </p>
+                      )}
+
+                      {cardToCompareWith?.set?.name ? (
+                        <p>
+                          <span
+                            style={{ fontWeight: "bold", fontSize: "1.1rem" }}
+                          >
+                            set:{" "}
+                          </span>
+                          <span
+                            style={{
+                              fontSize: "1.1rem",
+                            }}
+                          >
+                            {cardToCompareWith?.set?.name}
+                          </span>
+                        </p>
+                      ) : (
+                        <p>
+                          <span
+                            style={{ fontWeight: "bold", fontSize: "1.1rem" }}
+                          >
+                            set:{" "}
+                          </span>
+                          <span
+                            style={{
+                              fontSize: "1.1rem",
+                              fontStyle: "italic",
+                              color: "red",
+                            }}
+                          >
+                            N/A
+                          </span>
+                        </p>
+                      )}
+
+                      {cardToCompareWith?.tcgplayer?.prices?.holofoil
+                        ?.market ? (
+                        <p>
+                          <span
+                            style={{ fontWeight: "bold", fontSize: "1.1rem" }}
+                          >
+                            market price ($):{" "}
+                          </span>
+                          <span style={{ fontSize: "1.1rem" }}>
+                            {
+                              cardToCompareWith?.tcgplayer?.prices?.holofoil
+                                ?.market
+                            }
+                          </span>
+                        </p>
+                      ) : (
+                        <p>
+                          <span
+                            style={{ fontWeight: "bold", fontSize: "1.1rem" }}
+                          >
+                            market price ($):
+                          </span>
+                          <span
+                            style={{
+                              fontSize: "1.1rem",
+                              fontStyle: "italic",
+                              color: "red",
+                            }}
+                          >
+                            N/A
+                          </span>{" "}
+                        </p>
+                      )}
                     </div>
                     <div className="col-md-6">
                       <h3>{productInfo?.name}</h3>
@@ -453,18 +624,185 @@ const Product = ({ cart, setCart, watchlist, setWatchlist }) => {
                         width="200px"
                         className="pt-2 border rounded"
                       />
-                      <strong>
-                        <p>{productInfo?.name}</p>
-                      </strong>
-                      <p>hp: {productInfo?.hp}</p>
-                      <p>types: {productInfo?.types}</p>
-                      <p>evolvesTo: {productInfo?.evolvesTo}</p>
-                      <p>weaknesses: {productInfo?.weaknesses?.type}</p>
-                      <p>set: {productInfo?.set?.name}</p>
-                      <p>
-                        market price:
-                        {productInfo?.tcgplayer?.prices?.holofoil?.market}
-                      </p>
+                      {productInfo?.hp ? (
+                        <p>
+                          <span
+                            style={{ fontWeight: "bold", fontSize: "1.1rem" }}
+                          >
+                            hp:{" "}
+                          </span>{" "}
+                          <span style={{ fontSize: "1.1rem" }}>
+                            {productInfo?.hp}
+                          </span>
+                        </p>
+                      ) : (
+                        <p>
+                          <span
+                            style={{ fontWeight: "bold", fontSize: "1.1rem" }}
+                          >
+                            hp:{" "}
+                          </span>{" "}
+                          <span
+                            style-={{
+                              fontSize: "1.1rem",
+                              fontStyle: "italic",
+                              color: "red",
+                            }}
+                          >
+                            N/A
+                          </span>
+                        </p>
+                      )}
+
+                      {productInfo?.types ? (
+                        <p>
+                          <span
+                            style={{ fontWeight: "bold", fontSize: "1.1rem" }}
+                          >
+                            types:{" "}
+                          </span>{" "}
+                          <span style={{ fontSize: "1.1rem" }}>
+                            {productInfo?.types}
+                          </span>
+                        </p>
+                      ) : (
+                        <p>
+                          <span
+                            style={{ fontWeight: "bold", fontSize: "1.1rem" }}
+                          >
+                            types:{" "}
+                          </span>
+                          <span
+                            style={{
+                              fontSize: "1.1rem",
+                              fontStyle: "italic",
+                              color: "red",
+                            }}
+                          >
+                            N/A
+                          </span>
+                        </p>
+                      )}
+
+                      {productInfo?.evolvesTo ? (
+                        <p>
+                          <span
+                            style={{ fontWeight: "bold", fontSize: "1.1rem" }}
+                          >
+                            evolvesTo:
+                          </span>{" "}
+                          <span
+                            style={{ fontWeight: "bold", fontSize: "1.1rem" }}
+                          >
+                            {productInfo?.evolvesTo}
+                          </span>
+                        </p>
+                      ) : (
+                        <p>
+                          <span
+                            style={{ fontWeight: "bold", fontSize: "1.1rem" }}
+                          >
+                            evolvesTo:
+                          </span>
+                          <span
+                            style={{
+                              fontStyle: "italic",
+                              fontSize: "1.1rem",
+                              color: "red",
+                            }}
+                          >
+                            {" "}
+                            N/A
+                          </span>
+                        </p>
+                      )}
+                      {productInfo?.weaknesses?.type ? (
+                        <p>
+                          <span
+                            style={{ fontWeight: "bold", fontSize: "1.1rem" }}
+                          >
+                            weaknesses:{" "}
+                          </span>
+                          <span style={{ fontSize: "1.1rem" }}>
+                            {productInfo?.weaknesses?.type}
+                          </span>
+                        </p>
+                      ) : (
+                        <p>
+                          <span
+                            style={{ fontWeight: "bold", fontSize: "1.1rem" }}
+                          >
+                            weaknesses:{" "}
+                          </span>
+                          <span
+                            style={{
+                              fontsize: "1.1rem",
+                              fontStyle: "italic",
+                              color: "red",
+                            }}
+                          >
+                            N/A
+                          </span>
+                        </p>
+                      )}
+                      {productInfo?.set?.name ? (
+                        <p>
+                          <span
+                            style={{ fontWeight: "bold", fontSize: "1.1rem" }}
+                          >
+                            set:{" "}
+                          </span>
+                          <span style={{ fontSize: "1.1rem" }}>
+                            {productInfo?.set?.name}
+                          </span>
+                        </p>
+                      ) : (
+                        <p>
+                          <span
+                            style={{ fontWeight: "bold", fontSize: "1.1rem" }}
+                          >
+                            sets:{" "}
+                          </span>
+                          <span
+                            style={{
+                              fontSize: "1.1rem",
+                              fontStyle: "italic",
+                              color: "red",
+                            }}
+                          >
+                            N/A
+                          </span>
+                        </p>
+                      )}
+                      {productInfo?.tcgplayer?.prices?.holofoil?.market ? (
+                        <p>
+                          <span
+                            style={{ fontWeight: "bold", fontSize: "1.1rem" }}
+                          >
+                            market price ($):{" "}
+                          </span>
+                          <span style={{ fontSize: "1.1rem" }}>
+                            {productInfo?.tcgplayer?.prices?.holofoil?.market}
+                          </span>
+                        </p>
+                      ) : (
+                        <p>
+                          <span
+                            style={{ fontWeight: "bold", fontSize: "1.1rem" }}
+                          >
+                            market price ($):{" "}
+                          </span>
+                          <span
+                            style={{
+                              fontSize: "1.1rem",
+                              fontStyle: "italic",
+                              color: "red",
+                            }}
+                          >
+                            N/A
+                          </span>
+                        </p>
+                      )}
                     </div>
                   </div>
                   <div className="d-flex justify-content-center mt-3">
