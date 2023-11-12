@@ -54,6 +54,30 @@ const SideBarProductFilters = ({
           ))}
         </Form.Control>
       </Form.Group>
+
+      <h4 className="mt-5">For Listings</h4>
+      <Form.Label className="mt-3">Availability</Form.Label>
+      <Form.Group className="mb-3">
+        <Form.Check type="checkbox" label="Available" />
+      </Form.Group>
+      <Form.Group className="mb-3">
+        <Form.Check type="checkbox" label="Not Available" />
+      </Form.Group>
+
+      <Form.Label className="mt-3">Condition</Form.Label>
+      <Form.Group className="mb-3">
+        <Form.Check type="checkbox" label="Near Mint" />
+      </Form.Group>
+      <Form.Group className="mb-3">
+        <Form.Check type="checkbox" label="Lighly Played" />
+      </Form.Group>
+      <Form.Group className="mb-3">
+        <Form.Check type="checkbox" label="Moderately Played" />
+      </Form.Group>
+
+      <Form.Group className="mb-3">
+        <Form.Check type="checkbox" label="Heavly Played" />
+      </Form.Group>
     </div>
   );
 };
