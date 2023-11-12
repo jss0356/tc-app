@@ -1,4 +1,4 @@
-import {useParams} from 'react-router-dom'
+import {useNavigate, useParams} from 'react-router-dom'
 import MainNavbar from './Rcomponents/MainNavbar'
 import MarketplaceIcon from './logos/MarketplaceUploadIcon.png'
 import CardExample from './image/football/card1.jpg'
@@ -27,6 +27,8 @@ import {
   } from "chart.js";
 
   import { Bar } from "react-chartjs-2";
+  
+  import AsyncSelect from 'react-select/async'
 
 
   ChartJS.register(
@@ -49,6 +51,9 @@ const PortfolioItem = () =>{
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
 
+    const [loadingSelectData, setLoadingSelectData] = useState(false);
+    const [portfolioToMoveToo, setPortfolioToMoveToo] = useState("");
+
     const [portfolioLocation, setPortfolioLocation] = useState("N/A");
 
     const [low, setLow] = useState(0);
@@ -56,8 +61,12 @@ const PortfolioItem = () =>{
     const [average, setAverage] = useState(0);
     const [listingPrices, setListingPrices] = useState([])
 
+    const [newPortfolioID, setNewPortfolioID] = useState(null)
+    const [newCardID, setNewCardID] = useState(null)
+
     const [newListingPrice, setNewListingPrice] = useState("");
 
+    const navigate = useNavigate()
 
 
     const getAllListings = async (productID) => {
@@ -156,14 +165,32 @@ const PortfolioItem = () =>{
     
 
 
-    const getCardData = async () => {
+    const getCardData = async (updatedPortfolioID = null, updatedCardID = null) => {
         try{
 
             const q = query(collection(firestore, 'users'), where('email', '==', auth.currentUser.email));
             const foundUser = await getDocs(q);
             const userID = foundUser.docs[0].id;
+            let cardData
+            if( (newCardID && newPortfolioID) ){
+                cardData = await userServices.getCard(userID, newPortfolioID, newCardID);
+                console.log({cardData})
+                const foundPortfolioName = await userServices.determinePortfolioNameFromID(userID, newPortfolioID)
+                setPortfolioLocation(foundPortfolioName);
+    
 
-            const cardData = await userServices.getCard(userID, portfolioID, cardID);
+            }
+            else if(updatedPortfolioID && updatedCardID){
+                cardData = await userServices.getCard(userID, updatedPortfolioID, updatedCardID);
+                console.log({cardData})
+                const foundPortfolioName = await userServices.determinePortfolioNameFromID(userID, updatedPortfolioID)
+                setPortfolioLocation(foundPortfolioName);
+            } 
+            else{
+                cardData = await userServices.getCard(userID, portfolioID, cardID);
+                const foundPortfolioName = await userServices.determinePortfolioNameFromID(userID, portfolioID)
+                setPortfolioLocation(foundPortfolioName);
+            }
             setCard(cardData)
 
             const response = await fetch(`https://api.pokemontcg.io/v2/cards/${cardData.Id}`)
@@ -171,8 +198,6 @@ const PortfolioItem = () =>{
             setCardApiInfo(responseData.data);
             await getAllListings(responseData.data.id)
 
-            const foundPortfolioName = await userServices.determinePortfolioNameFromID(userID, portfolioID)
-            setPortfolioLocation(foundPortfolioName);
 
         }catch(err){
             console.error(err)
@@ -270,6 +295,55 @@ const PortfolioItem = () =>{
 
 
 
+const getPortfolioNames = async (searchValue) => {
+    try{
+        setLoadingSelectData(true);
+        const userID = await userServices.getUserID(auth.currentUser.email)
+        const portfolioNameObjects = await userServices.getAllOtherPortfolioNames(userID, portfolioID);
+    
+        if(portfolioNameObjects.length !== 0){
+            const fullOptionsArray = portfolioNameObjects.map((portfolioNameObj) => {
+                return {value: portfolioNameObj.id, label: portfolioNameObj.name}
+            })
+
+            return fullOptionsArray.filter((option) => option.label.toLowerCase().startsWith(searchValue.toLowerCase()))
+        }
+        else{
+            return []
+        }
+    }catch(err){
+        console.error(err)
+    }
+    finally{
+        setLoadingSelectData(false);
+    }
+
+}
+
+
+const moveCard = async () => {
+    try{
+        handleCloseMoveCard()
+        
+        if(portfolioToMoveToo !== ""){
+            const userID = await userServices.getUserID(auth.currentUser.email);
+            const newCardData = await userServices.moveCardToNewPortfolio(userID, portfolioID, cardID, portfolioToMoveToo)  
+            navigate(`/my-account/my-portfolios/${newCardData.newPortfolioID}/${newCardData.newCardID}`, {replace: true})
+            setLoading(true)
+            await getCardData(newCardData.newPortfolioID,newCardData.newCardID)
+            
+        }
+    }
+    catch(err){
+        console.error(err)
+    }
+    finally{
+        setLoading(false)
+    }
+    
+    return 
+}
+
 const moveCardModal =  <div id="move-card-modal">
     <Modal show={showMoveCard} onHide={handleCloseMoveCard}>
     <Modal.Header closeButton>
@@ -287,7 +361,9 @@ const moveCardModal =  <div id="move-card-modal">
                 <p className='fs-4'>{portfolioLocation}</p>
             </div>
 
-         
+            <AsyncSelect isLoading={loadingSelectData} loadOptions={getPortfolioNames} onChange={(newValue) => {
+                setPortfolioToMoveToo(newValue.value);
+            }}/>
 
 
         </form>
@@ -299,7 +375,7 @@ const moveCardModal =  <div id="move-card-modal">
         <Button variant="secondary" onClick={handleCloseMoveCard}>
         Close
         </Button>
-        <Button variant="primary" onClick={() => {}}>
+        <Button variant="primary" onClick={moveCard}>
         Move Card
         </Button>
     </Modal.Footer>

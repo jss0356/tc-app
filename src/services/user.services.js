@@ -180,6 +180,44 @@ import {useContext} from 'react'
 
             return portfolioData.name 
         }
+
+        getAllOtherPortfolioNames = async (userID, currentPortfolioID) => {
+            const portfoliosCollectionRef = collection(firestore, `users/${userID}/userPortfolios`);
+            const q = query(portfoliosCollectionRef, where("portfolioID", "!=", currentPortfolioID));
+            const portfolioCollectionSnapshot = await getDocs(q);
+            
+            const portfolioNames = []
+
+            if(portfolioCollectionSnapshot.empty){
+                return portfolioNames;
+            }
+
+            portfolioCollectionSnapshot.forEach((portfolioDocSnapshot) => {
+                portfolioNames.push({name: portfolioDocSnapshot.data().name, id: portfolioDocSnapshot.data().portfolioID})
+            })
+
+            return portfolioNames;
+
+        }
+
+        moveCardToNewPortfolio = async (userID, oldPortfolioID, cardID, newPortfolioID) => {
+            const oldCardRef  = doc(firestore, `users/${userID}/userPortfolios/${oldPortfolioID}/cards/${cardID}`);
+            const oldCardDocumentSnapshot = await getDoc(oldCardRef);
+            const oldCardData = oldCardDocumentSnapshot.data();
+
+            await deleteDoc(oldCardRef);
+
+            const cardToAdd = {Id: oldCardData.Id, Grade: oldCardData.Grade}
+            const newPortfolioCardsRef = collection(firestore, `users/${userID}/userPortfolios/${newPortfolioID}/cards`)
+            console.log({newPortfolioID})
+
+            const addedDocRef = await addDoc(newPortfolioCardsRef, cardToAdd)
+            await setDoc(addedDocRef, {cardID: addedDocRef.id}, {merge: true})
+
+
+            return {newCardID: addedDocRef.id, newPortfolioID}
+
+        }
     }
 
 
