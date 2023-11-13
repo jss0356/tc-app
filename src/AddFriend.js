@@ -1,6 +1,7 @@
 import MainNavbar from "./Rcomponents/MainNavbar"
 import SearchIcon from "./logos/SearchIcon.png"
 import { LinkContainer } from "react-router-bootstrap"
+import DefaultProfile from "./logos/default-profile.jpg"
 
 const AddFriend = () => {
 
@@ -23,6 +24,18 @@ const AddFriend = () => {
                 </div>
                 <p>Search Results:</p>
                 <div id="search-results" className="w-75 h-100 border border-dark" style={{backgroundColor:"white"}}></div>
+                <p>All Users:</p>
+                <div id="search-results" className="w-75 h-100 border border-dark" style={{backgroundColor:"white"}}>
+                <div className="bg-light border border-dark d-flex flex-row gap-2">
+                                    <img src={DefaultProfile} alt="Friend Profile Image" width="30px" height="30px"/>
+                                    <p>User-1</p><p>User Name</p><p>User Email</p>
+                                </div>
+                                <div className="bg-light border border-dark d-flex flex-row gap-2">
+                                    <img src={DefaultProfile} alt="Friend Profile Image" width="30px" height="30px"/>
+                                    <p>User-2</p><p>User Name</p><p>User Email</p>
+                                </div>
+                </div>
+            
             </div>
         
         </div>
