@@ -2,9 +2,12 @@ import MainNavbar from "./Rcomponents/MainNavbar"
 import SearchIcon from "./logos/SearchIcon.png"
 import { LinkContainer } from "react-router-bootstrap"
 import DefaultProfile from "./logos/default-profile.jpg"
-import React, { useState } from 'react';
-
+import React, { useEffect, useState } from 'react';
+import { getDocs, collection } from 'firebase/firestore';
+import { firestore } from './config/firebase.js'; // Replace with the path to your Firebase config file
 const AddFriend = () => {
+    const [users, setUsers] = useState([]);
+    const [userData, setUserData] = useState([]);
     const [isFriend, setIsFriend] = useState(false);
     const [isFriend2, setIsFriend2] = useState(false);
     const handleButtonClick = () => {
@@ -13,6 +16,47 @@ const AddFriend = () => {
     const handleButtonClick2 = () => {
         setIsFriend2((prevIsFriend) => !prevIsFriend);
     };
+
+    // Access the Firestore database
+
+    // const usersCollection = collection(firestore, 'users');
+    //const querySnapshot =  getDocs(usersCollection);
+    //console.log(querySnapshot + "SAS");
+    // querySnapshot.forEach((doc)=>{console.log(doc.data()) });
+
+    // Reference the "users" collection
+    //const usersCollection = collection(firestore, 'users');
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                // Reference the "users" collection
+                const usersCollection = collection(firestore, 'users');
+
+                // Fetch data from the "users" collection
+                const querySnapshot = await getDocs(usersCollection);
+
+                // Extract and store user data
+                const userDataArray = [];
+                querySnapshot.forEach((doc) => {
+                    userDataArray.push(doc.data());
+                });
+                setUserData(userDataArray)
+
+                console.log(users + "ASD")
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
+        };
+
+        fetchUserData();
+    }, []);
+
+
+
+
+
+
+
 
     return (
         <div id="Add-Friends-Container" className='w-100 h-100 d-flex flex-column'>
@@ -41,7 +85,7 @@ const AddFriend = () => {
                                 </div>
                                 <div className="bg-light border border-dark d-flex flex-row gap-2">
                                     <img src={DefaultProfile} alt="Friend Profile Image" width="30px" height="30px"/>
-                        <p>User-2</p><p>User Name</p><p>User Email</p><button onClick={handleButtonClick}>{isFriend ? '- Remove Friend' : '+ Add Friend'}</button>
+                        <p>User-2</p><p>User Name</p><p>User Email</p><button onClick={handleButtonClick2}>{isFriend2 ? '- Remove Friend' : '+ Add Friend'}</button>
                                 </div>
                 </div>
             
