@@ -383,6 +383,41 @@ const moveCardModal =  <div id="move-card-modal">
 </div>
 
 
+const [cardHoverEffect, setCardHoverEffect] = useState(false);
+
+const [hoverEffectStyle, setCardHoverEffectStyle] = useState({
+  width: "26%",
+  padding: "1rem",
+  transition: "all 0.5s ease",
+  transform: cardHoverEffect ? "scale(1)" : "scale(1)",
+  boxShadow: cardHoverEffect ? "0 0 10px rgba(0, 0, 0, 0.5)" : "none",
+  cursor: cardHoverEffect ? "pointer" : "default",
+});
+
+const handleHoverOverCard = (e) => {
+  setCardHoverEffect(true);
+};
+
+const handleMouseMove = (e) => {
+  console.log("CLIENT X: ", e.clientX);
+  console.log("CLIENT Y: ", e.clientY);
+  const dampeningFactor = 0.05;
+  setCardHoverEffectStyle({
+    ...hoverEffectStyle,
+    transform: `rotateX(${(e.clientY - 300) * dampeningFactor}deg) rotateY(${
+      (e.clientX - 190) * dampeningFactor
+    }deg)`,
+  });
+};
+
+const handleHoverOffCard = () => {
+  setCardHoverEffect(false);
+};
+
+const nonHoverEffectStyle = {
+  transition: "all 0.5s ease",
+  width: "13%",
+};
 
 
     return(
@@ -405,7 +440,10 @@ const moveCardModal =  <div id="move-card-modal">
                     <hr />
 
                     <div id="item-header" className='d-flex flex-column w-100 align-items-center'>
-                        <img src={cardApiInfo.images.small} alt="Card Image" className='border rounded' style={{width: "13%", height: "auto"}}/>
+                        <img src={cardApiInfo.images.small} alt="Card Image" className='border rounded' style={cardHoverEffect ? hoverEffectStyle : nonHoverEffectStyle}
+                onMouseOver={handleHoverOverCard}
+                onMouseLeave={handleHoverOffCard}
+                onMouseMove={handleMouseMove}/>
                         <h3 className='text-center'>{cardApiInfo.name}</h3>
                             <br />
                             <br />
