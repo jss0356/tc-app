@@ -10,6 +10,21 @@ const SideBarProductFilters = ({
   handleMaximumPriceInput,
   handleMinimumPriceInput,
   handleFilterDropDown,
+  oneToFivePrice,
+  setOneToFivePrice,
+  fiveToTenPrice,
+  setFiveToTenPrice,
+  tenToFifteenPrice,
+  setTenToFifteenPrice,
+  fifteenToTwentyPrice,
+  setFifteenToTwentyPrice,
+  twentyToTwentyFivePrice,
+  setTwentyToTwentyFivePrice,
+  handleOneToFivePrice,
+  handleFiveToTenPrice,
+  handleTenToFifteenPrice,
+  handleFifteenToTwentyPrice,
+  handleTwentyToTwentyFivePrice,
 }) => {
   return (
     <div
@@ -36,6 +51,47 @@ const SideBarProductFilters = ({
             style={{ width: "70px" }}
           />
         </div>
+      </Form.Group>
+
+      <Form.Group className="mb-3">
+        <Form.Check
+          type="checkbox"
+          label="$1-$5"
+          checked={oneToFivePrice}
+          onChange={handleOneToFivePrice}
+        />
+      </Form.Group>
+      <Form.Group className="mb-3">
+        <Form.Check
+          type="checkbox"
+          label="$5-$10"
+          checked={fiveToTenPrice}
+          onChange={handleFiveToTenPrice}
+        />
+      </Form.Group>
+      <Form.Group className="mb-3">
+        <Form.Check
+          type="checkbox"
+          label="$10-$15"
+          checked={tenToFifteenPrice}
+          onChange={handleTenToFifteenPrice}
+        />
+      </Form.Group>
+      <Form.Group className="mb-3">
+        <Form.Check
+          type="checkbox"
+          label="$15-$20"
+          checked={fifteenToTwentyPrice}
+          onChange={handleFifteenToTwentyPrice}
+        />
+      </Form.Group>
+      <Form.Group className="mb-3">
+        <Form.Check
+          type="checkbox"
+          label="$20-$25"
+          checked={twentyToTwentyFivePrice}
+          onChange={handleTwentyToTwentyFivePrice}
+        />
       </Form.Group>
 
       <Form.Group className="mb-3">

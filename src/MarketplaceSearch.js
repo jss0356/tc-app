@@ -19,6 +19,12 @@ const MarketplaceSearch = ({
   const [minimumPrice, setMinimumPrice] = useState(0);
   const [maximumPrice, setMaximumPrice] = useState(0);
 
+  const [oneToFivePrice, setOneToFivePrice] = useState(false);
+  const [fiveToTenPrice, setFiveToTenPrice] = useState(false);
+  const [tenToFifteenPrice, setTenToFifteenPrice] = useState(false);
+  const [fifteenToTwentyPrice, setFifteenToTwentyPrice] = useState(false);
+  const [twentyToTwentyFivePrice, setTwentyToTwentyFivePrice] = useState(false);
+
   const {
     search,
     setSearch,
@@ -121,9 +127,35 @@ const MarketplaceSearch = ({
         card.name.toLowerCase().includes(search.toLowerCase()) ||
         search.trim() === "";
       const allSetsFilter = filterDropDown === "All";
+
+      const oneToFivePriceRangeFilter = oneToFivePrice
+        ? priceOfCard >= 1 && priceOfCard <= 5
+        : true;
+
+      const fiveToTenPriceRangeFilter = fiveToTenPrice
+        ? priceOfCard >= 5 && priceOfCard <= 10
+        : true;
+
+      const tenToFifteenPriceRangeFilter = tenToFifteenPrice
+        ? priceOfCard >= 10 && priceOfCard <= 15
+        : true;
+
+      const fifteenToTwentyPriceRangeFilter = fifteenToTwentyPrice
+        ? priceOfCard >= 15 && priceOfCard <= 20
+        : true;
+
+      const twentyToTwentyFivePriceRangeFilter = twentyToTwentyFivePrice
+        ? priceOfCard >= 20 && priceOfCard <= 25
+        : true;
+
       if (allSetsFilter) {
         return (
           inputFilter &&
+          oneToFivePriceRangeFilter &&
+          fiveToTenPriceRangeFilter &&
+          tenToFifteenPriceRangeFilter &&
+          fifteenToTwentyPriceRangeFilter &&
+          twentyToTwentyFivePriceRangeFilter &&
           (!minimumPrice ||
             minimumPrice === 0 ||
             minimumPrice <= priceOfCard) &&
@@ -133,6 +165,11 @@ const MarketplaceSearch = ({
         const dropDownSetFilter = card?.set?.name === filterDropDown;
         return (
           inputFilter &&
+          oneToFivePriceRangeFilter &&
+          fiveToTenPriceRangeFilter &&
+          tenToFifteenPriceRangeFilter &&
+          fifteenToTwentyPriceRangeFilter &&
+          twentyToTwentyFivePriceRangeFilter &&
           dropDownSetFilter &&
           (!minimumPrice ||
             minimumPrice === 0 ||
@@ -153,7 +190,18 @@ const MarketplaceSearch = ({
         return 0;
       })
     );
-  }, [search, cards, filterDropDown, minimumPrice, maximumPrice]);
+  }, [
+    search,
+    cards,
+    filterDropDown,
+    minimumPrice,
+    maximumPrice,
+    oneToFivePrice,
+    fiveToTenPrice,
+    tenToFifteenPrice,
+    fifteenToTwentyPrice,
+    twentyToTwentyFivePrice,
+  ]);
 
   console.log(addedCards);
 
@@ -203,6 +251,26 @@ const MarketplaceSearch = ({
     setMinimumPrice(event.target.value);
   };
 
+  const handleOneToFivePrice = (event) => {
+    setOneToFivePrice(event.target.checked);
+  };
+
+  const handleFiveToTenPrice = (event) => {
+    setFiveToTenPrice(event.target.checked);
+  };
+
+  const handleTenToFifteenPrice = (event) => {
+    setTenToFifteenPrice(event.target.checked);
+  };
+
+  const handleFifteenToTwentyPrice = (event) => {
+    setFifteenToTwentyPrice(event.target.checked);
+  };
+
+  const handleTwentyToTwentyFivePrice = (event) => {
+    setTwentyToTwentyFivePrice(event.target.checked);
+  };
+
   return (
     <div id="container" className="h-100 w-100 d-flex flex-column">
       <div id="mainNavMarketplace" style={{ marginBottom: "130px" }}>
@@ -230,6 +298,21 @@ const MarketplaceSearch = ({
           handleMaximumPriceInput={handleMaximumPriceInput}
           handleMinimumPriceInput={handleMinimumPriceInput}
           handleFilterDropDown={handleFilterDropDown}
+          oneToFivePrice={oneToFivePrice}
+          setOneToFivePrice={setOneToFivePrice}
+          fiveToTenPrice={fiveToTenPrice}
+          setFiveToTenPrice={setFiveToTenPrice}
+          tenToFifteenPrice={tenToFifteenPrice}
+          setTenToFifteenPrice={setTenToFifteenPrice}
+          fifteenToTwentyPrice={fifteenToTwentyPrice}
+          setFifteenToTwentyPrice={setFifteenToTwentyPrice}
+          twentyToTwentyFivePrice={twentyToTwentyFivePrice}
+          setTwentyToTwentyFivePrice={setTwentyToTwentyFivePrice}
+          handleOneToFivePrice={handleOneToFivePrice}
+          handleFiveToTenPrice={handleFiveToTenPrice}
+          handleTenToFifteenPrice={handleTenToFifteenPrice}
+          handleFifteenToTwentyPrice={handleFifteenToTwentyPrice}
+          handleTwentyToTwentyFivePrice={handleTwentyToTwentyFivePrice}
         />
         <div
           id="marketplace-search-container"
