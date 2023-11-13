@@ -1,5 +1,4 @@
 import React, { useContext, useEffect } from 'react';
-import {useState} from 'react'
 import { CardContext } from './app/CardProvider';
 const CalculateGradeForm = () => {
 
@@ -44,8 +43,7 @@ const CalculateGradeForm = () => {
     }
 
     const {
-        id, setID,
-        grade, setGrade,
+        setGrade,
         selectedAltered, setSelectedAltered,
         selectedSurfaceWear, setSelectedSurfaceWear,
         selectedDiscoloration, setSelectedDiscoloration,

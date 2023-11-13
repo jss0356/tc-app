@@ -11,7 +11,6 @@ import {collection,
     query, 
     where
 } from "firebase/firestore"
-import {useContext} from 'react'
 
     //reference to users collection.
     const userCollectionRef = collection(firestore, "users")
@@ -154,7 +153,7 @@ import {useContext} from 'react'
             return portfolio.data();
         }
 
-        getPortfolioCards = async (portfolioID, userID) => {
+        /*getPortfolioCards = async (portfolioID, userID) => {
             const cardsRef = collection(firestore, `users/${userID}/userPortfolios/${portfolioID}/cards`)
             const cardsResult = await getDocs(cardsRef)
             if(cardsResult.empty){
@@ -167,7 +166,7 @@ import {useContext} from 'react'
             })
 
             return allCards
-        }
+        }*/
         getCard = async (userID, portfolioID, cardID) => {
             const cardRef = doc(firestore, `users/${userID}/userPortfolios/${portfolioID}/cards/${cardID}`);
             const card = await getDoc(cardRef)

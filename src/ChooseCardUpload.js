@@ -1,10 +1,15 @@
 
 import { components } from 'react-select'
 import AsyncSelect from 'react-select/async'
-import {useState} from 'react'
+import {useState, useContext} from 'react'
 import pokemon from './config/pokemontcgsdk'
+import { CardContext } from './app/CardProvider'
 
-const ChooseCardUpload = ({changeID}) => {
+const ChooseCardUpload = () => {
+
+    const {
+        id, setID
+    } = useContext(CardContext)
 
     const [loading, setLoading] = useState(false)
     
@@ -23,8 +28,8 @@ const ChooseCardUpload = ({changeID}) => {
 
     const selectionChange = (selectedOption) => {
         if (selectedOption) { 
-            changeID(selectedOption.value)
-        } else { changeID('none');  }
+            setID(selectedOption.value)
+        } else { setID('none');  }
     }
     
 
@@ -35,15 +40,18 @@ const ChooseCardUpload = ({changeID}) => {
         </components.Option>
     );
 
-    return (
-        <div>
-            <AsyncSelect className="basic-single mb-2" classNamePrefix="select" 
-            components={{Option: IconOption}} fe
-            onChange={selectionChange}
-            isLoading={loading} isClearable isSearchable 
-            loadOptions={getCards}/>
-        </div>
-    )
+    if (id === 'none'){
+        return (
+            <div>
+                <label htmlFor="card-name">Card Name (required)</label>
+                <AsyncSelect className="basic-single mb-2" classNamePrefix="select" 
+                components={{Option: IconOption}} fe
+                onChange={selectionChange}
+                isLoading={loading} isClearable isSearchable 
+                loadOptions={getCards}/>
+            </div>
+        )
+    }
 }
 
 export default ChooseCardUpload

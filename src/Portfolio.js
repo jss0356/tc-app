@@ -12,6 +12,7 @@ import userService from './services/user.services'
 import ChooseCardUpload from './ChooseCardUpload'
 import { CardContext } from './app/CardProvider'
 import userServices from './services/user.services'
+import CardUploadForm from './CardUploadForm'
 
 import { auth, firestore} from './config/firebase'
 import {collection, 
@@ -40,17 +41,7 @@ const Portfolio = () =>{
         grade, setGrade,
         id, setID
     } = useContext(CardContext)
-    //const [grade, setGrade] = useState(0);
-    //const [id, setID] = useState("");
 
-    const changeID = (value) => {
-        setID(value)
-    }
-
-    const changeGrade = (value) => {
-
-        setGrade(value)
-    }
     console.log(id)
 
     const DisplayForm = (props) => {
@@ -73,7 +64,6 @@ const Portfolio = () =>{
                         <option value="MINT 9">MINT 9</option>
                         <option value="GEM-MT 10">GEM-MT 10</option>
                     </select>
-                    {<p> Grade: {grade}</p>}
                 </div>
 
             )
@@ -95,8 +85,6 @@ const Portfolio = () =>{
 
         const portfolioData = await userServices.getUserPortfolio(portfolioID, userID)
         const cardsData = await userServices.getPortfolioCards(portfolioID, userID)
-
-        
 
 
         setPortfolio(portfolioData)
@@ -122,9 +110,7 @@ const Portfolio = () =>{
             console.log("IMAGES", images)
             setCardImages(images)
      
-        }
-       
-
+        }       
 
 
         }catch(err){
@@ -141,48 +127,55 @@ const Portfolio = () =>{
         
         getPortfolioData()
 
-
-        
     }, [])
 
 
     const uploadCard = async () => {
          
-        console.log(portfolioID)
-        const userID = await userService.getUserID(auth.currentUser.email)
-        console.log(userID)
-        const portfolioRef = await userService.getPortfolio(userID, portfolioID)
-        const portfolio = await getDoc(portfolioRef)
-        const portfolioData  = portfolio.data();
-        console.log(portfolioData)
+        if(id !== 'none'){
+            console.log(portfolioID)
+            const userID = await userService.getUserID(auth.currentUser.email)
+            console.log(userID)
+            const portfolioRef = await userService.getPortfolio(userID, portfolioID)
+            const portfolio = await getDoc(portfolioRef)
+            const portfolioData  = portfolio.data();
+            console.log(portfolioData)
 
-        const newTotal = portfolioData.itemCount + 1;
+            const newTotal = portfolioData.itemCount + 1;
 
-        const response = await fetch(`https://api.pokemontcg.io/v2/cards/${id}`)
-        const responseData = await response.json();
-        const cardData = responseData.data
+            const response = await fetch(`https://api.pokemontcg.io/v2/cards/${id}`)
+            const responseData = await response.json();
+            const cardData = responseData.data
 
 
-        const newTotalMarketValue = portfolioData.totalMarketValue + (cardData.tcgplayer?.prices?.holofoil?.market || 0)
-        const cardRef = collection(portfolioRef, "cards")
+            const newTotalMarketValue = portfolioData.totalMarketValue + (cardData.tcgplayer?.prices?.holofoil?.market || 0)
+            const cardRef = collection(portfolioRef, "cards")
 
-        console.log(grade, id)
-        const addedRef = await addDoc(cardRef, {
-            Grade: grade,
-            Id: id,
-            
-        })
-        await setDoc(addedRef, {cardID: addedRef.id}, {merge: true})
-        await setDoc(portfolioRef, {itemCount: newTotal, totalMarketValue: newTotalMarketValue}, {merge: true})
+            console.log(grade, id)
+            const addedRef = await addDoc(cardRef, {
+                Grade: grade,
+                Id: id,
+                
+            })
+            await setDoc(addedRef, {cardID: addedRef.id}, {merge: true})
+            await setDoc(portfolioRef, {itemCount: newTotal, totalMarketValue: newTotalMarketValue}, {merge: true})
 
-        handleClose()
-        await getPortfolioData()
+            handleClose()
+            setGrade("-")
+            await getPortfolioData()
+        } else {
+            alert("Card must be selected")
+        }
 
     }
 
     const [show, setShow] = useState(false);
 
-    const handleClose = () => setShow(false);
+    const handleClose = () => {
+        setShow(false)
+        setID("none")
+        setSelectedGraded("");
+    };
     const handleShow = () => setShow(true);
 
     const uploadCardModal =  <div id="add-portfolio-modal">
@@ -194,9 +187,10 @@ const Portfolio = () =>{
     
     <form>
 
-            <label htmlFor="add-portfolio-title">Card Name:</label>
-            <ChooseCardUpload changeID={changeID}/>
+            <CardUploadForm/>
+            <ChooseCardUpload/>
 
+            <label htmlFor="card-grade">Grade</label>
             <select className="form-select mb-2" aria-labelledby="Select card genre" value={selectedGraded} onChange={e => setSelectedGraded(e.target.value)}>
                 <option value="">Do you know the PSA grade?</option>
                     <option value="Yes">Yes</option>
@@ -209,7 +203,7 @@ const Portfolio = () =>{
                 <label htmlFor="card-description">Card Description</label>
                 <textarea className="form-control" id="card-description" rows="3"></textarea>
             </div>
-            {<p> Grade: {grade}</p>}
+            
         </form>
 
 
@@ -287,7 +281,7 @@ const Portfolio = () =>{
                             return (
                                 <>
                                 
-                                <Link to={`/my-account/my-portfolios/${portfolioID}/${cardImage.id}`}><img src={cardImage.image} style={{width: "50%", height: "auto"}}/></Link>
+                                <Link to={`/my-account/my-portfolios/${portfolioID}/${cardImage.id}`}><img src={cardImage.image} style={{width: "50%", height: "auto"}} alt = ""/></Link>
                                 
                                 </>
                             )
