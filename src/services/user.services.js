@@ -80,7 +80,7 @@ import {collection,
             return doc(firestore, `users/${userID}/userPortfolios/${portfolioID}`)
         }
 
-        getPortfolioCards = async (userID, portfolioID) => {
+        /*getPortfolioCards = async (userID, portfolioID) => {
             const portfolioCardsCollectionRef = collection(firestore, `users/${userID}/userPortfolios/${portfolioID}/cards`)
 
             try {
@@ -88,7 +88,7 @@ import {collection,
                 return cards
 
             }catch(err){ console.log(err) }
-        }
+        }*/
 
         getSettingRef = async (id) => {
 
@@ -153,7 +153,7 @@ import {collection,
             return portfolio.data();
         }
 
-        /*getPortfolioCards = async (portfolioID, userID) => {
+        getPortfolioCards = async (portfolioID, userID) => {
             const cardsRef = collection(firestore, `users/${userID}/userPortfolios/${portfolioID}/cards`)
             const cardsResult = await getDocs(cardsRef)
             if(cardsResult.empty){
@@ -166,7 +166,7 @@ import {collection,
             })
 
             return allCards
-        }*/
+        }
         getCard = async (userID, portfolioID, cardID) => {
             const cardRef = doc(firestore, `users/${userID}/userPortfolios/${portfolioID}/cards/${cardID}`);
             const card = await getDoc(cardRef)
