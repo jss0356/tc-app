@@ -5,6 +5,14 @@ import DefaultProfile from "./logos/default-profile.jpg"
 import React, { useEffect, useState } from 'react';
 import { getDocs, collection } from 'firebase/firestore';
 import { firestore } from './config/firebase.js'; // Replace with the path to your Firebase config file
+import {
+    
+    query,
+    where,
+   
+    addDoc,
+    setDoc,
+} from "firebase/firestore"
 const AddFriend = () => {
     const [users, setUsers] = useState([]);
     const [userData, setUserData] = useState([]);
@@ -49,13 +57,52 @@ const AddFriend = () => {
         };
 
         fetchUserData();
+        findPortfolios();
     }, []);
 
+    const buttonStyle = {
+        backgroundColor: isFriend ? '#e74c3c' : '#3498db',
+        color: 'white',
+        padding: '10px 20px',
+        border: 'none',
+        cursor: 'pointer',
+    };
+    const buttonStyle2 = {
+        backgroundColor: isFriend2 ? '#e74c3c' : '#3498db',
+        color: 'white',
+        padding: '10px 20px',
+        border: 'none',
+        cursor: 'pointer',
+    };
+
+    const findPortfolios = async () => {
+        console.log("A");
+        
+
+        try {
+            const q = query(collection(firestore, 'users'));
+            const foundUser = await getDocs(q);
+            const userID = foundUser.docs[0].id;
 
 
+            console.log(userID + "Z");
+
+            
+        }
+        catch (err) {
+            console.log(err);
+            
+        }
+        
+
+    }
+
+    useEffect(() => {
 
 
+        findPortfolios()
 
+    }, [])
 
 
     return (
@@ -81,11 +128,11 @@ const AddFriend = () => {
                 <div id="search-results" className="w-75 h-100 border border-dark" style={{backgroundColor:"white"}}>
                 <div className="bg-light border border-dark d-flex flex-row gap-2">
                                     <img src={DefaultProfile} alt="Friend Profile Image" width="30px" height="30px"/>
-                        <p>User-1</p><p>User Name</p><p>User Email  </p><button onClick={handleButtonClick}>{isFriend ? '- Remove Friend' : '+ Add Friend'}</button>
+                        <p>User-1</p><p>User Name</p><p>User Email    &nbsp; &nbsp;                                                                    &nbsp;&nbsp;&nbsp;&nbsp;   </p><button style={buttonStyle}  onClick={handleButtonClick}>{isFriend ? '- Remove Friend' : '+ Add Friend'}</button>
                                 </div>
                                 <div className="bg-light border border-dark d-flex flex-row gap-2">
                                     <img src={DefaultProfile} alt="Friend Profile Image" width="30px" height="30px"/>
-                        <p>User-2</p><p>User Name</p><p>User Email</p><button onClick={handleButtonClick2}>{isFriend2 ? '- Remove Friend' : '+ Add Friend'}</button>
+                        <p>User-2</p><p>User Name</p><p>User Email &nbsp; &nbsp;                                                                    &nbsp;&nbsp;&nbsp;&nbsp;</p><button style={buttonStyle2}  onClick={handleButtonClick2}>{isFriend2 ? '- Remove Friend' : '+ Add Friend'}</button>
                                 </div>
                 </div>
             
