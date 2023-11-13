@@ -82,10 +82,26 @@ const AddFriend = () => {
         try {
             const q = query(collection(firestore, 'users'));
             const foundUser = await getDocs(q);
+            
             const userID = foundUser.docs[0].id;
 
+            const u = collection(firestore, `users`);
 
-            console.log(userID + "Z");
+            const querySnapshot = await getDocs(u);
+
+
+            //const portfolioArray = [];
+            querySnapshot.forEach(async (doc) => {
+
+                const dataitem = doc.data();
+                console.log(dataitem)
+                //portfolioArray.push(portfolioItem);
+            });
+            
+            
+
+
+            
 
             
         }
