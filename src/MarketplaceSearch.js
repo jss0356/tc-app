@@ -24,6 +24,7 @@ const MarketplaceSearch = ({
   const [tenToFifteenPrice, setTenToFifteenPrice] = useState(false);
   const [fifteenToTwentyPrice, setFifteenToTwentyPrice] = useState(false);
   const [twentyToTwentyFivePrice, setTwentyToTwentyFivePrice] = useState(false);
+  const [twentyFivePlusPrice, setTwentyFivePlusPrice] = useState(false);
 
   const {
     search,
@@ -148,6 +149,10 @@ const MarketplaceSearch = ({
         ? priceOfCard >= 20 && priceOfCard <= 25
         : true;
 
+      const twentyFivePlusPriceRangeFilter = twentyFivePlusPrice
+        ? priceOfCard >= 25
+        : true;
+
       if (allSetsFilter) {
         return (
           inputFilter &&
@@ -156,6 +161,7 @@ const MarketplaceSearch = ({
           tenToFifteenPriceRangeFilter &&
           fifteenToTwentyPriceRangeFilter &&
           twentyToTwentyFivePriceRangeFilter &&
+          twentyFivePlusPriceRangeFilter &&
           (!minimumPrice ||
             minimumPrice === 0 ||
             minimumPrice <= priceOfCard) &&
@@ -170,6 +176,7 @@ const MarketplaceSearch = ({
           tenToFifteenPriceRangeFilter &&
           fifteenToTwentyPriceRangeFilter &&
           twentyToTwentyFivePriceRangeFilter &&
+          twentyFivePlusPriceRangeFilter &&
           dropDownSetFilter &&
           (!minimumPrice ||
             minimumPrice === 0 ||
@@ -201,6 +208,7 @@ const MarketplaceSearch = ({
     tenToFifteenPrice,
     fifteenToTwentyPrice,
     twentyToTwentyFivePrice,
+    twentyFivePlusPrice,
   ]);
 
   console.log(addedCards);
@@ -271,6 +279,10 @@ const MarketplaceSearch = ({
     setTwentyToTwentyFivePrice(event.target.checked);
   };
 
+  const handleTwentyFivePlusPrice = (event) => {
+    setTwentyFivePlusPrice(event.target.checked);
+  };
+
   return (
     <div id="container" className="h-100 w-100 d-flex flex-column">
       <div id="mainNavMarketplace" style={{ marginBottom: "130px" }}>
@@ -308,11 +320,14 @@ const MarketplaceSearch = ({
           setFifteenToTwentyPrice={setFifteenToTwentyPrice}
           twentyToTwentyFivePrice={twentyToTwentyFivePrice}
           setTwentyToTwentyFivePrice={setTwentyToTwentyFivePrice}
+          twentyFivePlusPrice={twentyFivePlusPrice}
+          setTwentyFivePlusPrice={setTwentyFivePlusPrice}
           handleOneToFivePrice={handleOneToFivePrice}
           handleFiveToTenPrice={handleFiveToTenPrice}
           handleTenToFifteenPrice={handleTenToFifteenPrice}
           handleFifteenToTwentyPrice={handleFifteenToTwentyPrice}
           handleTwentyToTwentyFivePrice={handleTwentyToTwentyFivePrice}
+          handleTwentyFivePlusPrice={handleTwentyFivePlusPrice}
         />
         <div
           id="marketplace-search-container"

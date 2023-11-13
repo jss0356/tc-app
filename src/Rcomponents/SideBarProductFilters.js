@@ -20,11 +20,14 @@ const SideBarProductFilters = ({
   setFifteenToTwentyPrice,
   twentyToTwentyFivePrice,
   setTwentyToTwentyFivePrice,
+  twentyFivePlusPrice,
+  setTwentyFivePlusPrice,
   handleOneToFivePrice,
   handleFiveToTenPrice,
   handleTenToFifteenPrice,
   handleFifteenToTwentyPrice,
   handleTwentyToTwentyFivePrice,
+  handleTwentyFivePlusPrice,
 }) => {
   return (
     <div
@@ -91,6 +94,15 @@ const SideBarProductFilters = ({
           label="$20-$25"
           checked={twentyToTwentyFivePrice}
           onChange={handleTwentyToTwentyFivePrice}
+        />
+      </Form.Group>
+
+      <Form.Group className="mb-3">
+        <Form.Check
+          type="checkbox"
+          label="$25+"
+          checked={twentyFivePlusPrice}
+          onChange={handleTwentyFivePlusPrice}
         />
       </Form.Group>
 
