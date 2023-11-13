@@ -5,10 +5,15 @@ import DefaultProfile from "./logos/default-profile.jpg"
 import React, { useState } from 'react';
 
 const AddFriend = () => {
-    const [buttonName, setButtonName] = useState(' + Add Friend');
+    const [isFriend, setIsFriend] = useState(false);
+    const [isFriend2, setIsFriend2] = useState(false);
     const handleButtonClick = () => {
-        setButtonName('Remove Friend');
+        setIsFriend((prevIsFriend) => !prevIsFriend);
     };
+    const handleButtonClick2 = () => {
+        setIsFriend2((prevIsFriend) => !prevIsFriend);
+    };
+
     return (
         <div id="Add-Friends-Container" className='w-100 h-100 d-flex flex-column'>
             <div id="main-nav">
@@ -32,11 +37,11 @@ const AddFriend = () => {
                 <div id="search-results" className="w-75 h-100 border border-dark" style={{backgroundColor:"white"}}>
                 <div className="bg-light border border-dark d-flex flex-row gap-2">
                                     <img src={DefaultProfile} alt="Friend Profile Image" width="30px" height="30px"/>
-                        <p>User-1</p><p>User Name</p><p>User Email  </p><button onClick={handleButtonClick}>{buttonName}</button>
+                        <p>User-1</p><p>User Name</p><p>User Email  </p><button onClick={handleButtonClick}>add friend</button>
                                 </div>
                                 <div className="bg-light border border-dark d-flex flex-row gap-2">
                                     <img src={DefaultProfile} alt="Friend Profile Image" width="30px" height="30px"/>
-                        <p>User-2</p><p>User Name</p><p>User Email</p><button onClick={handleButtonClick}>{buttonName}</button>
+                        <p>User-2</p><p>User Name</p><p>User Email</p><button onClick={handleButtonClick}>add friend</button>
                                 </div>
                 </div>
             
