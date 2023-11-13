@@ -113,7 +113,61 @@ const Home = () => {
         }
 
         for(const portfolio of portfolioArray){
-            for(const card of portfolio.cards){
+            for (const card of portfolio.cards) {
+                try {
+                    const response = await fetch(
+                        `https://api.pokemontcg.io/v2/cards/${card.id}`
+                    );
+
+                    if (!response.ok) {
+                        // If the response is not OK, handle the error (log and continue)
+                        console.error(`Failed to fetch card details for card with ID ${card.id}`);
+                        continue;
+                    }
+
+                    const responseData = await response.json();
+
+                    // Check if 'data' is available in the response
+                    if (responseData.data) {
+                        const cardData = responseData.data;
+
+                        // Check if 'name' and 'images' properties are available
+                        if (cardData.name && cardData.images && cardData.images.small) {
+                            // Update card properties
+                            card.name = cardData.name;
+                            card.image = cardData.images.small;
+                        } else {
+                            // If 'name' or 'images' is missing, handle the error (log and continue)
+                            console.error(`Incomplete data for card with ID ${card.id}`);
+                        }
+
+                        // Check if 'cardmarket' data is available
+                        if (cardData.cardmarket && cardData.cardmarket.prices) {
+                            const marketData = cardData.cardmarket.prices;
+
+                            // Access the market value and update the card object
+                            card.market = marketData.averageSellPrice || 0; // Default to 0 if market value is not available
+                        } else {
+                            // Set default market value if 'cardmarket' data is not available
+                            card.market = 0;
+                        }
+                    } else {
+                        // If 'data' is missing, handle the error (log and continue)
+                        console.error(`No data for card with ID ${card.id}`);
+                    }
+                } catch (error) {
+                    // Handle any unexpected errors during the fetch (log and continue)
+                    console.error(`Error fetching card details for card with ID ${card.id}:`, error);
+                }
+            }
+        }
+
+        // Update state with the modified portfolioArray
+        setPortfolios([...portfolioArray]);
+        setLoading(false);
+        console.log(portfolioArray);
+            
+            /*for(const card of portfolio.cards){
                 const response = await fetch(
                     `https://api.pokemontcg.io/v2/cards/${card.id}`
                 );
@@ -133,7 +187,7 @@ const Home = () => {
     
         setPortfolios(portfolioArray);
         setLoading(false);
-        console.log(portfolioArray);
+        console.log(portfolioArray); */
     };
 
     useEffect(() => {
@@ -225,18 +279,11 @@ const Home = () => {
                                  {portfolios.map((portfolio, index) => (
                                     <div key={index} className="portfolio-container text-center mx-2">
                                         {portfolio.cards && (
-                                            <Carousel variant="dark" style={{ width: "220px" }}>
-                                                {/*portfolio.cards.map((card, index) => (
-                                                <Carousel.Item key={index}>
-                                                    <div className='card text-center'>
-                                                    <p>{index}</p>
-                                                    </div>
-                                                </Carousel.Item>
-                                                ))*/}
+                                            <Carousel variant="dark" style={{ width: "240px" }}>
                                                 {portfolio.cards.map((card, index) =>
                                                 <Carousel.Item key={index}>
-                                                    <div className='card text-center'>
-                                                        <img src={card.image} alt={card.name} style={{ maxWidth: '100%', maxHeight: '100%' }}/>
+                                                    <div className='card text-center' style={{ border: '2px solid #333', padding: '10px', borderRadius: '5px' }}>
+                                                        <img src={card.image} alt={card.name} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'cover' }}/>
                                                         <p>Card Name: {card.name}</p>
                                                         <p>Card Grade: {card.grade}</p>
                                                         <p>Average Sell Price: ${card.market}</p>
@@ -246,21 +293,6 @@ const Home = () => {
                                                 )}
                                             </Carousel>
                                         )}
-                                        {/*<Carousel variant="dark" style={{ width: "220px" }}>
-                                            {/*portfolio.cards.map((card, index) => (
-                                                <Carousel.Item key={index}>
-                                                    <div className='card text-center'>
-                                                        <p>Meow</p>
-                                                    </div>
-                                                </Carousel.Item>
-                                            ))}
-                                            <Carousel.Item key="1">
-                                                <div className='card text-center'>
-                                                    <p>{portfolio.cards[0]}</p>
-                                                </div>
-                                            </Carousel.Item>
-                                        </Carousel>*/}
-
                                         <LinkContainer to={`/my-account/my-portfolios/${portfolio.id}`}>
                                             <h2 role="button">{portfolio.name}</h2>
                                         </LinkContainer>
