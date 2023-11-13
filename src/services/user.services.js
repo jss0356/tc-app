@@ -201,19 +201,51 @@ import {useContext} from 'react'
         }
 
         moveCardToNewPortfolio = async (userID, oldPortfolioID, cardID, newPortfolioID) => {
+            
+            
+            
+            
+            
             const oldCardRef  = doc(firestore, `users/${userID}/userPortfolios/${oldPortfolioID}/cards/${cardID}`);
+            const oldPortfolioDocRef = doc(firestore,  `users/${userID}/userPortfolios/${oldPortfolioID}`)
+
             const oldCardDocumentSnapshot = await getDoc(oldCardRef);
             const oldCardData = oldCardDocumentSnapshot.data();
 
             await deleteDoc(oldCardRef);
 
+
+            const response = await fetch(`https://api.pokemontcg.io/v2/cards/${oldCardData.Id}`)
+            const responseData = await response.json();
+            const cardData = responseData.data
+
+            const oldPortfolioDocumentSnapshot = await getDoc(oldPortfolioDocRef);
+            const oldPortfolioData = oldPortfolioDocumentSnapshot.data();
+    
+            const newTotalMarketValueOldPortfolio = oldPortfolioData.totalMarketValue - (cardData.tcgplayer?.prices?.holofoil?.market || 0)
+            const newTotalOldPortfolio = oldPortfolioData.itemCount - 1;
+
+            await setDoc(oldPortfolioDocRef, {itemCount: newTotalOldPortfolio, totalMarketValue: newTotalMarketValueOldPortfolio}, {merge: true});
+
+
+
             const cardToAdd = {Id: oldCardData.Id, Grade: oldCardData.Grade}
             const newPortfolioCardsRef = collection(firestore, `users/${userID}/userPortfolios/${newPortfolioID}/cards`)
+            const newPortfolioDocRef = doc(firestore, `users/${userID}/userPortfolios/${newPortfolioID}`)
+
             console.log({newPortfolioID})
 
             const addedDocRef = await addDoc(newPortfolioCardsRef, cardToAdd)
             await setDoc(addedDocRef, {cardID: addedDocRef.id}, {merge: true})
 
+            const newPortfolioSnapshot = await getDoc(newPortfolioDocRef)
+
+            const newPortfolioData = newPortfolioSnapshot.data()
+
+            const newTotalMarketValueNewPortfolio = newPortfolioData.totalMarketValue + (cardData.tcgplayer?.prices?.holofoil?.market || 0)
+            const newTotalNewPortfolio = newPortfolioData.itemCount + 1;
+
+            await setDoc(newPortfolioDocRef, {itemCount: newTotalNewPortfolio, totalMarketValue: newTotalMarketValueNewPortfolio}, {merge: true})
 
             return {newCardID: addedDocRef.id, newPortfolioID}
 
