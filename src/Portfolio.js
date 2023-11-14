@@ -45,32 +45,34 @@ const Portfolio = () =>{
     console.log(id)
 
     const DisplayForm = (props) => {
-        if(props.graded === "Yes") {
-            return(
+        if(id !== 'none'){
+            if(props.graded === "Yes") {
+                return(
 
-                <div>
-                    <select className="form-select custom-select mb-2" value={grade} onChange={e => setGrade(e.target.value)}>
-                        <option value="">Select a Grade:</option>
-                        <option value="N0">N0</option>
-                        <option value="PR 1">PR 1</option>
-                        <option value="FR 1.5">FR 1.5</option>
-                        <option value="GOOD 2">GOOD 2</option>
-                        <option value="VG 3">VG 3</option>
-                        <option value="VG-EX 4">VG-EX 4</option>
-                        <option value="EX 5">EX 5</option>
-                        <option value="EX-MT 6">EX-MT 6</option>
-                        <option value="NM 7">NM 7</option>
-                        <option value="NM-MT 8">NM-MT 8</option>
-                        <option value="MINT 9">MINT 9</option>
-                        <option value="GEM-MT 10">GEM-MT 10</option>
-                    </select>
-                </div>
+                    <div>
+                        <select className="form-select custom-select mb-2" value={grade} onChange={e => setGrade(e.target.value)}>
+                            <option value="-">Select a Grade:</option>
+                            <option value="N0">N0</option>
+                            <option value="PR 1">PR 1</option>
+                            <option value="FR 1.5">FR 1.5</option>
+                            <option value="GOOD 2">GOOD 2</option>
+                            <option value="VG 3">VG 3</option>
+                            <option value="VG-EX 4">VG-EX 4</option>
+                            <option value="EX 5">EX 5</option>
+                            <option value="EX-MT 6">EX-MT 6</option>
+                            <option value="NM 7">NM 7</option>
+                            <option value="NM-MT 8">NM-MT 8</option>
+                            <option value="MINT 9">MINT 9</option>
+                            <option value="GEM-MT 10">GEM-MT 10</option>
+                        </select>
+                    </div>
 
-            )
-        } else if (props.graded === "No") {
-            return (
-                <CalculateGradeForm />
-            )
+                )
+            } else if (props.graded === "No") {
+                return (
+                    <CalculateGradeForm />
+                )
+            }
         }
     }
 
@@ -131,7 +133,10 @@ const Portfolio = () =>{
 
 
     const uploadCard = async () => {
-         
+        
+        /*if (grade === '-'){
+            alert()
+        }*/
         if(id !== 'none'){
             console.log(portfolioID)
             const userID = await userService.getUserID(auth.currentUser.email)
@@ -161,7 +166,6 @@ const Portfolio = () =>{
             await setDoc(portfolioRef, {itemCount: newTotal, totalMarketValue: newTotalMarketValue}, {merge: true})
 
             handleClose()
-            setGrade("-")
             await getPortfolioData()
         } else {
             alert("Card must be selected")
@@ -174,6 +178,7 @@ const Portfolio = () =>{
     const handleClose = () => {
         setShow(false)
         setID("none")
+        setGrade("-")
         setSelectedGraded("");
     };
     const handleShow = () => setShow(true);
@@ -190,14 +195,9 @@ const Portfolio = () =>{
             <CardUploadForm/>
             <ChooseCardUpload/>
 
-            <label htmlFor="card-grade">Grade</label>
-            <select className="form-select mb-2" aria-labelledby="Select card genre" value={selectedGraded} onChange={e => setSelectedGraded(e.target.value)}>
-                <option value="">Do you know the PSA grade?</option>
-                    <option value="Yes">Yes</option>
-                    <option value="No">No</option>
-            </select>
+            
 
-            <DisplayForm graded = {selectedGraded}/>
+            <DisplayForm graded = "Yes"/>
 
             <div className="form-group">
                 <label htmlFor="card-description">Card Description</label>
