@@ -5,6 +5,7 @@ export const CardContext = createContext(null)
 const CardProvider = ({children}) => {
     const [id, setID] = useState("none")
     const [grade, setGrade] = useState("-")
+    const [selectedGraded, setSelectedGraded] = useState("No")
     const[selectedAltered, setSelectedAltered] = useState(11);
     const[selectedSurfaceWear, setSelectedSurfaceWear] = useState(11);
     const[selectedDiscoloration, setSelectedDiscoloration] = useState(11);
@@ -25,6 +26,7 @@ const CardProvider = ({children}) => {
     const contextValue = {
         id, setID,
         grade, setGrade,
+        selectedGraded, setSelectedGraded,
         selectedAltered, setSelectedAltered,
         selectedSurfaceWear, setSelectedSurfaceWear,
         selectedDiscoloration, setSelectedDiscoloration,
@@ -51,6 +53,5 @@ const CardProvider = ({children}) => {
     )
 
 }
-
 
 export default CardProvider

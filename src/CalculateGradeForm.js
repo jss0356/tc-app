@@ -1,5 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import { CardContext } from './app/CardProvider';
+import { Button } from 'react-bootstrap';
 const CalculateGradeForm = () => {
 
     const convertGrade = (g) => {
@@ -43,7 +44,9 @@ const CalculateGradeForm = () => {
     }
 
     const {
-        setGrade,
+        grade, setGrade,
+        id,
+        selectedGraded, setSelectedGraded,
         selectedAltered, setSelectedAltered,
         selectedSurfaceWear, setSelectedSurfaceWear,
         selectedDiscoloration, setSelectedDiscoloration,
@@ -62,7 +65,6 @@ const CalculateGradeForm = () => {
         selectedBackCentering, setSelectedBackCentering
     } = useContext(CardContext)
 
-
     useEffect(()=> {
 
         let selections = [Number(selectedAltered), Number(selectedSurfaceWear), Number(selectedDiscoloration), 
@@ -78,6 +80,7 @@ const CalculateGradeForm = () => {
             //setGrade(newGrade)
             convertGrade(newGrade)
         }
+        console.log(grade)
 
         
     },[selectedAltered, selectedSurfaceWear, selectedDiscoloration, 
@@ -85,9 +88,16 @@ const CalculateGradeForm = () => {
         selectedCornersFraying, selectedEdges, selectedFocus, selectedGloss, selectedInTact, selectedFrontCentering,
         selectedBackCentering])
 
+
+    const handleSelect = () => {
+        setSelectedGraded("No")
+    }
     return(
         <div>
-            <label htmlFor="add-portfolio-title">Calculate Grade:</label>
+            <div className=' d-flex flex-row align-items-end justify-content-between mt-1 mb-3' >
+                <Button size='sm' onClick={handleSelect}>&lt; Select Grade </Button>
+                <label>Select Options that best fit your card</label>
+            </div>
             <select className="form-select custom-select mb-2" value={selectedAltered} onChange={e => { setSelectedAltered(e.target.value)}}>
                 <option value={11}>Is the card altered in some way or have any major defects</option>
                 <option value={0}>Yes</option>
@@ -95,8 +105,8 @@ const CalculateGradeForm = () => {
             </select>
             <select className="form-select custom-select mb-2" value={selectedInTact} onChange={e => {setSelectedInTact(e.target.value)}}>
                 <option value={11}>Is the card fully in tact</option>
-                <option value={10}>Yes</option>
                 <option value={1}>No</option>
+                <option value={10}>Yes</option>
             </select>
             <select className="form-select custom-select mb-2" value={selectedSurfaceWear} onChange={e => {setSelectedSurfaceWear(e.target.value)}}>
                 <option value={11}>Choose an option that best describes the surface wear</option>
@@ -125,8 +135,8 @@ const CalculateGradeForm = () => {
             <select className="form-select custom-select mb-2" value={selectedStain} onChange={e => {setSelectedStain(e.target.value)}}>
                 <option value={11}>Choose an option that best describes any stains</option>
                 <option value={3}>Slight (Front)</option>
-                <option value={8}>Slight (Back)</option>
                 <option value={6}>Minor (Back)</option>
+                <option value={8}>Slight (Back)</option>
                 <option value={10}>None</option>
             </select>
             <select className="form-select custom-select mb-2" value={selectedDefect} onChange={e => {setSelectedDefect(e.target.value)}}>
@@ -196,22 +206,23 @@ const CalculateGradeForm = () => {
             </select>
             <select className="form-select custom-select mb-2" value={selectedFrontCentering} onChange={e => {setSelectedFrontCentering(e.target.value)}}>
                 <option value={11}>Choose an option that best describes the centering on the front</option>
-                <option value={10}>55/45 - 60/40 % or less</option>
-                <option value={9}>60/40 - 65/35 % or less</option>
-                <option value={8}>65/35 - 70/30 % or less</option>
-                <option value={7}>70/30 - 75/25 % or less</option>
-                <option value={6}>80/20 % or less</option>
-                <option value={5}>85/15 % or less</option>
                 <option value={3}>90/10 % or less</option>
+                <option value={5}>85/15 % or less</option>
+                <option value={6}>80/20 % or less</option>
+                <option value={7}>70/30 - 75/25 % or less</option>
+                <option value={8}>65/35 - 70/30 % or less</option>
+                <option value={9}>60/40 - 65/35 % or less</option>
+                <option value={10}>55/45 - 60/40 % or less</option>
             </select>
             <select className="form-select custom-select mb-2" value={selectedBackCentering} onChange={e => {setSelectedBackCentering(e.target.value)}}>
                 <option value={11}>Choose an option that best describes the centering on the back</option>
-                <option value={10}>75/25 % or less</option>
                 <option value={9}>90/10 % or less</option>
+                <option value={10}>75/25 % or less</option>
             </select>
 
         </div>
     )
+    
 
 }
 export default CalculateGradeForm;

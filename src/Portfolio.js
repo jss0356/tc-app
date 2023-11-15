@@ -12,6 +12,7 @@ import userService from './services/user.services'
 import ChooseCardUpload from './ChooseCardUpload'
 import { CardContext } from './app/CardProvider'
 import userServices from './services/user.services'
+import CardAndGradeImages from './CardAndGradeImages'
 import CardUploadForm from './CardUploadForm'
 
 import { auth, firestore} from './config/firebase'
@@ -28,7 +29,6 @@ import { Spinner } from 'react-bootstrap'
 
 const Portfolio = () =>{
 
-    const[selectedGraded, setSelectedGraded] = useState();
     const [portfolio, setPortfolio] = useState({})
     const [portfolioCards, setPortfolioCards] = useState([])
     
@@ -38,43 +38,24 @@ const Portfolio = () =>{
     const [cardImages, setCardImages] = useState([])
 
     const {
-        grade, setGrade,
-        id, setID
+        grade, setGrade, id, setID, setSelectedGraded,
+        setSelectedAltered, setSelectedSurfaceWear, setSelectedDiscoloration, setSelectedScratch,
+        setSelectedStain, setSelectedDefect, setSelectedCornersRounded, setSelectedCrease,
+        setSelectedBorder, setSelectedCornersFraying, setSelectedEdges,setSelectedFocus,
+        setSelectedGloss, setSelectedInTact, setSelectedFrontCentering, setSelectedBackCentering
+
     } = useContext(CardContext)
+
+    const reset = () => {
+        setGrade("-"); setID("none"); setSelectedGraded("No");
+    setSelectedAltered(11); setSelectedSurfaceWear(11); setSelectedDiscoloration(11); setSelectedScratch(11)
+    setSelectedStain(11); setSelectedDefect(11); setSelectedCornersRounded(11); setSelectedCrease(11)
+    setSelectedBorder(11); setSelectedCornersFraying(11); setSelectedEdges(11); setSelectedFocus(11)
+    setSelectedGloss(11); setSelectedInTact(11); setSelectedFrontCentering(11); setSelectedBackCentering(11)
+    }
 
     console.log(id)
 
-    const DisplayForm = (props) => {
-        if(id !== 'none'){
-            if(props.graded === "Yes") {
-                return(
-
-                    <div>
-                        <select className="form-select custom-select mb-2" value={grade} onChange={e => setGrade(e.target.value)}>
-                            <option value="-">Select a Grade:</option>
-                            <option value="N0">N0</option>
-                            <option value="PR 1">PR 1</option>
-                            <option value="FR 1.5">FR 1.5</option>
-                            <option value="GOOD 2">GOOD 2</option>
-                            <option value="VG 3">VG 3</option>
-                            <option value="VG-EX 4">VG-EX 4</option>
-                            <option value="EX 5">EX 5</option>
-                            <option value="EX-MT 6">EX-MT 6</option>
-                            <option value="NM 7">NM 7</option>
-                            <option value="NM-MT 8">NM-MT 8</option>
-                            <option value="MINT 9">MINT 9</option>
-                            <option value="GEM-MT 10">GEM-MT 10</option>
-                        </select>
-                    </div>
-
-                )
-            } else if (props.graded === "No") {
-                return (
-                    <CalculateGradeForm />
-                )
-            }
-        }
-    }
 
     const {portfolioID} = useParams()
 
@@ -134,9 +115,6 @@ const Portfolio = () =>{
 
     const uploadCard = async () => {
         
-        /*if (grade === '-'){
-            alert()
-        }*/
         if(id !== 'none'){
             console.log(portfolioID)
             const userID = await userService.getUserID(auth.currentUser.email)
@@ -177,9 +155,7 @@ const Portfolio = () =>{
 
     const handleClose = () => {
         setShow(false)
-        setID("none")
-        setGrade("-")
-        setSelectedGraded("");
+        reset()
     };
     const handleShow = () => setShow(true);
 
@@ -192,12 +168,9 @@ const Portfolio = () =>{
     
     <form>
 
-            <CardUploadForm/>
             <ChooseCardUpload/>
-
-            
-
-            <DisplayForm graded = "Yes"/>
+            <CardUploadForm/>
+            <CardAndGradeImages/>
 
             <div className="form-group">
                 <label htmlFor="card-description">Card Description</label>

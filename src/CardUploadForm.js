@@ -1,69 +1,53 @@
-import { CardContext } from './app/CardProvider'
-import {useState, useContext, useEffect} from 'react'
-import pokemon from './config/pokemontcgsdk'
+import { Button } from "react-bootstrap"
+import { useContext } from "react"
+import { CardContext } from "./app/CardProvider"
+import CalculateGradeForm from "./CalculateGradeForm"
 
 const CardUploadForm = () => {
 
     const {
-        grade,
-        id
+        grade, setGrade,
+        id,
+        selectedGraded, setSelectedGraded
     } = useContext(CardContext)
 
-    const [image, setImage] = useState("")
-    const [name, setName] = useState("")
+    const handleCalculate = () => {
+        setSelectedGraded("Yes")
+    }
 
-    const CardImg = () => {
-        if (id !== 'none'){
+    if(id !== 'none'){
+        if(selectedGraded === "No") {
             return(
-                <img src={image} style={{width: "35%", height: "auto"}} alt = ""/>
+
+                <div>
+                    <div className=' d-flex flex-row align-items-end justify-content-between mt-1 mb-3' >
+                        <label>Select a grade</label>
+                        <Button size='sm' onClick={handleCalculate}>Calculate Grade &gt;</Button>
+                    </div>
+                    <select className="form-select custom-select mb-2" value={grade} onChange={e => setGrade(e.target.value)}>
+                        <option value="-">None</option>
+                        <option value="N0">N0</option>
+                        <option value="PR 1">PR 1</option>
+                        <option value="FR 1.5">FR 1.5</option>
+                        <option value="GOOD 2">GOOD 2</option>
+                        <option value="VG 3">VG 3</option>
+                        <option value="VG-EX 4">VG-EX 4</option>
+                        <option value="EX 5">EX 5</option>
+                        <option value="EX-MT 6">EX-MT 6</option>
+                        <option value="NM 7">NM 7</option>
+                        <option value="NM-MT 8">NM-MT 8</option>
+                        <option value="MINT 9">MINT 9</option>
+                        <option value="GEM-MT 10">GEM-MT 10</option>
+                    </select>
+                </div>
+
             )
-        
-        } 
-    }
-
-    const GradeImg = () => {
-        if (grade !== '-'){
-            console.log(grade)
-            return(
-                <img src={process.env.PUBLIC_URL + `/grades/${grade}.png`} style={{width: "35%", height: "auto"}} alt = ""/>
-            )
-        }
-    }
-
-    const getCard = async () => {
-        try{
-            await pokemon.card.find(id).then(card => {
-                setImage(card.images.small)
-                setName(card.name)
-                console.log(card.name)
-            })
-        } catch (e) {
-            console.error(e)
-        }
-    }
-
-    const DisplayName = () => {
-        if (name !== ""){
-            return(
-                <label>{name}: {grade}</label>
+        } else if (selectedGraded === "Yes") {
+            return (
+                <CalculateGradeForm />
             )
         }
     }
-
-    useEffect( () => {
-        getCard()
-    }, [id])
-
-    return (
-        <div className='d-flex flex-column align-items-center mb-3'>
-            <DisplayName/>
-            <div id="right-display" className=' w-100 d-flex flex-row align-items-center justify-content-around padding-bottom mt-1'>
-                <CardImg/>
-                <GradeImg/>
-            </div>
-        </div>
-        )
-    
 }
 
 export default CardUploadForm
