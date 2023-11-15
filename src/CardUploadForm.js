@@ -18,7 +18,6 @@ const CardUploadForm = () => {
     if(id !== 'none'){
         if(selectedGraded === "No") {
             return(
-
                 <div>
                     <div className=' d-flex flex-row align-items-end justify-content-between mt-1 mb-3' >
                         <label>Select a grade</label>
@@ -40,7 +39,6 @@ const CardUploadForm = () => {
                         <option value="GEM-MT 10">GEM-MT 10</option>
                     </select>
                 </div>
-
             )
         } else if (selectedGraded === "Yes") {
             return (

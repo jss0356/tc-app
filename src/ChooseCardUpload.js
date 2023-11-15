@@ -7,11 +7,10 @@ import { CardContext } from './app/CardProvider'
 
 const ChooseCardUpload = () => {
 
+    const [loading, setLoading] = useState(false)
     const {
         id, setID
     } = useContext(CardContext)
-
-    const [loading, setLoading] = useState(false)
     
     const getCards = async inputValue => {
         
