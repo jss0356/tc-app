@@ -18,11 +18,14 @@ import {
   CategoryScale,
   LinearScale,
   BarElement,
+  LineElement,
+  PointElement,
   Title,
   Tooltip,
   Legend,
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
+import { Line } from "react-chartjs-2";
 import { Spinner } from "react-bootstrap";
 import pokemonTypes from "./constants/pokemonTypes";
 import Listing from "./Rcomponents/Listing";
@@ -34,7 +37,9 @@ ChartJS.register(
   BarElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  LineElement,
+  PointElement
 );
 
 const Product = ({ cart, setCart, watchlist, setWatchlist }) => {
@@ -182,6 +187,19 @@ const Product = ({ cart, setCart, watchlist, setWatchlist }) => {
         ],
         backgroundColor: "rgba(70, 184, 184, 0.2)",
         borderWidth: 2,
+      },
+    ],
+  };
+  const dataLine = {
+    labels: [1, 2, 3, 4, 5, 6, 7, 8],
+    datasets: [
+      {
+        //fill: true,
+        label: "Price",
+        data: 0,
+
+        borderColor: "rgb(53, 162, 235)",
+        backgroundColor: "rgba(53, 162, 235, 0.5)",
       },
     ],
   };
@@ -352,6 +370,12 @@ const Product = ({ cart, setCart, watchlist, setWatchlist }) => {
                 >
                   {productInfo?.hp}HP
                 </p>
+              </div>
+              <div>
+                <div className="chart-container h-100 w-45">
+                  <h2 className="text-center">Price Statistics (In USD)</h2>
+                  <Bar data={data} options={options} />
+                </div>
               </div>
             </div>
           </div>
@@ -907,9 +931,13 @@ const Product = ({ cart, setCart, watchlist, setWatchlist }) => {
   </div> */}
         <div className="d-flex flex-column w-100">
           <div className="w-100 h-100 d-flex flex-row justify-content-center">
-            <div className="chart-container h-100 w-50">
+            {/* <div className="chart-container h-100 w-50">
               <h2 className="text-center">Price Statistics (In USD)</h2>
               <Bar data={data} options={options} />
+            </div> */}
+            <div className="chart-container h-200 w-50">
+              <h2 className="text-center">Price History</h2>
+              <Line options={options} data={dataLine} />;
             </div>
           </div>
 
