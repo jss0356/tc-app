@@ -2,7 +2,7 @@ import MainNavbar from "./Rcomponents/MainNavbar"
 import SearchIcon from "./logos/SearchIcon.png"
 import { LinkContainer } from "react-router-bootstrap"
 import DefaultProfile from "./logos/default-profile.jpg"
-import React, { useEffect, useState } from 'react';
+import React , { useEffect, useState } from 'react';
 import { getDocs, collection } from 'firebase/firestore';
 import { firestore } from './config/firebase.js'; // Replace with the path to your Firebase config file
 import {
@@ -13,6 +13,7 @@ import {
     addDoc,
     setDoc,
 } from "firebase/firestore"
+import UserAddFriend from "./UserDisplayAddFriend.js";
 const AddFriend = () => {
     const [users, setUsers] = useState([]);
     const [userData, setUserData] = useState([]);
@@ -151,6 +152,7 @@ const AddFriend = () => {
                         <p>User-2</p><p>User Name</p><p>User Email &nbsp; &nbsp;                                                                    &nbsp;&nbsp;&nbsp;&nbsp;</p><button style={buttonStyle2}  onClick={handleButtonClick2}>{isFriend2 ? '- Remove Friend' : '+ Add Friend'}</button>
                                 </div>
                 </div>
+                <UserAddFriend userName=""/>
             
             </div>
         
