@@ -6,11 +6,20 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { LinkContainer } from "react-router-bootstrap";
 import add from "./logos/Add-Icon.png";
+import { useState } from "react";
 const WatchList = ({ watchlist, setWatchlist }) => {
   const removeCard = (cardId) => {
     setWatchlist(watchlist.filter((card) => card.id !== cardId));
   };
+  const [quickAddMessage, setQuickAddMessage] = useState(false);
 
+  const handleMouseEnter = () => {
+    setQuickAddMessage(true);
+  };
+
+  const handleMouseLeave = () => {
+    setQuickAddMessage(false);
+  };
   return (
     <div>
       <MainNavbarMarketplace />
@@ -58,16 +67,41 @@ const WatchList = ({ watchlist, setWatchlist }) => {
         <Col xs={12} sm={6} md={4} lg={3}>
           <div style={{ textAlign: "center", alignItems: "center" }}>
             <LinkContainer to="/marketplace/search-results">
-              <img
-                src={add}
-                alt="Add icon"
-                //style={{cursor: "pointer" }}
+              <div
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
                 style={{
-                  width: "50px",
+                  display: "flex",
                   alignItems: "center",
                   cursor: "pointer",
+                  position: "relative",
                 }}
-              />
+              >
+                <img
+                  src={add}
+                  alt="Add"
+                  style={{
+                    width: "50px",
+                  }}
+                />
+                {quickAddMessage && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      backgroundColor: "rgba(0, 0, 0, 0.8)",
+                      color: "white",
+                      padding: "5px 10px",
+                      borderRadius: "5px",
+                      zIndex: 1,
+                      top: "30%",
+                      left: "50%",
+                      transform: "translate(-50%, -50%)",
+                    }}
+                  >
+                    <p>Add a card to your watchlist</p>
+                  </div>
+                )}
+              </div>
             </LinkContainer>
           </div>
         </Col>

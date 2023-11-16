@@ -87,27 +87,36 @@ const Product = ({ cart, setCart, watchlist, setWatchlist }) => {
     );
   };
 
-  const individualCardDetails = () => {
-    setLoading(true);
-    fetch(`https://api.pokemontcg.io/v2/cards/${productID}`)
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        console.log(data);
-        setProductInfo(data.data);
-        return data.data;
-      })
-      .then((card) => {
-        fetchAllListings(card.id).then((listingsResult) => {
-          setLoading(false);
-        });
-      })
-      .catch((error) => {
-        setError(true);
-        setLoading(false);
-      });
-  };
+  async function individualCardDetails() {
+    try {
+      setLoading(true);
+      const response = await fetch(
+        `https://api.pokemontcg.io/v2/cards/${productID}`
+      );
+      const data = await response.json();
+      setProductInfo(data.data);
+    } catch (error) {
+      setError(true);
+      setLoading(false);
+    }
+    // .then((response) => {
+    //   return response.json();
+    // })
+    // .then((data) => {
+    //   console.log(data);
+    //   setProductInfo(data.data);
+    //   return data.data;
+    // })
+    // .then((card) => {
+    //   fetchAllListings(card.id).then((listingsResult) => {
+    //     setLoading(false);
+    //   });
+    // })
+    // .catch((error) => {
+    //   setError(true);
+    //   setLoading(false);
+    // });
+  }
 
   useEffect(() => {
     individualCardDetails();
