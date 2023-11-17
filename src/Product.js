@@ -14,6 +14,14 @@ import { MarketplaceContext } from "./app/MarketplaceProvider";
 import { useContext } from "react";
 import Modal from "react-bootstrap/Modal";
 import {
+  app,
+  firestore,
+  auth,
+  storage,
+  signInWithGoogle,
+} from "./config/firebase";
+import { collection, addDoc, getDocs, where, query } from "firebase/firestore";
+import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
@@ -52,7 +60,7 @@ const Product = ({ cart, setCart, watchlist, setWatchlist }) => {
   const [low, setLow] = useState(0);
   const [high, setHigh] = useState(0);
   const [average, setAverage] = useState(0);
-
+  const [pricesOverTime, setPricesOverTime] = useState([]);
   const [cardToCompareWith, setCardToCompareWith] = useState(null);
   const [popUpSectionToCompare, setPopUpSectionToCompare] = useState(false);
   const { cards, setCards } = useContext(MarketplaceContext);
@@ -92,7 +100,7 @@ const Product = ({ cart, setCart, watchlist, setWatchlist }) => {
     );
   };
 
-  async function individualCardDetails() {
+  async function individualCardDetails(productID) {
     try {
       setLoading(true);
       const response = await fetch(
@@ -100,6 +108,17 @@ const Product = ({ cart, setCart, watchlist, setWatchlist }) => {
       );
       const data = await response.json();
       setProductInfo(data.data);
+      const currentDate = new Date().toISOString();
+      const currentPrice = data.data.tcgplayer?.prices?.holofoil?.market;
+
+      const docRef = await addDoc(
+        collection(firestore, "projectPriceChartData"),
+        {
+          date: currentDate,
+          price: currentPrice,
+          productID: productID,
+        }
+      );
     } catch (error) {
       setError(true);
       setLoading(false);
@@ -124,8 +143,29 @@ const Product = ({ cart, setCart, watchlist, setWatchlist }) => {
   }
 
   useEffect(() => {
-    individualCardDetails();
-  }, []);
+    async function retrieveFireStoreData(productID) {
+      try {
+        await individualCardDetails(productID);
+
+        const querySnapshot = await getDocs(
+          query(
+            collection(firestore, "projectPriceChartData"),
+            where("productID", "==", productID)
+          )
+        );
+        let prices = querySnapshot.docs.map((doc) => doc.data());
+
+        prices.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+        setPricesOverTime(prices);
+      } catch (error) {
+        console.error("firestore error ", error);
+        setError(true);
+      }
+    }
+
+    retrieveFireStoreData(productID);
+  }, [productID]);
 
   const determineStartingFrom = () => {
     if (listingPrices.length !== 0) {
@@ -191,12 +231,12 @@ const Product = ({ cart, setCart, watchlist, setWatchlist }) => {
     ],
   };
   const dataLine = {
-    labels: [1, 2, 3, 4, 5, 6, 7, 8],
+    labels: pricesOverTime.map((p) => p.date),
     datasets: [
       {
         //fill: true,
         label: "Price",
-        data: 0,
+        data: pricesOverTime.map((p) => p.price),
 
         borderColor: "rgb(53, 162, 235)",
         backgroundColor: "rgba(53, 162, 235, 0.5)",
