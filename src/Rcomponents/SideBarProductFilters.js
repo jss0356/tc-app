@@ -34,10 +34,10 @@ const SideBarProductFilters = ({
       className="sidebar"
       style={{ background: "#f8f9fa", padding: "20px", marginRight: "20px" }}
     >
-      <h4 className="mb-2">Filters</h4>
+      <h4 className="mb-2">Filters For Market Prices</h4>
       <Form.Group className="mb-2">
         <Form.Label>Price Range</Form.Label>
-        <div className="d-flex">
+        <div className="d-flex align-items-center">
           <Form.Control
             type="number"
             placeholder="Min"
@@ -45,7 +45,7 @@ const SideBarProductFilters = ({
             onChange={handleMinimumPriceInput}
             style={{ width: "70px" }}
           />
-          <div className="mx-2">to</div>
+          <div className="mx-2 text-center">to</div>
           <Form.Control
             type="number"
             placeholder="Max"
@@ -123,7 +123,7 @@ const SideBarProductFilters = ({
         </Form.Control>
       </Form.Group>
 
-      <h4 className="mt-5">For Listings</h4>
+      <h4 className="mt-5">Filters For User Listings</h4>
       <Form.Label className="mt-3">Availability</Form.Label>
       <Form.Group className="mb-3">
         <Form.Check type="checkbox" label="Available" />

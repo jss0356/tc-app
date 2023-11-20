@@ -394,6 +394,10 @@ const MarketplaceSearch = ({
                         <Card.Title className="card-name">
                           {card.name}
                         </Card.Title>
+                        <p>
+                          Market Price:${""}
+                          {card?.tcgplayer?.prices?.holofoil?.market}
+                        </p>
                         <Card.Text
                           style={
                             card.startingPrice === "No Listings."

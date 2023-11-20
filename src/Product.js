@@ -108,7 +108,12 @@ const Product = ({ cart, setCart, watchlist, setWatchlist }) => {
       );
       const data = await response.json();
       setProductInfo(data.data);
-      const currentDate = new Date().toISOString();
+      const currentDate = new Date().toLocaleDateString("en-US", {
+        month: "2-digit",
+        day: "2-digit",
+        year: "numeric",
+      });
+
       const currentPrice = data.data.tcgplayer?.prices?.holofoil?.market;
 
       const docRef = await addDoc(
