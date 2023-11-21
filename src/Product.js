@@ -220,14 +220,15 @@ const Product = ({ cart, setCart, watchlist, setWatchlist }) => {
 
   const options = { responsive: true, maintainAspectRatio: true };
   const data = {
-    labels: ["low", "high", "average", "market"],
+    labels: ["low", "direct low", "high", "average", "market"],
     datasets: [
       {
         label: "Card Prices",
         data: [
-          low || 0,
-          high || 0,
-          average || 0,
+          productInfo.tcgplayer?.prices?.holofoil?.low || 0,
+          productInfo.tcgplayer?.prices?.holofoil?.directLow || 0,
+          productInfo.tcgplayer?.prices?.holofoil?.high || 0,
+          productInfo.tcgplayer?.prices?.holofoil?.mid || 0,
           productInfo.tcgplayer?.prices?.holofoil?.market || 0,
         ],
         backgroundColor: "rgba(70, 184, 184, 0.2)",
@@ -982,6 +983,14 @@ const Product = ({ cart, setCart, watchlist, setWatchlist }) => {
             </div> */}
             <div className="chart-container h-200 w-50">
               <h2 className="text-center">Price History</h2>
+              {productInfo?.tcgplayer?.prices?.holofoil?.market ? (
+                <p></p>
+              ) : (
+                <p style={{ fontWeight: "bold" }} className="text-center">
+                  This card currently has no price data. No data can be shown on
+                  the chart.
+                </p>
+              )}
               <Line options={options} data={dataLine} />;
             </div>
           </div>
