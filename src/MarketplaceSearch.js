@@ -25,7 +25,8 @@ const MarketplaceSearch = ({
   const [fifteenToTwentyPrice, setFifteenToTwentyPrice] = useState(false);
   const [twentyToTwentyFivePrice, setTwentyToTwentyFivePrice] = useState(false);
   const [twentyFivePlusPrice, setTwentyFivePlusPrice] = useState(false);
-
+  const [minStartPriceListings, setMinStartPriceListings] = useState(0);
+  const [maxStartPriceListings, setMaxStartPriceListings] = useState(0);
   const {
     search,
     setSearch,
@@ -124,6 +125,9 @@ const MarketplaceSearch = ({
   useEffect(() => {
     const filtered = cards.filter((card) => {
       const priceOfCard = card?.tcgplayer?.prices?.holofoil?.market;
+      const priceOfCardForListings = parseFloat(
+        (card.startingPrice || "").replace("$", "")
+      );
       const inputFilter =
         card.name.toLowerCase().includes(search.toLowerCase()) ||
         search.trim() === "";
@@ -152,6 +156,13 @@ const MarketplaceSearch = ({
       const twentyFivePlusPriceRangeFilter = twentyFivePlusPrice
         ? priceOfCard >= 25
         : true;
+      const startingPriceFilter =
+        (!minStartPriceListings ||
+          minStartPriceListings === 0 ||
+          minStartPriceListings <= priceOfCardForListings) &&
+        (!maxStartPriceListings ||
+          maxStartPriceListings === 0 ||
+          maxStartPriceListings >= priceOfCardForListings);
 
       if (allSetsFilter) {
         return (
@@ -162,6 +173,7 @@ const MarketplaceSearch = ({
           fifteenToTwentyPriceRangeFilter &&
           twentyToTwentyFivePriceRangeFilter &&
           twentyFivePlusPriceRangeFilter &&
+          startingPriceFilter &&
           (!minimumPrice ||
             minimumPrice === 0 ||
             minimumPrice <= priceOfCard) &&
@@ -177,6 +189,7 @@ const MarketplaceSearch = ({
           fifteenToTwentyPriceRangeFilter &&
           twentyToTwentyFivePriceRangeFilter &&
           twentyFivePlusPriceRangeFilter &&
+          startingPriceFilter &&
           dropDownSetFilter &&
           (!minimumPrice ||
             minimumPrice === 0 ||
@@ -209,6 +222,8 @@ const MarketplaceSearch = ({
     fifteenToTwentyPrice,
     twentyToTwentyFivePrice,
     twentyFivePlusPrice,
+    minStartPriceListings,
+    maxStartPriceListings,
   ]);
 
   console.log(addedCards);
@@ -283,6 +298,14 @@ const MarketplaceSearch = ({
     setTwentyFivePlusPrice(event.target.checked);
   };
 
+  const handleUserListingsMaxPrice = (event) => {
+    setMaxStartPriceListings(event.target.value);
+  };
+
+  const handleUserListingsMinPrice = (event) => {
+    setMinStartPriceListings(event.target.value);
+  };
+
   return (
     <div id="container" className="h-100 w-100 d-flex flex-column">
       <div id="mainNavMarketplace" style={{ marginBottom: "130px" }}>
@@ -328,6 +351,10 @@ const MarketplaceSearch = ({
           handleFifteenToTwentyPrice={handleFifteenToTwentyPrice}
           handleTwentyToTwentyFivePrice={handleTwentyToTwentyFivePrice}
           handleTwentyFivePlusPrice={handleTwentyFivePlusPrice}
+          minStartPriceListings={minStartPriceListings}
+          maxStartPriceListings={maxStartPriceListings}
+          handleUserListingsMaxPrice={handleUserListingsMaxPrice}
+          handleUserListingsMinPrice={handleUserListingsMinPrice}
         />
         <div
           id="marketplace-search-container"

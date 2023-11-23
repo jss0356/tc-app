@@ -64,6 +64,7 @@ const Product = ({ cart, setCart, watchlist, setWatchlist }) => {
   const [cardToCompareWith, setCardToCompareWith] = useState(null);
   const [popUpSectionToCompare, setPopUpSectionToCompare] = useState(false);
   const { cards, setCards } = useContext(MarketplaceContext);
+
   const openPopUpSectionToCompare = (card) => {
     setCardToCompareWith(card);
     setPopUpSectionToCompare(true);
@@ -108,6 +109,8 @@ const Product = ({ cart, setCart, watchlist, setWatchlist }) => {
       );
       const data = await response.json();
       setProductInfo(data.data);
+      const card = data.data;
+      await fetchAllListings(card.id);
       const currentDate = new Date().toLocaleDateString("en-US", {
         month: "2-digit",
         day: "2-digit",

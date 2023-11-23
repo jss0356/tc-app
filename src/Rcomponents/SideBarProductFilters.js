@@ -28,6 +28,10 @@ const SideBarProductFilters = ({
   handleFifteenToTwentyPrice,
   handleTwentyToTwentyFivePrice,
   handleTwentyFivePlusPrice,
+  minStartPriceListings,
+  maxStartPriceListings,
+  handleUserListingsMaxPrice,
+  handleUserListingsMinPrice,
 }) => {
   const [marketPriceFilters, setMarketPriceFilters] = useState(true);
   const switchBetweenFilters = () => {
@@ -164,16 +168,16 @@ const SideBarProductFilters = ({
               <Form.Control
                 type="number"
                 placeholder="Min"
-                value={minimumPrice}
-                onChange={handleMinimumPriceInput}
+                value={minStartPriceListings}
+                onChange={handleUserListingsMinPrice}
                 style={{ width: "70px" }}
               />
               <div className="mx-2 text-center">to</div>
               <Form.Control
                 type="number"
                 placeholder="Max"
-                value={maximumPrice}
-                onChange={handleMaximumPriceInput}
+                value={maxStartPriceListings}
+                onChange={handleUserListingsMaxPrice}
                 style={{ width: "70px" }}
               />
             </div>
