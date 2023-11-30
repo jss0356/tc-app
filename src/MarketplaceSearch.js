@@ -37,6 +37,7 @@ const MarketplaceSearch = ({
     useState(false);
   const [twentyFivePlusPriceListings, setTwentyFivePlusPriceListings] =
     useState(false);
+  const [recentCards, setRecentCards] = useState([]);
   const {
     search,
     setSearch,
@@ -361,6 +362,24 @@ const MarketplaceSearch = ({
     setMinStartPriceListings(event.target.value);
   };
 
+  const storeCard = (card) => {
+    const cardInStorage = JSON.parse(sessionStorage.getItem("recent")) || [];
+    setRecentCards(cardInStorage);
+  };
+
+  useEffect(() => {
+    storeCard();
+  }, []);
+
+  const clickToAddToRecent = (card) => {
+    const addToStorage = [
+      card,
+      ...recentCards.filter((c) => c.id !== card.id),
+    ].slice(0, 4);
+    setRecentCards(addToStorage);
+    sessionStorage.setItem("recent", JSON.stringify(addToStorage));
+  };
+
   return (
     <div id="container" className="h-100 w-100 d-flex flex-column">
       <div id="mainNavMarketplace" style={{ marginBottom: "130px" }}>
@@ -481,8 +500,8 @@ const MarketplaceSearch = ({
                           variant="top"
                           src={card.images.small}
                           alt={card.name}
-                          //make the image smaller
                           style={{ height: "auto", width: "100%" }}
+                          onClick={() => clickToAddToRecent(card)}
                         />
                       </Link>
 
@@ -590,6 +609,43 @@ const MarketplaceSearch = ({
                 </li>
               </ul>
             </nav>
+          </div>
+          <div>
+            <h3 style={{ marginLeft: "20px" }}>Recently Viewed Cards</h3>
+            <div className="d-flex flex-wrap">
+              {recentCards.map((card) => (
+                <Card
+                  key={card.id}
+                  className="card-item"
+                  style={{
+                    width: "200px",
+                    cursor: "pointer",
+                    margin: "8px",
+                    transition: "box-shadow 10s",
+                    ":hover": {
+                      boxShadow: "0 5px 10px rgba(0, 0, 0, 0.2)",
+                    },
+                  }}
+                  alt={card.name}
+                  onClick={() => clickToAddToRecent(card)}
+                >
+                  <Link
+                    to={`/marketplace/cards/${card.id}`}
+                    className="card-link"
+                  >
+                    <Card.Img
+                      variant="top"
+                      src={card.images.small}
+                      alt={card.name}
+                      style={{ height: "auto", width: "100%" }}
+                    />
+                  </Link>
+                  <Card.Body>
+                    <Card.Title className="card-name">{card.name}</Card.Title>
+                  </Card.Body>
+                </Card>
+              ))}
+            </div>
           </div>
         </div>
       </div>
