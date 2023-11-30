@@ -32,6 +32,18 @@ const SideBarProductFilters = ({
   maxStartPriceListings,
   handleUserListingsMaxPrice,
   handleUserListingsMinPrice,
+  oneToFivePriceListings,
+  setOneToFivePriceListings,
+  fiveToTenPriceListings,
+  setFiveToTenPriceListings,
+  tenToFifteenPriceListings,
+  setTenToFifteenPriceListings,
+  fifteenToTwentyPriceListings,
+  setFifteenToTwentyPriceListings,
+  twentyToTwentyFivePriceListings,
+  setTwentyToTwentyFivePriceListings,
+  twentyFivePlusPriceListings,
+  setTwentyFivePlusPriceListings,
 }) => {
   const [marketPriceFilters, setMarketPriceFilters] = useState(true);
   const switchBetweenFilters = () => {
@@ -186,48 +198,52 @@ const SideBarProductFilters = ({
             <Form.Check
               type="checkbox"
               label="$1-$5"
-              checked={oneToFivePrice}
-              onChange={handleOneToFivePrice}
+              checked={oneToFivePriceListings}
+              onChange={(e) => setOneToFivePriceListings(e.target.checked)}
             />
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Check
               type="checkbox"
               label="$5-$10"
-              checked={fiveToTenPrice}
-              onChange={handleFiveToTenPrice}
+              checked={fiveToTenPriceListings}
+              onChange={(e) => setFiveToTenPriceListings(e.target.checked)}
             />
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Check
               type="checkbox"
               label="$10-$15"
-              checked={tenToFifteenPrice}
-              onChange={handleTenToFifteenPrice}
+              checked={tenToFifteenPriceListings}
+              onChange={(e) => setTenToFifteenPriceListings(e.target.checked)}
             />
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Check
               type="checkbox"
               label="$15-$20"
-              checked={fifteenToTwentyPrice}
-              onChange={handleFifteenToTwentyPrice}
+              checked={fifteenToTwentyPriceListings}
+              onChange={(e) =>
+                setFifteenToTwentyPriceListings(e.target.checked)
+              }
             />
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Check
               type="checkbox"
               label="$20-$25"
-              checked={twentyToTwentyFivePrice}
-              onChange={handleTwentyToTwentyFivePrice}
+              checked={twentyToTwentyFivePriceListings}
+              onChange={(e) =>
+                setTwentyToTwentyFivePriceListings(e.target.checked)
+              }
             />
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Check
               type="checkbox"
               label="$25+"
-              checked={twentyFivePlusPrice}
-              onChange={handleTwentyFivePlusPrice}
+              checked={twentyFivePlusPriceListings}
+              onChange={(e) => setTwentyFivePlusPriceListings(e.target.checked)}
             />
           </Form.Group>
           <Form.Group className="mb-3">

@@ -27,6 +27,16 @@ const MarketplaceSearch = ({
   const [twentyFivePlusPrice, setTwentyFivePlusPrice] = useState(false);
   const [minStartPriceListings, setMinStartPriceListings] = useState(0);
   const [maxStartPriceListings, setMaxStartPriceListings] = useState(0);
+  const [oneToFivePriceListings, setOneToFivePriceListings] = useState(false);
+  const [fiveToTenPriceListings, setFiveToTenPriceListings] = useState(false);
+  const [tenToFifteenPriceListings, setTenToFifteenPriceListings] =
+    useState(false);
+  const [fifteenToTwentyPriceListings, setFifteenToTwentyPriceListings] =
+    useState(false);
+  const [twentyToTwentyFivePriceListings, setTwentyToTwentyFivePriceListings] =
+    useState(false);
+  const [twentyFivePlusPriceListings, setTwentyFivePlusPriceListings] =
+    useState(false);
   const {
     search,
     setSearch,
@@ -156,6 +166,33 @@ const MarketplaceSearch = ({
       const twentyFivePlusPriceRangeFilter = twentyFivePlusPrice
         ? priceOfCard >= 25
         : true;
+
+      const oneToFivePriceRangeFilterListings = oneToFivePriceListings
+        ? priceOfCardForListings >= 1 && priceOfCardForListings <= 5
+        : true;
+
+      const fiveToTenPriceRangeFilterListings = fiveToTenPriceListings
+        ? priceOfCardForListings >= 5 && priceOfCardForListings <= 10
+        : true;
+
+      const tenToFifteenPriceRangeFilterListings = tenToFifteenPriceListings
+        ? priceOfCardForListings >= 10 && priceOfCardForListings <= 15
+        : true;
+
+      const fifteenToTwentyPriceRangeFilterListings =
+        fifteenToTwentyPriceListings
+          ? priceOfCardForListings >= 15 && priceOfCardForListings <= 20
+          : true;
+
+      const twentyToTwentyFivePriceRangeFilterListings =
+        twentyToTwentyFivePriceListings
+          ? priceOfCardForListings >= 20 && priceOfCardForListings <= 25
+          : true;
+
+      const twentyFivePlusPriceRangeFilterListings = twentyFivePlusPriceListings
+        ? priceOfCardForListings >= 25
+        : true;
+
       const startingPriceFilter =
         (!minStartPriceListings ||
           minStartPriceListings === 0 ||
@@ -173,6 +210,12 @@ const MarketplaceSearch = ({
           fifteenToTwentyPriceRangeFilter &&
           twentyToTwentyFivePriceRangeFilter &&
           twentyFivePlusPriceRangeFilter &&
+          oneToFivePriceRangeFilterListings &&
+          fiveToTenPriceRangeFilterListings &&
+          tenToFifteenPriceRangeFilterListings &&
+          fifteenToTwentyPriceRangeFilterListings &&
+          twentyToTwentyFivePriceRangeFilterListings &&
+          twentyFivePlusPriceRangeFilterListings &&
           startingPriceFilter &&
           (!minimumPrice ||
             minimumPrice === 0 ||
@@ -189,6 +232,12 @@ const MarketplaceSearch = ({
           fifteenToTwentyPriceRangeFilter &&
           twentyToTwentyFivePriceRangeFilter &&
           twentyFivePlusPriceRangeFilter &&
+          oneToFivePriceRangeFilterListings &&
+          fiveToTenPriceRangeFilterListings &&
+          tenToFifteenPriceRangeFilterListings &&
+          fifteenToTwentyPriceRangeFilterListings &&
+          twentyToTwentyFivePriceRangeFilterListings &&
+          twentyFivePlusPriceRangeFilterListings &&
           startingPriceFilter &&
           dropDownSetFilter &&
           (!minimumPrice ||
@@ -224,6 +273,12 @@ const MarketplaceSearch = ({
     twentyFivePlusPrice,
     minStartPriceListings,
     maxStartPriceListings,
+    oneToFivePriceListings,
+    fiveToTenPriceListings,
+    tenToFifteenPriceListings,
+    fifteenToTwentyPriceListings,
+    twentyToTwentyFivePriceListings,
+    twentyFivePlusPriceListings,
   ]);
 
   console.log(addedCards);
@@ -355,6 +410,20 @@ const MarketplaceSearch = ({
           maxStartPriceListings={maxStartPriceListings}
           handleUserListingsMaxPrice={handleUserListingsMaxPrice}
           handleUserListingsMinPrice={handleUserListingsMinPrice}
+          oneToFivePriceListings={oneToFivePriceListings}
+          setOneToFivePriceListings={setOneToFivePriceListings}
+          fiveToTenPriceListings={fiveToTenPriceListings}
+          setFiveToTenPriceListings={setFiveToTenPriceListings}
+          tenToFifteenPriceListings={tenToFifteenPriceListings}
+          setTenToFifteenPriceListings={setTenToFifteenPriceListings}
+          fifteenToTwentyPriceListings={fifteenToTwentyPriceListings}
+          setFifteenToTwentyPriceListings={setFifteenToTwentyPriceListings}
+          twentyToTwentyFivePriceListings={twentyToTwentyFivePriceListings}
+          setTwentyToTwentyFivePriceListings={
+            setTwentyToTwentyFivePriceListings
+          }
+          twentyFivePlusPriceListings={twentyFivePlusPriceListings}
+          setTwentyFivePlusPriceListings={setTwentyFivePlusPriceListings}
         />
         <div
           id="marketplace-search-container"
