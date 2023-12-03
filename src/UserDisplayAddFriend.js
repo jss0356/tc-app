@@ -66,8 +66,8 @@ function UserAddFriend(userName ){
                 const dataitem = doc.data();
                 //console.log(dataitem+"AA");
 
-                setUsers(dataitem)
-                //console.log(users+"SSSSS");
+                setUsers(dataitem.username)
+                console.log(users+"SSSSS");
 
                 //portfolioArray.push(portfolioItem);
             });
@@ -109,7 +109,7 @@ function UserAddFriend(userName ){
     };
     const handleButtonClick = () => {
         setIsFriend((prevIsFriend) => !prevIsFriend);
-        console.log(userName);
+        //console.log(userName);
 
     };
 
@@ -118,7 +118,7 @@ function UserAddFriend(userName ){
     <div className="bg-light border border-dark d-flex flex-row gap-2">
         <h1>HELLO</h1>
         <img src={DefaultProfile} alt="Friend Profile Image" width="30px" height="30px"/>
-        <p>{userName.userName.username}</p><p>User Name</p><p>User Email    &nbsp; &nbsp;                                                                    &nbsp;&nbsp;&nbsp;&nbsp;   </p><button style={buttonStyle}  onClick={handleButtonClick}>{isFriend ? '- Remove Friend' : '+ Add Friend'}</button>
+        <p>{userName}</p><p>User Name</p><p>User Email    &nbsp; &nbsp;                                                                    &nbsp;&nbsp;&nbsp;&nbsp;   </p><button style={buttonStyle}  onClick={handleButtonClick}>{isFriend ? '- Remove Friend' : '+ Add Friend'}</button>
         </div>
                         
                 

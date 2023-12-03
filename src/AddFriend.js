@@ -16,7 +16,8 @@ import {
 import UserAddFriend from "./UserDisplayAddFriend.js";
 const AddFriend = () => {
     const [users, setUsers] = useState([]);
-    let myUsers=[];
+    
+    
     const myArray = ['Apple', 'Banana', 'Mango'];
     const [userData, setUserData] = useState([]);
     const [isFriend, setIsFriend] = useState(false);
@@ -71,7 +72,7 @@ const AddFriend = () => {
 
     const findPortfolios = async () => {
         
-        
+        let myUsers=[];
 
         try {
             const q = query(collection(firestore, 'users'));
@@ -83,24 +84,20 @@ const AddFriend = () => {
 
             const querySnapshot = await getDocs(u);
             setUserDataquery(querySnapshot);
-
-            //console.log(querySnapshot+"W");
-
-            //const portfolioArray = [];
+            
             querySnapshot.forEach(async (doc) => {
 
                 const dataitem = doc.data();
-                console.log(dataitem.username+"AAv");
-                const u=dataitem.username+"m";
+                const u=dataitem.username;
+                console.log(u)
+                
+                
                 myUsers.push(u)
 
 
-                //setUsers([...users,"dataitem.username"])
                 
 
-                //portfolioArray.push(portfolioItem);
             });
-            //console.log(myUsers);
             
             
 
@@ -113,7 +110,8 @@ const AddFriend = () => {
             console.log(err);
             
         }
-        
+        console.log(myUsers + "abc")
+        setUsers(myUsers)
 
     }
 
@@ -121,9 +119,15 @@ const AddFriend = () => {
 
 
         findPortfolios()
+        
+
 
     }, [])
 
+    const MyComponent = ({value}) => {
+        return <div><h1>{value}  </h1></div>;
+      };
+      
 
     return (
         <div id="Add-Friends-Container" className='w-100 h-100 d-flex flex-column'>
@@ -146,20 +150,17 @@ const AddFriend = () => {
                 <div id="search-results" className="w-75 h-100 border border-dark" style={{backgroundColor:"white"}}></div>
                 <p>All Users:</p>
                 <div>
-
-                <div>
-                    {console.log(myArray)}
-                    {console.log(myUsers)}
-
-      {myUsers.map((item, index) => (
-        <UserAddFriend  userName={item} />
+                {console.log(users+"kl")}
+                {users.map((item, index) => (
+        <MyComponent value={item}/>
       ))}
-    </div>
-                    {myUsers.map((item,index)=>(<UserAddFriend userName={item}/>))}
-                   
+
+
+
+            
+
                 
-<UserAddFriend userName={users}/>
-                
+               
                 </div>
             </div>
         
