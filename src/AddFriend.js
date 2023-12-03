@@ -16,9 +16,13 @@ import {
 import UserAddFriend from "./UserDisplayAddFriend.js";
 const AddFriend = () => {
     const [users, setUsers] = useState([]);
+    let myUsers=[];
+    const myArray = ['Apple', 'Banana', 'Mango'];
     const [userData, setUserData] = useState([]);
     const [isFriend, setIsFriend] = useState(false);
     const [isFriend2, setIsFriend2] = useState(false);
+    const [userDataquery, setUserDataquery] = useState([]);
+
     const handleButtonClick = () => {
         setIsFriend((prevIsFriend) => !prevIsFriend);
     };
@@ -50,6 +54,8 @@ const AddFriend = () => {
                     userDataArray.push(doc.data());
                 });
                 setUserData(userDataArray)
+                //console.log(userData + "ASDkkk")
+
 
                 //console.log(users + "ASDkkk")
             } catch (error) {
@@ -76,19 +82,25 @@ const AddFriend = () => {
             const u = collection(firestore, `users`);
 
             const querySnapshot = await getDocs(u);
+            setUserDataquery(querySnapshot);
 
+            //console.log(querySnapshot+"W");
 
             //const portfolioArray = [];
             querySnapshot.forEach(async (doc) => {
 
                 const dataitem = doc.data();
-                //console.log(dataitem+"AA");
+                console.log(dataitem.username+"AAv");
+                const u=dataitem.username+"m";
+                myUsers.push(u)
 
-                setUsers(dataitem)
-                console.log(users);
+
+                //setUsers([...users,"dataitem.username"])
+                
 
                 //portfolioArray.push(portfolioItem);
             });
+            //console.log(myUsers);
             
             
 
@@ -133,9 +145,22 @@ const AddFriend = () => {
                 <p>Search Results:</p>
                 <div id="search-results" className="w-75 h-100 border border-dark" style={{backgroundColor:"white"}}></div>
                 <p>All Users:</p>
+                <div>
+
+                <div>
+                    {console.log(myArray)}
+                    {console.log(myUsers)}
+
+      {myUsers.map((item, index) => (
+        <UserAddFriend  userName={item} />
+      ))}
+    </div>
+                    {myUsers.map((item,index)=>(<UserAddFriend userName={item}/>))}
+                   
                 
-                <UserAddFriend userName={users}/>
-            
+<UserAddFriend userName={users}/>
+                
+                </div>
             </div>
         
         </div>
