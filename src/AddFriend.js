@@ -2,7 +2,7 @@ import MainNavbar from "./Rcomponents/MainNavbar"
 import SearchIcon from "./logos/SearchIcon.png"
 import { LinkContainer } from "react-router-bootstrap"
 import DefaultProfile from "./logos/default-profile.jpg"
-import React, { useEffect, useState } from 'react';
+import React , { useEffect, useState } from 'react';
 import { getDocs, collection } from 'firebase/firestore';
 import { firestore } from './config/firebase.js'; // Replace with the path to your Firebase config file
 import {
@@ -13,11 +13,17 @@ import {
     addDoc,
     setDoc,
 } from "firebase/firestore"
+import UserAddFriend from "./UserDisplayAddFriend.js";
 const AddFriend = () => {
     const [users, setUsers] = useState([]);
+    
+    
+    const myArray = ['Apple', 'Banana', 'Mango'];
     const [userData, setUserData] = useState([]);
     const [isFriend, setIsFriend] = useState(false);
     const [isFriend2, setIsFriend2] = useState(false);
+    const [userDataquery, setUserDataquery] = useState([]);
+
     const handleButtonClick = () => {
         setIsFriend((prevIsFriend) => !prevIsFriend);
     };
@@ -49,8 +55,10 @@ const AddFriend = () => {
                     userDataArray.push(doc.data());
                 });
                 setUserData(userDataArray)
+                //console.log(userData + "ASDkkk")
 
-                console.log(users + "ASD")
+
+                //console.log(users + "ASDkkk")
             } catch (error) {
                 console.error('Error fetching user data:', error);
             }
@@ -60,24 +68,11 @@ const AddFriend = () => {
         findPortfolios();
     }, []);
 
-    const buttonStyle = {
-        backgroundColor: isFriend ? '#e74c3c' : '#3498db',
-        color: 'white',
-        padding: '10px 20px',
-        border: 'none',
-        cursor: 'pointer',
-    };
-    const buttonStyle2 = {
-        backgroundColor: isFriend2 ? '#e74c3c' : '#3498db',
-        color: 'white',
-        padding: '10px 20px',
-        border: 'none',
-        cursor: 'pointer',
-    };
+    
 
     const findPortfolios = async () => {
-        console.log("A");
         
+        let myUsers=[];
 
         try {
             const q = query(collection(firestore, 'users'));
@@ -88,14 +83,21 @@ const AddFriend = () => {
             const u = collection(firestore, `users`);
 
             const querySnapshot = await getDocs(u);
-
-
-            //const portfolioArray = [];
+            setUserDataquery(querySnapshot);
+            
             querySnapshot.forEach(async (doc) => {
 
                 const dataitem = doc.data();
-                console.log(dataitem)
-                //portfolioArray.push(portfolioItem);
+                const u=[];u[0]=dataitem.username;
+                console.log(u)
+                
+                
+                myUsers.push(u)
+                //console.log(myUsers+ " ")
+
+
+                
+
             });
             
             
@@ -109,7 +111,8 @@ const AddFriend = () => {
             console.log(err);
             
         }
-        
+        //console.log(myUsers + "abc")
+        setUsers(myUsers)
 
     }
 
@@ -117,9 +120,15 @@ const AddFriend = () => {
 
 
         findPortfolios()
+        
+
 
     }, [])
 
+    const MyComponent = ({value}) => {
+        return <div><h1>{value} </h1></div>;
+      };
+      
 
     return (
         <div id="Add-Friends-Container" className='w-100 h-100 d-flex flex-column'>
@@ -141,17 +150,19 @@ const AddFriend = () => {
                 <p>Search Results:</p>
                 <div id="search-results" className="w-75 h-100 border border-dark" style={{backgroundColor:"white"}}></div>
                 <p>All Users:</p>
-                <div id="search-results" className="w-75 h-100 border border-dark" style={{backgroundColor:"white"}}>
-                <div className="bg-light border border-dark d-flex flex-row gap-2">
-                                    <img src={DefaultProfile} alt="Friend Profile Image" width="30px" height="30px"/>
-                        <p>User-1</p><p>User Name</p><p>User Email    &nbsp; &nbsp;                                                                    &nbsp;&nbsp;&nbsp;&nbsp;   </p><button style={buttonStyle}  onClick={handleButtonClick}>{isFriend ? '- Remove Friend' : '+ Add Friend'}</button>
-                                </div>
-                                <div className="bg-light border border-dark d-flex flex-row gap-2">
-                                    <img src={DefaultProfile} alt="Friend Profile Image" width="30px" height="30px"/>
-                        <p>User-2</p><p>User Name</p><p>User Email &nbsp; &nbsp;                                                                    &nbsp;&nbsp;&nbsp;&nbsp;</p><button style={buttonStyle2}  onClick={handleButtonClick2}>{isFriend2 ? '- Remove Friend' : '+ Add Friend'}</button>
-                                </div>
-                </div>
+                <div>
+                {/* {console.log(users+"kl")} */}
+                {/* {users.map((item, index) => (
+        <MyComponent value={item}/>
+      ))} */}
+
+
+
             
+
+                
+               
+                </div>
             </div>
         
         </div>
