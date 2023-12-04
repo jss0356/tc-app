@@ -88,7 +88,9 @@ const AddFriend = () => {
             querySnapshot.forEach(async (doc) => {
 
                 const dataitem = doc.data();
-                const u=[];u[0]=dataitem.username;
+                const u=[];
+                u['name']=dataitem.username;
+                u['email']=dataitem.email;
                 console.log(u)
                 
                 
@@ -126,7 +128,7 @@ const AddFriend = () => {
     }, [])
 
     const MyComponent = ({value}) => {
-        return <div><h1>{value} </h1></div>;
+        return <div><p>User Name : {"  "+value.name+" "} User Email : {value.email}</p></div>;
       };
       
 
@@ -151,10 +153,13 @@ const AddFriend = () => {
                 <div id="search-results" className="w-75 h-100 border border-dark" style={{backgroundColor:"white"}}></div>
                 <p>All Users:</p>
                 <div>
-                {/* {console.log(users+"kl")} */}
-                {/* {users.map((item, index) => (
+                {/* {console.log(users)} */}
+                {
+                users.map((item,index)=>(console.log(item.name)))
+                }
+                {users.map((item, index) => (
         <MyComponent value={item}/>
-      ))} */}
+      ))}
 
 
 
