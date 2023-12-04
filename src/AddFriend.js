@@ -20,16 +20,29 @@ const AddFriend = () => {
     
     const myArray = ['Apple', 'Banana', 'Mango'];
     const [userData, setUserData] = useState([]);
-    const [isFriend, setIsFriend] = useState(false);
+    //const [isFriend, setIsFriend] = useState(false);
     const [isFriend2, setIsFriend2] = useState(false);
     const [userDataquery, setUserDataquery] = useState([]);
 
-    const handleButtonClick = () => {
-        setIsFriend((prevIsFriend) => !prevIsFriend);
-    };
-    const handleButtonClick2 = () => {
-        setIsFriend2((prevIsFriend) => !prevIsFriend);
-    };
+    // const handleButtonClick = () => {
+    //     setIsFriend((prevIsFriend) => !prevIsFriend);
+    // };
+    // const handleButtonClick2 = () => {
+    //     setIsFriend2((prevIsFriend) => !prevIsFriend);
+    // };
+    // const [isFriend, setIsFriend] = useState(false);
+    // const buttonStyle = {
+    //     backgroundColor: isFriend ? '#e74c3c' : '#3498db',
+    //     color: 'white',
+    //     padding: '10px 20px',
+    //     border: 'none',
+    //     cursor: 'pointer',
+    // };
+    // const handleButtonClick = () => {
+    //     setIsFriend((prevIsFriend) => !prevIsFriend);
+    //     //console.log(userName);
+
+    // };
 
     // Access the Firestore database
 
@@ -88,7 +101,9 @@ const AddFriend = () => {
             querySnapshot.forEach(async (doc) => {
 
                 const dataitem = doc.data();
-                const u=[];u[0]=dataitem.username;
+                const u=[];
+                u['name']=dataitem.username;
+                u['email']=dataitem.email;
                 console.log(u)
                 
                 
@@ -126,7 +141,42 @@ const AddFriend = () => {
     }, [])
 
     const MyComponent = ({value}) => {
-        return <div><h1>{value} </h1></div>;
+
+        const [isFriend, setIsFriend] = useState(false);
+        const buttonStyle = {
+            backgroundColor: isFriend ? '#e74c3c' : '#3498db',
+            color: 'white',
+            padding: '10px 20px',
+            border: 'none',
+            cursor: 'pointer',
+            align : 'right'
+        };
+        const handleButtonClick = () => {
+            setIsFriend((prevIsFriend) => !prevIsFriend);
+            //console.log(userName);
+    
+        };
+
+        return <div>
+                {/* <div className="bg-light border border-dark d-flex flex-row justify-content-between align-items-center gap-2">
+                <img src={DefaultProfile} alt="Friend Profile Image" width="30px" height="30px"/>
+
+
+            <span>User Name : {"  "+value.name+" "} </span><span>User Email : {"  "+value.email}</span>
+            
+            <button style={buttonStyle}  onClick={handleButtonClick}>{isFriend ? '- Remove Friend' : '+ Add Friend'}</button>
+            </div> */}
+            <div className="bg-light border border-dark d-flex justify-content-between align-items-center gap-2">
+    <div>
+        <img src={DefaultProfile} alt="Friend Profile Image" width="30px" height="30px" />
+        <span style={{color:"#20c997"}}> {value.name +  "  " }</span>
+        <span style={{color:"#198754"}}> {value.email + "   "}</span>
+    </div>
+    <button style={buttonStyle} onClick={handleButtonClick}>
+        {isFriend ? '- Remove Friend' : '+ Add Friend'}
+    </button>
+</div>
+            </div>
       };
       
 
@@ -151,10 +201,13 @@ const AddFriend = () => {
                 <div id="search-results" className="w-75 h-100 border border-dark" style={{backgroundColor:"white"}}></div>
                 <p>All Users:</p>
                 <div>
-                {/* {console.log(users+"kl")} */}
-                {/* {users.map((item, index) => (
+                {/* {console.log(users)} */}
+                {
+                users.map((item,index)=>(console.log(item.name)))
+                }
+                {users.map((item, index) => (
         <MyComponent value={item}/>
-      ))} */}
+      ))}
 
 
 
