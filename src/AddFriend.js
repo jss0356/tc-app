@@ -88,11 +88,12 @@ const AddFriend = () => {
             querySnapshot.forEach(async (doc) => {
 
                 const dataitem = doc.data();
-                const u=dataitem.username;
+                const u=[];u[0]=dataitem.username;
                 console.log(u)
                 
                 
                 myUsers.push(u)
+                //console.log(myUsers+ " ")
 
 
                 
@@ -110,7 +111,7 @@ const AddFriend = () => {
             console.log(err);
             
         }
-        console.log(myUsers + "abc")
+        //console.log(myUsers + "abc")
         setUsers(myUsers)
 
     }
@@ -125,7 +126,7 @@ const AddFriend = () => {
     }, [])
 
     const MyComponent = ({value}) => {
-        return <div><h1>{value}  </h1></div>;
+        return <div><h1>{value} </h1></div>;
       };
       
 
@@ -150,10 +151,10 @@ const AddFriend = () => {
                 <div id="search-results" className="w-75 h-100 border border-dark" style={{backgroundColor:"white"}}></div>
                 <p>All Users:</p>
                 <div>
-                {console.log(users+"kl")}
-                {users.map((item, index) => (
+                {/* {console.log(users+"kl")} */}
+                {/* {users.map((item, index) => (
         <MyComponent value={item}/>
-      ))}
+      ))} */}
 
 
 
