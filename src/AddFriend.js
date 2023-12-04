@@ -128,7 +128,13 @@ const AddFriend = () => {
     }, [])
 
     const MyComponent = ({value}) => {
-        return <div><p>User Name : {"  "+value.name+" "} User Email : {value.email}</p></div>;
+
+        return <div>
+                <div className="bg-light border border-dark d-flex flex-row gap-2">
+
+            <p>User Name : {"  "+value.name+" "} User Email : {value.email}</p></div>
+            
+            </div>
       };
       
 
