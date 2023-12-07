@@ -35,12 +35,12 @@ const MainNavbarMarketplace = ({
     <div
       style={{
         position: "absolute",
-        width: "30%",
-        height: "40%",
+        width: "20px",
+        height: "20px",
         borderRadius: "50%",
         background: "red",
-        top: "0%",
-        right: "10%",
+        top: "-50%",
+        right: "-50%",
         fontWeight: "bold",
         display: "grid",
         placeContent: "center",
@@ -87,8 +87,9 @@ const MainNavbarMarketplace = ({
             </LinkContainer>
             <LinkContainer to="/marketplace/cart">
               <Nav.Link>
-                <span style={{ marginLeft: "2px", marginRight: "2px" }}>
+                <span style={{ marginLeft: "2px", marginRight: "2px", position: "relative" }}>
                   <img src={cart} alt="cart-icon" />
+                  {cartCount > 0 && cartCountElement}
                 </span>
                 cart
               </Nav.Link>
