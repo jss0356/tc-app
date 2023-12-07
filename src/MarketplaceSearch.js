@@ -85,23 +85,22 @@ const MarketplaceSearch = ({
     }
   };
 
-
-  
   const fetchAllListingsPrice = async (cardList) => {
-    let startingPriceListings
-    try{
-      startingPriceListings = await ListingDataService.getStartingPrices(auth.currentUser.email);
+    let startingPriceListings;
+    try {
+      startingPriceListings = await ListingDataService.getStartingPrices(
+        auth.currentUser.email
+      );
+    } catch (err) {
+      console.error(err);
     }
-    catch(err){
-      console.error(err)
-    }
-    
+
     cardList.forEach((card, index) => {
       const foundStartingPriceListing = startingPriceListings.find(
         (listing) => listing.productID === card.id
       );
 
-      console.log(foundStartingPriceListing, "FOUND")
+      console.log(foundStartingPriceListing, "FOUND");
 
       if (foundStartingPriceListing !== undefined) {
         cardList[index].startingPrice = "$" + foundStartingPriceListing.Price;
@@ -625,38 +624,51 @@ const MarketplaceSearch = ({
           <div>
             <h3 style={{ marginLeft: "20px" }}>Recently Viewed Cards</h3>
             <div className="d-flex flex-wrap">
-              {recentCards.map((card) => (
-                <Card
-                  key={card.id}
-                  className="card-item"
-                  style={{
-                    width: "200px",
-                    cursor: "pointer",
-                    margin: "8px",
-                    transition: "box-shadow 10s",
-                    ":hover": {
-                      boxShadow: "0 5px 10px rgba(0, 0, 0, 0.2)",
-                    },
-                  }}
-                  alt={card.name}
-                  onClick={() => clickToAddToRecent(card)}
-                >
-                  <Link
-                    to={`/marketplace/cards/${card.id}`}
-                    className="card-link"
-                  >
-                    <Card.Img
-                      variant="top"
-                      src={card.images.small}
+              {recentCards.length > 0 ? (
+                <div className="d-flex flex-wrap">
+                  {recentCards.map((card) => (
+                    <Card
+                      key={card.id}
+                      className="card-item"
+                      style={{
+                        width: "200px",
+                        cursor: "pointer",
+                        margin: "8px",
+                        transition: "box-shadow 10s",
+                        ":hover": {
+                          boxShadow: "0 5px 10px rgba(0, 0, 0, 0.2)",
+                        },
+                      }}
                       alt={card.name}
-                      style={{ height: "auto", width: "100%" }}
-                    />
-                  </Link>
-                  <Card.Body>
-                    <Card.Title className="card-name">{card.name}</Card.Title>
-                  </Card.Body>
-                </Card>
-              ))}
+                      onClick={() => clickToAddToRecent(card)}
+                    >
+                      <Link
+                        to={`/marketplace/cards/${card.id}`}
+                        className="card-link"
+                      >
+                        <Card.Img
+                          variant="top"
+                          src={card.images.small}
+                          alt={card.name}
+                          style={{ height: "auto", width: "100%" }}
+                        />
+                      </Link>
+                      <Card.Body>
+                        <Card.Title className="card-name">
+                          {card.name}
+                        </Card.Title>
+                      </Card.Body>
+                    </Card>
+                  ))}
+                </div>
+              ) : (
+                <div
+                  className="justify-content-center align-items-center d-flex"
+                  style={{ textAlign: "center", marginLeft: "20px" }}
+                >
+                  <p>No cards recently viewed.</p>
+                </div>
+              )}
             </div>
           </div>
         </div>
