@@ -91,7 +91,9 @@ const Product = ({ cart, setCart, watchlist, setWatchlist }) => {
     if (listingsResult.length === 0 || allListings.length === 0) {
       return;
     }
-    const allFilteredLisitings = listingsResult.sort((a, b) => a.Price - b.Price).filter((listing) => listing.sellerEmail !== auth.currentUser.email);
+    const allFilteredLisitings = listingsResult
+      .sort((a, b) => a.Price - b.Price)
+      .filter((listing) => listing.sellerEmail !== auth.currentUser.email);
     setListings(allFilteredLisitings);
     setListingPrices(
       allFilteredLisitings.map((listing) => ({
@@ -99,7 +101,6 @@ const Product = ({ cart, setCart, watchlist, setWatchlist }) => {
         isStartingPrice: listing.isStartingPrice,
       }))
     );
-    
   };
 
   async function individualCardDetails(productID) {
@@ -131,10 +132,9 @@ const Product = ({ cart, setCart, watchlist, setWatchlist }) => {
     } catch (error) {
       setError(true);
       setLoading(false);
-    }
-    finally{
-      setError(false)
-      setLoading(false)
+    } finally {
+      setError(false);
+      setLoading(false);
     }
     // .then((response) => {
     //   return response.json();
@@ -169,8 +169,21 @@ const Product = ({ cart, setCart, watchlist, setWatchlist }) => {
         let prices = querySnapshot.docs.map((doc) => doc.data());
 
         prices.sort((a, b) => new Date(a.date) - new Date(b.date));
+        prices.forEach((price) => {
+          const currentData = pricesOverTime.findIndex(
+            (entry) => entry.date === price.date
+          );
 
-        setPricesOverTime(prices);
+          if (currentData !== -1) {
+            pricesOverTime[currentData] = price;
+          } else {
+            pricesOverTime.push(price);
+          }
+        });
+
+        pricesOverTime.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+        setPricesOverTime([...pricesOverTime]);
       } catch (error) {
         console.error("firestore error ", error);
         setError(true);
@@ -1010,27 +1023,26 @@ const Product = ({ cart, setCart, watchlist, setWatchlist }) => {
             <h2 className="text-center">Listings</h2>
             {!loading && listings.length > 0 ? (
               listings.map((listing) => {
-                console.log(auth.currentUser.email, listing.sellerEmail)
-                if(auth.currentUser.email !== listing.sellerEmail){
+                console.log(auth.currentUser.email, listing.sellerEmail);
+                if (auth.currentUser.email !== listing.sellerEmail) {
                   return (
                     <>
-                  <Listing
-                    listingID={listing.listingID}
-                    sellerEmail={listing.sellerEmail}
-                    Grade={listing.Grade}
-                    Price={listing.Price}
-                    cardID={listing.cardID}
-                    portfolioID={listing.portfolioID}
-                    cart={cart}
-                    setCart={setCart}
-                    productID={productID}
-                    card={productInfo}
-                  />
-                </>
-                  )
-                }
-                else{
-                  return <></>
+                      <Listing
+                        listingID={listing.listingID}
+                        sellerEmail={listing.sellerEmail}
+                        Grade={listing.Grade}
+                        Price={listing.Price}
+                        cardID={listing.cardID}
+                        portfolioID={listing.portfolioID}
+                        cart={cart}
+                        setCart={setCart}
+                        productID={productID}
+                        card={productInfo}
+                      />
+                    </>
+                  );
+                } else {
+                  return <></>;
                 }
               })
             ) : (
