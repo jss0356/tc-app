@@ -6,6 +6,7 @@ import { MarketplaceContext } from "./app/MarketplaceProvider";
 import { Link } from "react-router-dom";
 import SideBarProductFilters from "./Rcomponents/SideBarProductFilters";
 import ListingDataService from "./services/listings.services";
+import { auth } from "./config/firebase";
 const MarketplaceSearch = ({
   cart,
   setCart,
@@ -84,13 +85,24 @@ const MarketplaceSearch = ({
     }
   };
 
+
+  
   const fetchAllListingsPrice = async (cardList) => {
-    const startingPriceListings = await ListingDataService.getStartingPrices();
-    console.log("STARTING PRICE LISTINGS", startingPriceListings);
+    let startingPriceListings
+    try{
+      startingPriceListings = await ListingDataService.getStartingPrices(auth.currentUser.email);
+    }
+    catch(err){
+      console.error(err)
+    }
+    
     cardList.forEach((card, index) => {
       const foundStartingPriceListing = startingPriceListings.find(
         (listing) => listing.productID === card.id
       );
+
+      console.log(foundStartingPriceListing, "FOUND")
+
       if (foundStartingPriceListing !== undefined) {
         cardList[index].startingPrice = "$" + foundStartingPriceListing.Price;
       } else {

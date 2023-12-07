@@ -1,4 +1,4 @@
-import {firestore} from "../config/firebase"
+import {auth, firestore} from "../config/firebase"
 
 import {collection, 
     getDocs, 
@@ -65,10 +65,10 @@ class ListingsDataService {
 
     }
 
-    getStartingPrices = async () => {
-        const q = query(listingsCollectionRef, where("isStartingPrice", "==", true))
+    getStartingPrices = async (userEmail) => {
+        const q = query(listingsCollectionRef, where("isStartingPrice", "==", true), where("sellerEmail", "!=", userEmail));
         const listingsSnapshot = await getDocs(q);
-        
+        console.log(listingsSnapshot)
         const allListings = [];
 
         if(listingsSnapshot.empty){

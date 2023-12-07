@@ -91,14 +91,15 @@ const Product = ({ cart, setCart, watchlist, setWatchlist }) => {
     if (listingsResult.length === 0 || allListings.length === 0) {
       return;
     }
-
-    setListings(listingsResult.sort((a, b) => a.Price - b.Price));
+    const allFilteredLisitings = listingsResult.sort((a, b) => a.Price - b.Price).filter((listing) => listing.sellerEmail !== auth.currentUser.email);
+    setListings(allFilteredLisitings);
     setListingPrices(
-      allListings.map((listing) => ({
+      allFilteredLisitings.map((listing) => ({
         Price: listing.Price,
         isStartingPrice: listing.isStartingPrice,
       }))
     );
+    
   };
 
   async function individualCardDetails(productID) {
@@ -130,6 +131,10 @@ const Product = ({ cart, setCart, watchlist, setWatchlist }) => {
     } catch (error) {
       setError(true);
       setLoading(false);
+    }
+    finally{
+      setError(false)
+      setLoading(false)
     }
     // .then((response) => {
     //   return response.json();
@@ -252,7 +257,7 @@ const Product = ({ cart, setCart, watchlist, setWatchlist }) => {
       },
     ],
   };
-  console.log(cart);
+  console.log(listings);
   const [cardHoverEffect, setCardHoverEffect] = useState(false);
 
   const [hoverEffectStyle, setCardHoverEffectStyle] = useState({
@@ -1004,8 +1009,11 @@ const Product = ({ cart, setCart, watchlist, setWatchlist }) => {
           >
             <h2 className="text-center">Listings</h2>
             {!loading && listings.length > 0 ? (
-              listings.map((listing) => (
-                <>
+              listings.map((listing) => {
+                console.log(auth.currentUser.email, listing.sellerEmail)
+                if(auth.currentUser.email !== listing.sellerEmail){
+                  return (
+                    <>
                   <Listing
                     listingID={listing.listingID}
                     sellerEmail={listing.sellerEmail}
@@ -1017,7 +1025,12 @@ const Product = ({ cart, setCart, watchlist, setWatchlist }) => {
                     card={productInfo}
                   />
                 </>
-              ))
+                  )
+                }
+                else{
+                  return <></>
+                }
+              })
             ) : (
               <span className="text-danger" style={{ fontWeight: "bold" }}>
                 No listings available.

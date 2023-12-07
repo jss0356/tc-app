@@ -387,6 +387,7 @@ const [cardHoverEffect, setCardHoverEffect] = useState(false);
 
 const [hoverEffectStyle, setCardHoverEffectStyle] = useState({
   width: "26%",
+  height: "auto",
   padding: "1rem",
   transition: "all 0.5s ease",
   transform: cardHoverEffect ? "scale(1)" : "scale(1)",
@@ -416,6 +417,7 @@ const handleHoverOffCard = () => {
 
 const nonHoverEffectStyle = {
   transition: "all 0.5s ease",
+  height: "auto",
   width: "13%",
 };
 
