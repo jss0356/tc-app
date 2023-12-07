@@ -37,7 +37,12 @@ const Listing = (props) => {
         setCartCount((prev) => prev - 1);
       }
       else{
-        props.setCart([...props.cart, {...props.card, listingID: props.listingID, listingPrice: props.Price, listingGrade: props.Grade, listingEmail: props.sellerEmail, }])
+        if(props.cardID){
+          props.setCart([...props.cart, {...props.card, listingID: props.listingID, listingPrice: props.Price, listingGrade: props.Grade, listingEmail: props.sellerEmail, cardID: props.cardID, portfolioID: props.portfolioID}])
+        }
+        else{
+          props.setCart([...props.cart, {...props.card, listingID: props.listingID, listingPrice: props.Price, listingGrade: props.Grade, listingEmail: props.sellerEmail, portfolioID: props.portfolioID}])
+        }
         setCartCount((prev) => prev + 1);
 
       }

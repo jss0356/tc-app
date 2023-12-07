@@ -125,7 +125,9 @@ const PortfolioItem = () =>{
                 Price: Number(newListingPrice),
                 productID: card.Id,
                 sellerEmail: foundUserData.email,
-                isStartingPrice: false
+                isStartingPrice: false,
+                cardID,
+                portfolioID
             }    
 
             const allListings = await ListingsDataService.getListingsByProductID(card.Id)
@@ -137,6 +139,7 @@ const PortfolioItem = () =>{
                 if(newListing.Price < allListings[0].Price){
                     newListing.isStartingPrice = true;
                     await setDoc(doc(firestore, `listings/${allListings[0].listingID}`, {isStartingPrice: false}, {merge: true}));
+
                 }
             }
 

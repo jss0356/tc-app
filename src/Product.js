@@ -1019,6 +1019,8 @@ const Product = ({ cart, setCart, watchlist, setWatchlist }) => {
                     sellerEmail={listing.sellerEmail}
                     Grade={listing.Grade}
                     Price={listing.Price}
+                    cardID={listing.cardID}
+                    portfolioID={listing.portfolioID}
                     cart={cart}
                     setCart={setCart}
                     productID={productID}

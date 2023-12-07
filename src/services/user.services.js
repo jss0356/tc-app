@@ -249,6 +249,43 @@ import {collection,
             return {newCardID: addedDocRef.id, newPortfolioID}
 
         }
+    
+        async deleteCardFromPortfolio (userID, oldPortfolioID, cardID){
+            const oldCardRef  = doc(firestore, `users/${userID}/userPortfolios/${oldPortfolioID}/cards/${cardID}`);
+            const oldPortfolioDocRef = doc(firestore,  `users/${userID}/userPortfolios/${oldPortfolioID}`)
+            await deleteDoc(oldCardRef);
+            return "Successful deletion."
+        }
+        addCardToUserPortfolio = async (userID, cartItem) => {
+            const userPortfoliosCollectionRef = collection(firestore, `users/${userID}/userPortfolios`)
+            const q = query(userPortfoliosCollectionRef, where("name", "==", "recently purchased"))
+            const recentlyPurchasedPortfolioSnapshot = await getDocs(q)
+            //no portfolio with recently purchased name exists.
+            if(recentlyPurchasedPortfolioSnapshot.empty){
+                //first create an empty portfolio with such a name and initialize certain fields.
+                const recentlyPurchasedPortfolioRef = await addDoc(userPortfoliosCollectionRef, {name: "recently purchased"})
+                await setDoc(recentlyPurchasedPortfolioRef, {portfolioID: recentlyPurchasedPortfolioRef.id, itemCount: 1, totalMarketValue: cartItem.tcgplayer?.prices?.holofoil?.market || 0}, {merge: true});
+
+                //now lastly add the card to the portfolio.
+                const recentlyPurchasedPortolioCardsRef = collection(firestore, `users/${userID}/userPortfolios/${recentlyPurchasedPortfolioRef.id}/cards`)
+                const addedCardRef = await addDoc(recentlyPurchasedPortolioCardsRef, {Grade: cartItem.listingGrade, Id: cartItem.id})
+                await setDoc(addedCardRef, {cardID: addedCardRef.id}, {merge: true})
+                return "success";
+            }
+            //else portfolio with recently purchased name exists.
+            else{
+                const recentlyPurchasedPortfolioRef = doc(firestore, `users/userPortfolios/${recentlyPurchasedPortfolioSnapshot.docs[0].id}`)
+                await setDoc(recentlyPurchasedPortfolioRef, {itemCount: recentlyPurchasedPortfolioSnapshot.docs[0].data().itemCount + 1, totalMarketValue: recentlyPurchasedPortfolioSnapshot.docs[0].data().totalMarketValue + cartItem.tcgplayer?.prices?.holofoil?.market || 0})
+                
+                const recentlyPurchasedCardsCollectionRef = collection(firestore, `users/userPortfolios/${recentlyPurchasedPortfolioRef.id}/cards`);
+                const addedCardRef = await addDoc(recentlyPurchasedCardsCollectionRef, {Grade: cartItem.listingGrade, Id: cartItem.id})
+                await setDoc(addedCardRef, {cardID: addedCardRef.id}, {merge: true})
+
+                return "success"
+
+            }
+        }
+
     }
 
 
