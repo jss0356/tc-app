@@ -10,10 +10,10 @@ const Listing = (props) => {
   console.log("CART", props.cart)
   
 
-  const [inCart, setInCart] = useState(false);
+  const [inCart, setInCart] = useState(props.cart.some((card) => (card.listingID) === props.listingID));
 
   const determineInCartStatus = () => {
-    const result = props.cart.find((card) => card.id === props.card.id)
+    const result = props.cart.find((card) => (card.listingID) === props.listingID)
     if(result){
       setInCart(true)
       return;
