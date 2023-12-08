@@ -33,8 +33,9 @@ class ListingsDataService {
         const listingDocRef = doc(firestore, 'listings', listingID)
         return updateDoc(listingDocRef, updatesToAdd) 
     }
-    deleteListing(listingID){
+    async deleteListing(listingID){
         const listingDocRef = doc(firestore, 'listings', listingID)
+        const listingDocSnapshot = await getDoc(listingDocRef)
         return deleteDoc(listingDocRef)
     }
 

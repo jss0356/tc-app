@@ -102,7 +102,7 @@ const ResetPassword = () =>{
 
                         </form>
                         <div className="d-flex justify-content-center w-100 pt-5">
-                            <Link to="/login">Back to login</Link>
+                            <Link to="/">Back to login</Link>
                         </div>
                     </div>
                 </div>

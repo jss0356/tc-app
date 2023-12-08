@@ -241,16 +241,15 @@ const Product = ({ cart, setCart, watchlist, setWatchlist }) => {
 
   const options = { responsive: true, maintainAspectRatio: true };
   const data = {
-    labels: ["low", "direct low", "high", "average", "market"],
+    labels: ["low", "high", "average", "market"],
     datasets: [
       {
         label: "Card Prices",
         data: [
-          productInfo.tcgplayer?.prices?.holofoil?.low || 0,
-          productInfo.tcgplayer?.prices?.holofoil?.directLow || 0,
-          productInfo.tcgplayer?.prices?.holofoil?.high || 0,
-          productInfo.tcgplayer?.prices?.holofoil?.mid || 0,
-          productInfo.tcgplayer?.prices?.holofoil?.market || 0,
+          low || 0,
+          high || 0,
+          average || 0,
+          productInfo.tcgplayer?.prices?.holofoil?.market || productInfo.tcgplayer?.prices?.unlimitedHolofoil?.market || 0,
         ],
         backgroundColor: "rgba(70, 184, 184, 0.2)",
         borderWidth: 2,

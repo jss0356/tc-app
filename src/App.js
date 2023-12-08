@@ -49,7 +49,7 @@ function App() {
       >
         <MarketplaceProvider>
           <Routes>
-            <Route path="/login" element={<Login />} />
+            <Route path="/" element={<Login />} />
             <Route path="/register">
               <Route index element={<Registration />} />
               <Route
@@ -151,7 +151,6 @@ function App() {
                 <Route path="success" element={<PaymentSuccess />} />
               </Route>
             </Route>
-            <Route path="/" element={<TestNav />} />
             <Route path="*" element={<NotFound />} />
             <Route path="/user/:id" element={<User />} />
             <Route
