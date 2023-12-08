@@ -7,11 +7,12 @@ import Col from "react-bootstrap/Col";
 import { LinkContainer } from "react-router-bootstrap";
 import add from "./logos/Add-Icon.png";
 import { useState } from "react";
-const WatchList = ({ watchlist, setWatchlist }) => {
+const WatchList = ({ watchlist, setWatchlist, cart, setCard, cartQuantity, setCartQuanitity }) => {
   const removeCard = (cardId) => {
     setWatchlist(watchlist.filter((card) => card.id !== cardId));
   };
   const [quickAddMessage, setQuickAddMessage] = useState(false);
+  
 
   const handleMouseEnter = () => {
     setQuickAddMessage(true);

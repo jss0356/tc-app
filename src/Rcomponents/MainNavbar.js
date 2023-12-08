@@ -16,7 +16,7 @@ const MainNavbar = () => {
         try{
             await signOut(auth)
             console.log("signed out")
-            navigate("/login")    
+            navigate("/")    
         }
         catch(err){
             console.log("unable to sign out")

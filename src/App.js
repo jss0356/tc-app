@@ -47,7 +47,6 @@ function App() {
         className="container-fluid"
         style={{ overflow: "auto", minHeight: "100vh" }}
       >
-        <MarketplaceProvider>
           <Routes>
             <Route path="/" element={<Login />} />
             <Route path="/register">
@@ -127,28 +126,47 @@ function App() {
               <Route
                 path="search-results"
                 element={
+                  <MarketplaceProvider>
+
                   <MarketplaceSearch
                     cart={cart}
                     setCart={setCart}
                     cartQuantity={cartQuantity}
                     setCartQuantity={setCartQuantity}
                   />
+        </MarketplaceProvider>
+
                 }
               />
               <Route
                 path="cart"
                 element={
+                  <MarketplaceProvider>
+
                   <Cart
                     cart={cart}
                     setCart={setCart}
                     cartQuantity={cartQuantity}
                     setCartQuantity={setCartQuantity}
                   />
+                 </MarketplaceProvider>
+
                 }
               />
               <Route path="payment">
-                <Route index element={<PaymentInfo cart={cart} />} />
-                <Route path="success" element={<PaymentSuccess />} />
+                <Route index element={
+                        <MarketplaceProvider>
+
+                <PaymentInfo cart={cart} />
+                </MarketplaceProvider>
+} />
+                <Route path="success" element={
+                        <MarketplaceProvider>
+
+                <PaymentSuccess />
+                </MarketplaceProvider>
+
+                } />
               </Route>
             </Route>
             <Route path="*" element={<NotFound />} />
@@ -156,11 +174,16 @@ function App() {
             <Route
               path="/watchlist"
               element={
-                <WatchList watchlist={watchlist} setWatchlist={setWatchlist} />
+                <MarketplaceProvider>
+                  <WatchList watchlist={watchlist} setWatchlist={setWatchlist} cart={cart}
+                    setCart={setCart}
+                    cartQuantity={cartQuantity}
+                    setCartQuantity={setCartQuantity}/>
+                </MarketplaceProvider>
+
               }
             />
           </Routes>
-        </MarketplaceProvider>
       </div>
     </div>
   );
