@@ -196,9 +196,15 @@ const Product = ({ cart, setCart, watchlist, setWatchlist }) => {
   const determineStartingFrom = () => {
     if (listingPrices.length !== 0) {
       const listing = listingPrices.find(
-        (listing) => listing.isStartingPrice === true
+        (listing) => listing?.isStartingPrice === true
       );
-      return "$" + String(listing.Price);
+      if(listing){
+        return "$" + String(listing?.Price);
+      }
+      else{
+        return "N/A"
+      }
+      
     }
     return "N/A";
   };
